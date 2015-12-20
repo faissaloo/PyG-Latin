@@ -62,19 +62,19 @@ obj <OBJECTNAME> {
 It will cause an error in indentation when transpiling to Python. This is unintentional and should be fixed in future. This also applies to room definitions
 
 In addition to the normal Python functions, the following functions are added by the PyG library:
-sleep(float seconds)
-keyboard_check(int key)
-keyboard_check_pressed(int key)
-draw_set_color(int color)
-draw_point(float y,float x)
-draw_text(float y,float x,str string)
-draw_rectangle(float y1,float x1,float y2,float x2,bool outline)
-draw_circle(float y,float x,float r,bool outline)
-draw_line(float y1,float x1,float y2,float x2)
-draw_path(float y,float x,list path)
-instance_create(float y,float x,obj object)
-instance_destroy()
-room_goto(rm room)
+* sleep(float seconds)
+* keyboard_check(int key)
+* keyboard_check_pressed(int key)
+* draw_set_color(int color)
+* draw_point(float y,float x)
+* draw_text(float y,float x,str string)
+* draw_rectangle(float y1,float x1,float y2,float x2,bool outline)
+* draw_circle(float y,float x,float r,bool outline)
+* draw_line(float y1,float x1,float y2,float x2)
+* draw_path(float y,float x,list path)
+* instance_create(float y,float x,obj object)
+* instance_destroy()
+* room_goto(rm room)
 
 In addition to the normal Python constants, the following constants are added by the PyG library (they're not actually constants, just variables, but that's because Python doesn't have constants):
 c_black

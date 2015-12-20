@@ -77,11 +77,11 @@ In addition to the normal Python functions, the following functions are added by
 * room_goto(rm room)
 
 In addition to the normal Python constants, the following constants are added by the PyG library (they're not actually constants, just variables, but that's because Python doesn't have constants):
-c_black
-c_red
-c_green
-c_yellow
-c_blue
-c_magenta
-c_cyan
-c_white
+* c_black
+* c_red
+* c_green
+* c_yellow
+* c_blue
+* c_magenta
+* c_cyan
+* c_white

@@ -29,7 +29,7 @@ obj <OBJECTNAME> {
 
     }
 }
-
+```
 A room is structured like so:
 ```
 room <ROOMNAME> {

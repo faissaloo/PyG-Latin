@@ -1,27 +1,27 @@
-obj player {
-    event create
+obj(player) {
+    event(create)
     {
         self.y=0
         self.x=0
     }
-    event step
+    event(step)
     {
-        if keyboard_check_pressed(97)
+        if (keyboard_check_pressed(97))
         {
             self.x-=1
         }
-        if keyboard_check_pressed(100)
+        if (keyboard_check_pressed(100))
         {
             self.x+=1
         }
     }
-    event draw
+    event(draw)
     {
         draw_point(self.y,self.x)
     }
 }
 
-room rm1 {
+room(rm1) {
     room_speed=60
     room_width=24
     room_height=88

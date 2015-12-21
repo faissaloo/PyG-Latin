@@ -46,10 +46,17 @@ def transpile(inputSource):
             def __init__(self,TYPE,BODY):
                 self.TYPE=TYPE
                 self.BODY=BODY
-        class ifStatement():
-            def __init__(self,STATEMENT,BODY):
-                self.STATEMENT=STATEMENT
+
+        class roomDefinition():
+            def __init__(self,NAME,BODY):
+                self.NAME=NAME
                 self.BODY=BODY
+
+        class ifStatement():
+            def __init__(self,EXPRESSION,BODY):
+                self.EXPRESSION=EXPRESSION
+                self.BODY=BODY
+
         class whileStatement():
             def __init__(self,STATEMENT,BODY):
                 self.STATEMENT=STATEMENT
@@ -58,6 +65,20 @@ def transpile(inputSource):
             def __init__(self,STATEMENT,BODY):
                 self.STATEMENT=STATEMENT
                 self.BODY=BODY
+
+        class expression():
+            def __init__(self,EXPRESSION):
+                self.EXPRESSION=EXPRESSION
+
+        class addition():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class subtraction():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
 
         def expect(string,required=False):
             nonlocal i
@@ -89,26 +110,67 @@ def transpile(inputSource):
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_":
                 name+=source[i]
                 i+=1
-            print(name)
+            #print(name)
             return name
 
+        def takeexpression():
+            nonlocal i
+            nonlocal source
+            expression=""
+            while source[i]!="{":
+                expression+=source[i]
+                i+=1
+            #print(expression)
+            return expression
+
+
+        def parseExpression():
+            nonlocal i
+            nonlocal source
+
+        def parseAddition():
+            nonlocal i
+            nonlocal source
+
+        def parseSubtraction():
+            nonlocal i
+            nonlocal source
+
+            return
         def parseCodeBlock():
             nonlocal i
             nonlocal source
             body=[]
             line=""
-            while source[i]!="}":
-                i+=1 #Putting this here at the beginning instead of at the end seems to fix things kinda, why?
-                event=parseEventDefinition()
-                if event!=None:
-                    body.append(event)
-            if expect("\n"):
-                body.append(line)
-                line=""
-            else:
-                line+=source[i]
-            print(body)
+            if expect("{",True):
+                while source[i]!="}":
+                    i+=1 #Putting this here at the beginning instead of at the end seems to fix things kinda, why?
+                    ifcomp=parseIfStatement()
+                    event=parseEventDefinition()
+                    if ifcomp!=None:
+                        body.append(ifcomp)
+                    elif event!=None:
+                        body.append(event)
+                    elif expect("\n"):
+                        a=line
+                        #print(a)
+                        body.append(a) #We need to figure out parsing for this
+                        line=""
+                    else:
+                        line+=source[i]
+            expect("}",True)
             return body
+
+        def parseIfStatement():
+            nonlocal i
+            nonlocal source
+            objBody=""
+            if expect("if") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
+                    ifExpression=expression(takeexpression())
+                    ifBody=parseCodeBlock()
+                    return ifStatement(ifExpression,ifBody)
+            else:
+                return None
 
         def parseObjDefinition():
             nonlocal i
@@ -117,9 +179,7 @@ def transpile(inputSource):
             if expect("obj") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
                     objName=takename()
                     expect_whitespace()
-                    if expect("{",True):
-                        objBody=parseCodeBlock()
-                    expect("}",True)
+                    objBody=parseCodeBlock()
                     return objDefinition(objName,objBody)
             else:
                 return None
@@ -131,10 +191,24 @@ def transpile(inputSource):
             if expect("event") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
                 eventName=takename()
                 expect_whitespace()
-                if expect("{"):
-                    eventBody=parseCodeBlock()
-                expect("}")
+                eventBody=parseCodeBlock()
                 return eventDefinition(eventName,eventBody)
+
+        def parseRoomDefinition():
+            nonlocal i
+            nonlocal source
+            roomBody=""
+            if expect("room") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
+                    roomName=takename()
+                    expect_whitespace()
+                    roomBody=parseCodeBlock()
+                    return roomDefinition(roomName,roomBody)
+            else:
+                return None
+        def parseLine():
+            nonlocal i
+            nonlocal source
+            pass
         i=0
         line=""
         while i<len(source):
@@ -144,19 +218,19 @@ def transpile(inputSource):
                 line=""
             else:
                 line+=source[i]
-            for ii in [parseEventDefinition(),parseObjDefinition()]:
+            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
                 if ii!=None:
                     rawParsedData.append(ii)
 
             i+=1
         #Debug
-        if len(rawParsedData)>0:
-            print(rawParsedData[0])
-        return rawParsedData
 
+        return rawParsedData
     return parse(inputSource)
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-with open(outputFile,'w') as f:
-    f.write(transpile(latinSource))
+print(transpile(latinSource))
+#Not yet fit for use
+#with open(outputFile,'w') as f:
+#    f.write(transpile(latinSource))

@@ -58,27 +58,41 @@ def transpile(inputSource):
                 self.BODY=BODY
 
         class whileStatement():
-            def __init__(self,STATEMENT,BODY):
-                self.STATEMENT=STATEMENT
+            def __init__(self,EXPRESSION,BODY):
+                self.EXPRESSION=EXPRESSION
                 self.BODY=BODY
         class forStatement():
             def __init__(self,STATEMENT,BODY):
-                self.STATEMENT=STATEMENT
+                self.EXPRESSION=EXPRESSION
                 self.BODY=BODY
 
         class expression():
-            def __init__(self,EXPRESSION):
-                self.EXPRESSION=EXPRESSION
+            def __init__(self,BODY):
+                self.BODY=BODY
 
-        class addition():
+        class additionOperation():
             def __init__(self,OPERAND1,OPERAND2):
                 self.OPERAND1=OPERAND1
                 self.OPERAND2=OPERAND2
 
-        class subtraction():
+        class subtractionOperation():
             def __init__(self,OPERAND1,OPERAND2):
                 self.OPERAND1=OPERAND1
                 self.OPERAND2=OPERAND2
+
+        class multiplicationOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class divisionOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class realNumber(): #Real numbers are just all floats, because screw having two different types
+            def __init__(self,REAL):
+                self.REAL=REAL
 
         def expect(string,required=False):
             nonlocal i
@@ -96,7 +110,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             if source[i] not in " \t\n" and throwError:
-                print("Error: Expected whitespace")
+                print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
                 while source[i] in " \t\n":
@@ -113,30 +127,101 @@ def transpile(inputSource):
             #print(name)
             return name
 
-        def takeexpression():
+        def takevalue():
             nonlocal i
             nonlocal source
-            expression=""
-            while source[i]!="{":
-                expression+=source[i]
+            value=""
+            expect_whitespace()
+            while source[i] in "0123456789.":
+                value+=source[i]
                 i+=1
-            #print(expression)
-            return expression
+            return realNumber(value)
 
-
-        def parseExpression():
+        def takevalue_beforeoperation():
             nonlocal i
             nonlocal source
+            while source[i] in "0123456789.": #Goes back until there's no numerical/period character
+                i-=1
+            value=takevalue()
+            return value
 
         def parseAddition():
             nonlocal i
             nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("+"):
+                OPERAND1=takevalue_beforeoperation()
+                expect("+")
+                OPERAND2=takevalue()
+                return additionOperation(OPERAND1,OPERAND2)
+            else:
+                return None
 
         def parseSubtraction():
             nonlocal i
             nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("-"):#This is reading -= and taking it as a subtraction, it should not be looking in the body of the if statement, why is it doing that?
+                OPERAND1=takevalue_beforeoperation()
+                expect("-")
+                OPERAND2=takevalue()
+                return subtractionOperation(OPERAND1,OPERAND2)
+            else:
+                return None
 
-            return
+        def parseMultiplication():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("*"):
+                OPERAND1=takevalue_beforeoperation()
+                expect("*")
+                OPERAND2=takevalue()
+                return additionOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+
+        def parseDivision():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("/"):
+                OPERAND1=takevalue_beforeoperation()
+                expect("/")
+                OPERAND2=takevalue()
+                return subtractionOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+
+        def parseExpression():
+            nonlocal i
+            nonlocal source
+            expressionBody=[]
+            while source[i]!="{": #It's stopping here when it needs to
+                i+=1
+                add=parseAddition()
+                sub=parseSubtraction()
+                mul=parseMultiplication()
+                div=parseDivision()
+                if add!=None:
+                    expressionBody.append(add)
+                if sub!=None:
+                    expressionBody.append(sub)
+                if mul!=None:
+                    expressionBody.append(mul)
+                if div!=None:
+                    expressionBody.append(div)
+                #Add something to interpret functions here pls so that the expression parser doesn't get it
+                if expect("("):
+                    expressionBody.append(parseExpression())
+                    expect(")")
+
+            return expression(expressionBody)
+
         def parseCodeBlock():
             nonlocal i
             nonlocal source
@@ -144,7 +229,7 @@ def transpile(inputSource):
             line=""
             if expect("{",True):
                 while source[i]!="}":
-                    i+=1 #Putting this here at the beginning instead of at the end seems to fix things kinda, why?
+                    i+=1
                     ifcomp=parseIfStatement()
                     event=parseEventDefinition()
                     if ifcomp!=None:
@@ -153,30 +238,37 @@ def transpile(inputSource):
                         body.append(event)
                     elif expect("\n"):
                         a=line
-                        #print(a)
                         body.append(a) #We need to figure out parsing for this
                         line=""
                     else:
                         line+=source[i]
-            expect("}",True)
+                expect("}",True)
             return body
 
         def parseIfStatement():
             nonlocal i
             nonlocal source
-            objBody=""
-            if expect("if") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
-                    ifExpression=expression(takeexpression())
+            if expect("if") and expect_whitespace(True): #This if statement is spilling, fix pls
+                    ifExpression=parseExpression()
                     ifBody=parseCodeBlock()
                     return ifStatement(ifExpression,ifBody)
+            else:
+                return None
+
+        def parseWhileStatement():
+            nonlocal i
+            nonlocal source
+            if expect("while") and expect_whitespace(True):
+                    whileExpression=parseExpression(takeexpression())
+                    whileBody=parseCodeBlock()
+                    return whileStatement(whileExpression,whileBody)
             else:
                 return None
 
         def parseObjDefinition():
             nonlocal i
             nonlocal source
-            objBody=""
-            if expect("obj") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
+            if expect("obj") and expect_whitespace(True):
                     objName=takename()
                     expect_whitespace()
                     objBody=parseCodeBlock()
@@ -187,7 +279,6 @@ def transpile(inputSource):
         def parseEventDefinition():
             nonlocal i
             nonlocal source
-            eventBody=""
             if expect("event") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
                 eventName=takename()
                 expect_whitespace()
@@ -198,6 +289,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             roomBody=""
+            #This is causing issues whenever room is in something else because it is being skipped over
             if expect("room") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
                     roomName=takename()
                     expect_whitespace()
@@ -213,14 +305,14 @@ def transpile(inputSource):
         line=""
         while i<len(source):
             #Put all the other parse*() functions here
+            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
+                if ii!=None:
+                    rawParsedData.append(ii)
             if expect("\n"):
                 rawParsedData.append(line)
                 line=""
             else:
                 line+=source[i]
-            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
-                if ii!=None:
-                    rawParsedData.append(ii)
 
             i+=1
         #Debug

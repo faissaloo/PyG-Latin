@@ -303,26 +303,25 @@ def transpile(inputSource):
             pass
         i=0
         line=""
+        #This is the root loop
         while i<len(source):
             #Put all the other parse*() functions here
-            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
-                if ii!=None:
-                    rawParsedData.append(ii)
             if expect("\n"):
                 rawParsedData.append(line)
                 line=""
             else:
                 line+=source[i]
-
+            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
+                if ii!=None:
+                    rawParsedData.append(ii)
             i+=1
         #Debug
-
         return rawParsedData
     return parse(inputSource)
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource))
+print(transpile(latinSource)[0].BODY[1].BODY)
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

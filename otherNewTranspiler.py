@@ -90,6 +90,31 @@ def transpile(inputSource):
                 self.OPERAND1=OPERAND1
                 self.OPERAND2=OPERAND2
 
+        class additionAssignmentOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class subtractionAssignmentOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class multiplicationAssignmentOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class divideAssignmentOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
+        class simpleAssignmentOperation():
+            def __init__(self,OPERAND1,OPERAND2):
+                self.OPERAND1=OPERAND1
+                self.OPERAND2=OPERAND2
+
         class realNumber(): #Real numbers are just all floats, because screw having two different types
             def __init__(self,REAL):
                 self.REAL=REAL
@@ -125,6 +150,14 @@ def transpile(inputSource):
                 name+=source[i]
                 i+=1
             #print(name)
+            return name
+
+        def takename_before():
+            nonlocal i
+            nonlocal source
+            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_": #Goes back until there's no numerical/period character
+                i-=1
+            name=takename()
             return name
 
         def takevalue():
@@ -219,8 +252,71 @@ def transpile(inputSource):
                 if expect("("):
                     expressionBody.append(parseExpression())
                     expect(")")
-
             return expression(expressionBody)
+
+        def parseAdditionAssignment():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("+="):
+                OPERAND1=takename_before()
+                expect("+=")
+                OPERAND2=parseExpression()
+                return additionAssignmentOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+
+        def parseSubtractionAssignment():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("-="):
+                OPERAND1=takename_before()
+                expect("-=")
+                OPERAND2=parseExpression()
+                return subtractionAssignmentOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+
+        def parseMultiplicationAssignment():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("*="):
+                OPERAND1=takename_before()
+                expect("*=")
+                OPERAND2=parseExpression()
+                return multiplicationAssignmentOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+
+        def parseDivisionAssignment():
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0") #It should be possible for these to be expressions too
+            if expect("/="):
+                OPERAND1=takename_before()
+                expect("/=")
+                OPERAND2=parseExpression()
+                return divideAssignmentOperation(OPERAND1,OPERAND2)
+            else:
+                return None
+        def parseSimpleAssignment(): #Make sure to parse relative assignments before this like -=,+=,*= and /=
+            nonlocal i
+            nonlocal source
+            OPERAND1=realNumber("0.0")
+            OPERAND2=realNumber("0.0")
+            if expect("="):
+                OPERAND1=takename_before()
+                expect("=")
+                OPERAND2=parseExpression()
+                return simpleAssignmentOperation(OPERAND1,OPERAND2)
+            else:
+                return None
 
         def parseCodeBlock():
             nonlocal i
@@ -321,7 +417,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource)[0].BODY[1].BODY)
+print(transpile(latinSource))
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

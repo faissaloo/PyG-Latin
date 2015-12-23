@@ -119,7 +119,7 @@ def transpile(inputSource):
             def __init__(self,REAL):
                 self.REAL=REAL
 
-        def expect(string,required=False):
+        def expect(string,enforce=False):
             nonlocal i
             nonlocal source
             #print(source[i:i+len(string)],"=",string)
@@ -127,14 +127,14 @@ def transpile(inputSource):
                 i+=len(string)#Skip over the thing
                 return True
             else:
-                if required:
+                if enforce:
                     print("Error: Expected '"+string+"'")
                 return False
 
-        def expect_whitespace(throwError=False):
+        def expect_whitespace(enforce=False):
             nonlocal i
             nonlocal source
-            if source[i] not in " \t\n" and throwError:
+            if source[i] not in " \t\n" and enforce:
                 print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
@@ -142,7 +142,7 @@ def transpile(inputSource):
                     i+=1 #Skip over whitespace, for some reason this is going to far
                 return True
 
-        def takename():
+        def takename(enforce=False):
             nonlocal i
             nonlocal source
             name=""
@@ -150,14 +150,19 @@ def transpile(inputSource):
                 name+=source[i]
                 i+=1
             #print(name)
-            return name
+            if name!="":
+                return name
+            else:
+                if enforce:
+                    print("Error: Expected name")
+                return None #Just incase there's no name
 
         def takename_before():
             nonlocal i
             nonlocal source
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_": #Goes back until there's no numerical/period character
                 i-=1
-            name=takename()
+            name=takename(True)
             return name
 
         def takevalue():
@@ -318,29 +323,6 @@ def transpile(inputSource):
             else:
                 return None
 
-        def parseCodeBlock():
-            nonlocal i
-            nonlocal source
-            body=[]
-            line=""
-            if expect("{",True):
-                while source[i]!="}":
-                    i+=1
-                    ifcomp=parseIfStatement()
-                    event=parseEventDefinition()
-                    if ifcomp!=None:
-                        body.append(ifcomp)
-                    elif event!=None:
-                        body.append(event)
-                    elif expect("\n"):
-                        a=line
-                        body.append(a) #We need to figure out parsing for this
-                        line=""
-                    else:
-                        line+=source[i]
-                expect("}",True)
-            return body
-
         def parseIfStatement():
             nonlocal i
             nonlocal source
@@ -360,6 +342,32 @@ def transpile(inputSource):
                     return whileStatement(whileExpression,whileBody)
             else:
                 return None
+
+        def parseCodeBlock():
+            nonlocal i
+            nonlocal source
+            body=[]
+            line=""
+            if expect("{",True):
+                while source[i]!="}":
+                    i+=1
+                    whileloop=parseWhileStatement()
+                    ifcomp=parseIfStatement()
+                    event=parseEventDefinition()
+                    if whileloop!=None:
+                        body.append(whileloop)
+                    elif ifcomp!=None:
+                        body.append(ifcomp)
+                    elif event!=None:
+                        body.append(event)
+                    elif expect("\n"):
+                        a=line
+                        body.append(a) #We need to figure out parsing for this
+                        line=""
+                    else:
+                        line+=source[i]
+                expect("}",True)
+            return body
 
         def parseObjDefinition():
             nonlocal i

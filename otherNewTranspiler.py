@@ -253,11 +253,7 @@ def transpile(inputSource):
             expressionBody=[]
             while source[i] not in endOn: #It's stopping here when it needs to
                 i+=1
-                add=parseAddition()
-                sub=parseSubtraction()
-                mul=parseMultiplication()
-                div=parseDivision()
-                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction()]:
+                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
                     if ii!=None:
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
@@ -375,6 +371,22 @@ def transpile(inputSource):
                         line+=source[i]
                 expect("}",True)
             return body
+
+        def parseString():
+            nonlocal i
+            nonlocal source
+            STRING=""
+            if expect("\""):
+                while source[i]!="\"":
+                    i+=1
+                    STRING+=source[i]
+                expect("\"",True)
+            elif expect("\'"):
+                while source[i]!="\'":
+                    i+=1
+                    STRING+=source[i]
+                expect("\'",True)
+            return string(STRING)
 
         def parseObjDefinition():
             nonlocal i

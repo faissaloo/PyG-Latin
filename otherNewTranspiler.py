@@ -37,6 +37,7 @@ def transpile(inputSource):
     rawParsedData=[]
 
     def parse(source):
+        #Special case statements
         class objDefinition():
             def __init__(self,NAME,BODY):
                 self.NAME=NAME
@@ -52,6 +53,7 @@ def transpile(inputSource):
                 self.NAME=NAME
                 self.BODY=BODY
 
+        #General Statements
         class ifStatement():
             def __init__(self,EXPRESSION,BODY):
                 self.EXPRESSION=EXPRESSION
@@ -66,6 +68,7 @@ def transpile(inputSource):
                 self.EXPRESSION=EXPRESSION
                 self.BODY=BODY
 
+        #Maths stuff
         class expression():
             def __init__(self,BODY):
                 self.BODY=BODY
@@ -115,9 +118,18 @@ def transpile(inputSource):
                 self.OPERAND1=OPERAND1
                 self.OPERAND2=OPERAND2
 
+        #Datatypes
         class realNumber(): #Real numbers are just all floats, because screw having two different types
             def __init__(self,REAL):
                 self.REAL=REAL
+
+        class string():
+            def __init__(self,STRING):
+                self.STRING=STRING
+
+        class list():
+            def __init__(self,LIST):
+                self.LIST=LIST
 
         def expect(string,enforce=False):
             nonlocal i

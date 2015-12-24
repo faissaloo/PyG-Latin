@@ -62,7 +62,7 @@ def transpile(inputSource):
                 self.EXPRESSION=EXPRESSION
                 self.BODY=BODY
         class forStatement():
-            def __init__(self,STATEMENT,BODY):
+            def __init__(self,EXPRESSION,BODY):
                 self.EXPRESSION=EXPRESSION
                 self.BODY=BODY
 
@@ -235,24 +235,19 @@ def transpile(inputSource):
             else:
                 return None
 
-        def parseExpression():
+        def parseExpression(endOn="{"):
             nonlocal i
             nonlocal source
             expressionBody=[]
-            while source[i]!="{": #It's stopping here when it needs to
+            while source[i] not in endOn: #It's stopping here when it needs to
                 i+=1
                 add=parseAddition()
                 sub=parseSubtraction()
                 mul=parseMultiplication()
                 div=parseDivision()
-                if add!=None:
-                    expressionBody.append(add)
-                if sub!=None:
-                    expressionBody.append(sub)
-                if mul!=None:
-                    expressionBody.append(mul)
-                if div!=None:
-                    expressionBody.append(div)
+                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction()]:
+                    if ii!=None:
+                        expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
                 if expect("("):
                     expressionBody.append(parseExpression())
@@ -267,7 +262,7 @@ def transpile(inputSource):
             if expect("+="):
                 OPERAND1=takename_before()
                 expect("+=")
-                OPERAND2=parseExpression()
+                OPERAND2=parseExpression("{\n")
                 return additionAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
@@ -280,7 +275,7 @@ def transpile(inputSource):
             if expect("-="):
                 OPERAND1=takename_before()
                 expect("-=")
-                OPERAND2=parseExpression()
+                OPERAND2=parseExpression("{\n")
                 return subtractionAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
@@ -293,7 +288,7 @@ def transpile(inputSource):
             if expect("*="):
                 OPERAND1=takename_before()
                 expect("*=")
-                OPERAND2=parseExpression()
+                OPERAND2=parseExpression("{\n")
                 return multiplicationAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
@@ -306,7 +301,7 @@ def transpile(inputSource):
             if expect("/="):
                 OPERAND1=takename_before()
                 expect("/=")
-                OPERAND2=parseExpression()
+                OPERAND2=parseExpression("{\n")
                 return divideAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
@@ -318,7 +313,7 @@ def transpile(inputSource):
             if expect("="):
                 OPERAND1=takename_before()
                 expect("=")
-                OPERAND2=parseExpression()
+                OPERAND2=parseExpression("{\n")
                 return simpleAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
@@ -415,7 +410,7 @@ def transpile(inputSource):
                 line=""
             else:
                 line+=source[i]
-            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition()]:
+            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment()]:
                 if ii!=None:
                     rawParsedData.append(ii)
             i+=1
@@ -425,7 +420,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource))
+print(transpile(latinSource)[2])
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

@@ -174,6 +174,7 @@ def transpile(inputSource):
             nonlocal source
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_": #Goes back until there's no numerical/period character
                 i-=1
+            i+=1 #[Hackiness intensifies]
             name=takename(True)
             return name
 
@@ -268,7 +269,9 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect("+="):
+                i-=3 #This is
                 OPERAND1=takename_before()
+                i+=2 #A hacky fix and takename_before should be fixed
                 expect("+=")
                 OPERAND2=parseExpression("{\n")
                 return additionAssignmentOperation(OPERAND1,OPERAND2)
@@ -281,7 +284,9 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect("-="):
+                i-=3 #This is
                 OPERAND1=takename_before()
+                i+=2 #A hacky fix and takename_before should be fixed
                 expect("-=")
                 OPERAND2=parseExpression("{\n")
                 return subtractionAssignmentOperation(OPERAND1,OPERAND2)
@@ -294,7 +299,9 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect("*="):
+                i-=3 #This is
                 OPERAND1=takename_before()
+                i+=2 #A hacky fix and takename_before should be fixed
                 expect("*=")
                 OPERAND2=parseExpression("{\n")
                 return multiplicationAssignmentOperation(OPERAND1,OPERAND2)
@@ -307,7 +314,9 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0") #It should be possible for these to be expressions too
             if expect("/="):
+                i-=3 #This is
                 OPERAND1=takename_before()
+                i+=2 #A hacky fix and takename_before should be fixed
                 expect("/=")
                 OPERAND2=parseExpression("{\n")
                 return divideAssignmentOperation(OPERAND1,OPERAND2)
@@ -319,7 +328,9 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect("="):
+                i-=2 #This is
                 OPERAND1=takename_before()
+                i+=1 #A hacky fix and takename_before should be fixed
                 expect("=")
                 OPERAND2=parseExpression("{\n")
                 return simpleAssignmentOperation(OPERAND1,OPERAND2)
@@ -444,7 +455,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource)[2])
+print(transpile(latinSource))
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

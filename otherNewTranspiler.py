@@ -322,6 +322,7 @@ def transpile(inputSource):
                 return divideAssignmentOperation(OPERAND1,OPERAND2)
             else:
                 return None
+
         def parseSimpleAssignment(): #Make sure to parse relative assignments before this like -=,+=,*= and /=
             nonlocal i
             nonlocal source
@@ -392,12 +393,16 @@ def transpile(inputSource):
                     i+=1
                     STRING+=source[i]
                 expect("\"",True)
+                return string(STRING)
             elif expect("\'"):
                 while source[i]!="\'":
                     i+=1
                     STRING+=source[i]
                 expect("\'",True)
-            return string(STRING)
+                return string(STRING)
+            else:
+                return None
+
 
         def parseObjDefinition():
             nonlocal i

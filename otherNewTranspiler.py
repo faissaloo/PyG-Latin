@@ -252,7 +252,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             expressionBody=[]
-            while source[i] not in endOn: #It's stopping here when it needs to
+            while source[i] not in endOn and i<len(source)-1: #It's stopping here when it needs to
                 i+=1
                 for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
                     if ii!=None:
@@ -364,11 +364,12 @@ def transpile(inputSource):
             body=[]
             line=""
             if expect("{",True):
-                while source[i]!="}":
+                while source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
                     i+=1
                     whileloop=parseWhileStatement()
                     ifcomp=parseIfStatement()
                     event=parseEventDefinition()
+                    #expr=parseExpression("\n")
                     if whileloop!=None:
                         body.append(whileloop)
                     elif ifcomp!=None:

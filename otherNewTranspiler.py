@@ -271,7 +271,7 @@ def transpile(inputSource):
             if expect("+="):
                 i-=3 #This is
                 OPERAND1=takename_before()
-                i+=2 #A hacky fix and takename_before should be fixed
+                i+=1 #A hacky fix and takename_before should be fixed
                 expect("+=")
                 OPERAND2=parseExpression("{\n")
                 return additionAssignmentOperation(OPERAND1,OPERAND2)
@@ -286,7 +286,7 @@ def transpile(inputSource):
             if expect("-="):
                 i-=3 #This is
                 OPERAND1=takename_before()
-                i+=2 #A hacky fix and takename_before should be fixed
+                i+=1 #A hacky fix and takename_before should be fixed
                 expect("-=")
                 OPERAND2=parseExpression("{\n")
                 return subtractionAssignmentOperation(OPERAND1,OPERAND2)
@@ -301,7 +301,7 @@ def transpile(inputSource):
             if expect("*="):
                 i-=3 #This is
                 OPERAND1=takename_before()
-                i+=2 #A hacky fix and takename_before should be fixed
+                i+=1 #A hacky fix and takename_before should be fixed
                 expect("*=")
                 OPERAND2=parseExpression("{\n")
                 return multiplicationAssignmentOperation(OPERAND1,OPERAND2)
@@ -316,7 +316,7 @@ def transpile(inputSource):
             if expect("/="):
                 i-=3 #This is
                 OPERAND1=takename_before()
-                i+=2 #A hacky fix and takename_before should be fixed
+                i+=1 #A hacky fix and takename_before should be fixed
                 expect("/=")
                 OPERAND2=parseExpression("{\n")
                 return divideAssignmentOperation(OPERAND1,OPERAND2)

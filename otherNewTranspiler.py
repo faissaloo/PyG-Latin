@@ -393,6 +393,12 @@ def transpile(inputSource):
                 if expect(deliniator):
                     while source[i]!=deliniator:
                         i+=1
+                        #Escape the deliniator by handling it before looping back
+                        #To source[i]!=deliniator so it doesn't catch it
+                        #Using or because we don't want escape codes to only works
+                        #When using one deliniator
+                        if expect("\\") and (expect("\"") or expect("\'")):
+                            STRING+=deliniator
                         STRING+=source[i]
                     expect(deliniator,True)
                     return string(STRING)

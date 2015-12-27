@@ -388,21 +388,21 @@ def transpile(inputSource):
         def parseString():
             nonlocal i
             nonlocal source
-            STRING=""
-            if expect("\""):
-                while source[i]!="\"":
-                    i+=1
-                    STRING+=source[i]
-                expect("\"",True)
-                return string(STRING)
-            elif expect("\'"):
-                while source[i]!="\'":
-                    i+=1
-                    STRING+=source[i]
-                expect("\'",True)
-                return string(STRING)
-            else:
-                return None
+            def parseStringDeliniator(deliniator):
+                STRING=""
+                if expect(deliniator):
+                    while source[i]!=deliniator:
+                        i+=1
+                        STRING+=source[i]
+                    expect(deliniator,True)
+                    return string(STRING)
+                else:
+                    return None
+
+            for ii in [parseStringDeliniator("\""),parseStringDeliniator("\'")]:
+                if ii!=None:
+                    return ii
+
 
 
         def parseObjDefinition():

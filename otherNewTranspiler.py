@@ -193,6 +193,7 @@ def transpile(inputSource):
             nonlocal source
             while source[i] in "0123456789.": #Goes back until there's no numerical/period character
                 i-=1
+            i+=1
             value=takevalue()
             return value
 

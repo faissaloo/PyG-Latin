@@ -155,7 +155,7 @@ def transpile(inputSource):
                 print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
-                while source[i] in " \t\n":
+                while source[i] in " \t\n" and i<len(source)-1:
                     i+=1 #Skip over whitespace, for some reason this is going to far
                 return True
 
@@ -419,7 +419,6 @@ def transpile(inputSource):
         line=""
         #This is the root loop
         while i<len(source):
-            #After d13a312 room definitions are no longer showing up
             #Put all the other parse*() functions here
             for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseExpression()]:
                 if ii!=None:

@@ -387,12 +387,9 @@ def transpile(inputSource):
                     return string(STRING)
                 else:
                     return None
-
             for ii in [parseStringDeliniator("\""),parseStringDeliniator("\'")]:
                 if ii!=None:
                     return ii
-
-
 
         def parseObjDefinition():
             nonlocal i

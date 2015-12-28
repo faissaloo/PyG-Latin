@@ -69,6 +69,10 @@ def transpile(inputSource):
                 self.BODY=BODY
 
         #Maths stuff
+        class variable():
+            def __init__(self,VARIABLENAME):
+                self.VARIABLENAME=VARIABLENAME
+
         class expression():
             def __init__(self,BODY):
                 self.BODY=BODY
@@ -221,6 +225,16 @@ def transpile(inputSource):
             else:
                 return None
 
+        def parseVariable():
+            nonlocal i
+            nonlocal source
+            VARIABLENAME=takename()
+            if VARIABLENAME!=None:
+                print(VARIABLENAME)
+                return variable(VARIABLENAME)
+            else:
+                return None
+
         def parseAddition():
             nonlocal i
             nonlocal source
@@ -257,7 +271,7 @@ def transpile(inputSource):
             expressionBody=[]
             while source[i] not in endOn and i<len(source)-1: #It's stopping here when it needs to
                 i+=1
-                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
+                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString(),parseVariable()]:
                     if ii!=None:
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it

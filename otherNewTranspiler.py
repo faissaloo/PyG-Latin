@@ -230,7 +230,6 @@ def transpile(inputSource):
             nonlocal source
             VARIABLENAME=takename()
             if VARIABLENAME!=None:
-                print(VARIABLENAME)
                 return variable(VARIABLENAME)
             else:
                 return None

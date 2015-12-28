@@ -73,6 +73,11 @@ def transpile(inputSource):
             def __init__(self,BODY):
                 self.BODY=BODY
 
+        class function():
+            def __init__(self,FUNCTIONNAME,ARGUMENTS):
+                self.FUNCTIONNAME=FUNCTIONNAME
+                self.ARGUMENTS=ARGUMENTS #Arguments should be a list
+
         class additionOperation():
             def __init__(self,OPERAND1,OPERAND2):
                 self.OPERAND1=OPERAND1
@@ -178,7 +183,10 @@ def transpile(inputSource):
             i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
             i+=1
-            return name
+            if name!="":
+                return name
+            else:
+                return None
 
         def takevalue():
             nonlocal i
@@ -233,6 +241,16 @@ def transpile(inputSource):
             nonlocal source
             return handleOperation("/",divisionOperation)
 
+        def parseFunction():
+            nonlocal i
+            nonlocal source
+            FUNCTIONNAME=takename_before("(")
+            ARGUMENTS=[] #Need to add something to split the arguments by ,
+            if FUNCTIONNAME!=None:
+                return function(FUNCTIONNAME,ARGUMENTS)
+            else:
+                return None
+
         def parseExpression(endOn="{"):
             nonlocal i
             nonlocal source
@@ -244,7 +262,9 @@ def transpile(inputSource):
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
                 if expect("("):
-                    expressionBody.append(parseExpression())
+                    for ii in [parseFunction(),parseExpression()]:
+                        if ii!=None:
+                            expressionBody.append(ii)
                     expect(")")
             return expression(expressionBody)
 
@@ -399,6 +419,7 @@ def transpile(inputSource):
         line=""
         #This is the root loop
         while i<len(source):
+            #After d13a312 room definitions are no longer showing up
             #Put all the other parse*() functions here
             for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseExpression()]:
                 if ii!=None:

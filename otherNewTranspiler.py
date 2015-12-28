@@ -169,13 +169,15 @@ def transpile(inputSource):
                     print("Error: Expected name")
                 return None #Just incase there's no name
 
-        def takename_before():
+        def takename_before(operationString):
             nonlocal i
             nonlocal source
+            i-=len(operationString)+1
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_": #Goes back until there's no numerical/period character
                 i-=1
-            i+=1 #[Hackiness intensifies]
+            i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
+            i+=1
             return name
 
         def takevalue():
@@ -252,12 +254,10 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect(operationString):
-                i-=len(operationString)+1
                 #Takename before needs an argument for what the operationString is
                 #So that it can go as far back as it needs to and I don't have
                 #To deal with it
-                OPERAND1=takename_before()
-                i+=1 #A hacky fix and takename_before should be fixed
+                OPERAND1=takename_before(operationString)
                 expect(operationString)
                 OPERAND2=parseExpression("{\n")
                 return classToStoreIn(OPERAND1,OPERAND2)

@@ -246,80 +246,48 @@ def transpile(inputSource):
                     expect(")")
             return expression(expressionBody)
 
-        def parseAdditionAssignment():
+        def handleAssignment(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
-            if expect("+="):
-                i-=3 #This is
+            if expect(operationString):
+                i-=len(operationString)+1
+                #Takename before needs an argument for what the operationString is
+                #So that it can go as far back as it needs to and I don't have
+                #To deal with it
                 OPERAND1=takename_before()
                 i+=1 #A hacky fix and takename_before should be fixed
-                expect("+=")
+                expect(operationString)
                 OPERAND2=parseExpression("{\n")
-                return additionAssignmentOperation(OPERAND1,OPERAND2)
+                return classToStoreIn(OPERAND1,OPERAND2)
             else:
                 return None
+
+        def parseAdditionAssignment():
+            nonlocal i
+            nonlocal source
+            return handleAssignment("+=",additionAssignmentOperation)
 
         def parseSubtractionAssignment():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("-="):
-                i-=3 #This is
-                OPERAND1=takename_before()
-                i+=1 #A hacky fix and takename_before should be fixed
-                expect("-=")
-                OPERAND2=parseExpression("{\n")
-                return subtractionAssignmentOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleAssignment("-=",subtractionAssignmentOperation)
 
         def parseMultiplicationAssignment():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("*="):
-                i-=3 #This is
-                OPERAND1=takename_before()
-                i+=1 #A hacky fix and takename_before should be fixed
-                expect("*=")
-                OPERAND2=parseExpression("{\n")
-                return multiplicationAssignmentOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleAssignment("*=",multiplicationAssignmentOperation)
 
         def parseDivisionAssignment():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0") #It should be possible for these to be expressions too
-            if expect("/="):
-                i-=3 #This is
-                OPERAND1=takename_before()
-                i+=1 #A hacky fix and takename_before should be fixed
-                expect("/=")
-                OPERAND2=parseExpression("{\n")
-                return divideAssignmentOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleAssignment("/=",divideAssignmentOperation)
 
         def parseSimpleAssignment(): #Make sure to parse relative assignments before this like -=,+=,*= and /=
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("="):
-                i-=2 #This is
-                OPERAND1=takename_before()
-                i+=1 #A hacky fix and takename_before should be fixed
-                expect("=")
-                OPERAND2=parseExpression("{\n")
-                return simpleAssignmentOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleAssignment("=",simpleAssignmentOperation)
 
         def parseIfStatement():
             nonlocal i

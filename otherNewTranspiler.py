@@ -402,9 +402,9 @@ def transpile(inputSource):
         def parseRoomDefinition():
             nonlocal i
             nonlocal source
-            roomBody=""
+            expect_whitespace()
             #This is causing issues whenever room is in something else because it is being skipped over
-            if expect("room") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
+            if expect("room") and expect_whitespace(True):
                     roomName=takename()
                     expect_whitespace()
                     roomBody=parseCodeBlock()

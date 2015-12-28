@@ -400,12 +400,7 @@ def transpile(inputSource):
         #This is the root loop
         while i<len(source):
             #Put all the other parse*() functions here
-            if expect("\n"):
-                rawParsedData.append(line)
-                line=""
-            else:
-                line+=source[i]
-            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment()]:
+            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseExpression()]:
                 if ii!=None:
                     rawParsedData.append(ii)
             i+=1

@@ -197,57 +197,39 @@ def transpile(inputSource):
             value=takevalue()
             return value
 
-        def parseAddition():
+        #For handling things like "+" and "/" etc
+        def handleOperation(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
-            if expect("+"):
+            if expect(operationString):
                 OPERAND1=takevalue_beforeoperation()
-                expect("+")
+                expect(operationString)
                 OPERAND2=takevalue()
-                return additionOperation(OPERAND1,OPERAND2)
+                return classToStoreIn(OPERAND1,OPERAND2)
             else:
                 return None
+
+        def parseAddition():
+            nonlocal i
+            nonlocal source
+            return handleOperation("+",additionOperation)
 
         def parseSubtraction():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("-"):#This is reading -= and taking it as a subtraction, it should not be looking in the body of the if statement, why is it doing that?
-                OPERAND1=takevalue_beforeoperation()
-                expect("-")
-                OPERAND2=takevalue()
-                return subtractionOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleOperation("-",subtractionOperation)
 
         def parseMultiplication():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("*"):
-                OPERAND1=takevalue_beforeoperation()
-                expect("*")
-                OPERAND2=takevalue()
-                return additionOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleOperation("*",multiplicationOperation)
 
         def parseDivision():
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
-            if expect("/"):
-                OPERAND1=takevalue_beforeoperation()
-                expect("/")
-                OPERAND2=takevalue()
-                return subtractionOperation(OPERAND1,OPERAND2)
-            else:
-                return None
+            return handleOperation("/",divisionOperation)
 
         def parseExpression(endOn="{"):
             nonlocal i

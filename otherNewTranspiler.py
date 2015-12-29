@@ -156,7 +156,8 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             if source[i] not in " \t\n" and enforce:
-                print("Error: Expected whitespace, got "+source[i]+" instead")
+                if enforce:
+                    print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
                 while source[i] in " \t\n" and i<len(source)-1:
@@ -166,8 +167,9 @@ def transpile(inputSource):
         def expect_whitespacebefore(enforce=False):
             nonlocal i
             nonlocal source
-            if source[i] not in " \t\n" and enforce:
-                print("Error: Expected whitespace, got "+source[i]+" instead")
+            if source[i] not in " \t\n":
+                if enforce:
+                    print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
                 while source[i] in " \t\n" and i>0:

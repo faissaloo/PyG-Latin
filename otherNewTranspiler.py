@@ -216,9 +216,11 @@ def transpile(inputSource):
                 i+=1
             return realNumber(value)
 
-        def takevalue_beforeoperation():
+        def takevalue_beforeoperation(operationString):
             nonlocal i
             nonlocal source
+            i-=len(operationString)+1
+            expect_whitespacebefore()
             while source[i] in "0123456789.": #Goes back until there's no numerical/period character
                 i-=1
             i+=1
@@ -233,8 +235,7 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect(operationString):
-                expect_whitespacebefore()
-                OPERAND1=takevalue_beforeoperation()
+                OPERAND1=takevalue_beforeoperation(operationString)
                 expect(operationString)
                 expect_whitespace()
                 OPERAND2=takevalue()

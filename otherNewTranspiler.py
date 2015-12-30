@@ -214,7 +214,10 @@ def transpile(inputSource):
             while source[i] in "0123456789.":
                 value+=source[i]
                 i+=1
-            return realNumber(value)
+            if value!="":
+                return realNumber(value)
+            else:
+                return None
 
         def takevalue_beforeoperation(operationString):
             nonlocal i

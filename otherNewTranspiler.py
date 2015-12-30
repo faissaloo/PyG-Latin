@@ -215,7 +215,7 @@ def transpile(inputSource):
                 value+=source[i]
                 i+=1
             if value!="":
-                return realNumber(value)
+                return realNumber(float(value))
             else:
                 return None
 

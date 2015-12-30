@@ -286,7 +286,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             FUNCTIONNAME=takename_before("(")
-            ARGUMENTS=parseArguments() #Need to add something to split the arguments by ,
+            ARGUMENTS=parseArguments()
             if FUNCTIONNAME!=None:
                 return function(FUNCTIONNAME,ARGUMENTS)
             else:
@@ -296,7 +296,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             expressionBody=[]
-            while source[i] not in endOn and i<len(source)-1: #It's stopping here when it needs to
+            while i<len(source)-1 and source[i] not in endOn: #It's stopping here when it needs to
                 i+=1
                 for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString(),parseVariable()]:
                     if ii!=None:
@@ -378,7 +378,7 @@ def transpile(inputSource):
             body=[]
             line=""
             if expect("{",True):
-                while source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
+                while i<len(source)-1 and source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
                     i+=1
                     whileloop=parseWhileStatement()
                     ifcomp=parseIfStatement()
@@ -390,6 +390,9 @@ def transpile(inputSource):
                         body.append(ifcomp)
                     elif event!=None:
                         body.append(event)
+                    #elif expr!=None:
+                    #    print("YAY",expr.BODY)
+                    #    body.append(expr)
                     elif expect("\n"):
                         a=line
                         body.append(a) #We need to figure out parsing for this

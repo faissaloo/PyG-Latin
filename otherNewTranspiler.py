@@ -184,7 +184,7 @@ def transpile(inputSource):
                 name+=source[i]
                 i+=1
             #print(name)
-            if name!="":
+            if name!="" and not name.isdigit():
                 return name
             else:
                 if enforce:

@@ -6,7 +6,7 @@ obj player {
     }
     event step
     {
-        if 1+1
+        if 1 + 1
         {
             self.x-=1
         }

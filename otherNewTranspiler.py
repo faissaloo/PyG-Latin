@@ -200,6 +200,7 @@ def transpile(inputSource):
             i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
             i+=1
+            expect_whitespace()
             if name!="":
                 return name
             else:
@@ -222,6 +223,7 @@ def transpile(inputSource):
                 i-=1
             i+=1
             value=takevalue()
+            expect_whitespace()
             return value
 
         #For handling things like "+" and "/" etc
@@ -231,8 +233,10 @@ def transpile(inputSource):
             OPERAND1=realNumber("0.0")
             OPERAND2=realNumber("0.0")
             if expect(operationString):
+                expect_whitespacebefore()
                 OPERAND1=takevalue_beforeoperation()
                 expect(operationString)
+                expect_whitespace()
                 OPERAND2=takevalue()
                 return classToStoreIn(OPERAND1,OPERAND2)
             else:
@@ -303,8 +307,10 @@ def transpile(inputSource):
                 #Takename before needs an argument for what the operationString is
                 #So that it can go as far back as it needs to and I don't have
                 #To deal with it
+                expect_whitespacebefore()
                 OPERAND1=takename_before(operationString)
                 expect(operationString)
+                expect_whitespace()
                 OPERAND2=parseExpression("{\n")
                 return classToStoreIn(OPERAND1,OPERAND2)
             else:

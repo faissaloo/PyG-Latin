@@ -272,11 +272,21 @@ def transpile(inputSource):
             nonlocal source
             return handleOperation("/",divisionOperation)
 
+        def parseArguments():
+            nonlocal i
+            nonlocal source
+            argsBody=[]
+            argsBody.append(parseExpression("(),"))
+            while expect(","):
+                argsBody.append(parseExpression("(),"))
+            print(argsBody)
+            return argsBody
+
         def parseFunction():
             nonlocal i
             nonlocal source
             FUNCTIONNAME=takename_before("(")
-            ARGUMENTS=[] #Need to add something to split the arguments by ,
+            ARGUMENTS=parseArguments() #Need to add something to split the arguments by ,
             if FUNCTIONNAME!=None:
                 return function(FUNCTIONNAME,ARGUMENTS)
             else:

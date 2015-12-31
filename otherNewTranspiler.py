@@ -84,48 +84,39 @@ def transpile(inputSource):
 
         class additionOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class subtractionOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class multiplicationOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class divisionOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class additionAssignmentOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class subtractionAssignmentOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class multiplicationAssignmentOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class divideAssignmentOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         class simpleAssignmentOperation():
             def __init__(self,OPERAND1,OPERAND2):
-                self.OPERAND1=OPERAND1
-                self.OPERAND2=OPERAND2
+                self.OPERANDS=OPERAND1,OPERAND2
 
         #Datatypes
         class realNumber(): #Real numbers are just all floats, because screw having two different types
@@ -489,7 +480,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource)[0].BODY)
+print(transpile(latinSource))
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

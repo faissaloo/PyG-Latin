@@ -190,7 +190,6 @@ def transpile(inputSource):
                 i-=1
             i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
-            i+=1
             expect_whitespace()
             if name!="":
                 return name
@@ -314,6 +313,7 @@ def transpile(inputSource):
                 #To deal with it
                 expect_whitespacebefore()
                 OPERAND1=takename_before(operationString)
+                #print(source[i],operationString)
                 expect(operationString)
                 expect_whitespace()
                 OPERAND2=parseExpression("{\n")
@@ -384,7 +384,7 @@ def transpile(inputSource):
                     elif event!=None:
                         body.append(event)
                     #elif line!=None:
-                    #    print("YAY",line[0])
+                    #    print("YAY",line)
                     #    body.append(line)
                 expect("}",True)
             return body

@@ -282,7 +282,7 @@ def transpile(inputSource):
             argsBody.append(parseExpression("(),"))
             while expect(","):
                 argsBody.append(parseExpression("(),"))
-            print(argsBody)
+            #print(argsBody)
             return argsBody
 
         def parseFunction():
@@ -379,29 +379,22 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             body=[]
-            line=""
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
                     i+=1
                     whileloop=parseWhileStatement()
                     ifcomp=parseIfStatement()
                     event=parseEventDefinition()
-                    #expr=parseExpression("\n")
+                    #line=parseLine()
                     if whileloop!=None:
                         body.append(whileloop)
                     elif ifcomp!=None:
                         body.append(ifcomp)
                     elif event!=None:
                         body.append(event)
-                    #elif expr!=None:
-                    #    print("YAY",expr.BODY)
-                    #    body.append(expr)
-                    elif expect("\n"):
-                        a=line
-                        body.append(a) #We need to figure out parsing for this
-                        line=""
-                    else:
-                        line+=source[i]
+                    #elif line!=None:
+                    #    print("YAY",line[0])
+                    #    body.append(line)
                 expect("}",True)
             return body
 
@@ -460,10 +453,25 @@ def transpile(inputSource):
                     return roomDefinition(roomName,roomBody)
             else:
                 return None
+
         def parseLine():
             nonlocal i
             nonlocal source
-            pass
+            lineBody=[]
+            while i<len(source)-1 and source[i] not in "\n}":
+                i+=1
+                for ii in [parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
+                    if ii!=None:
+                        lineBody.append(ii)
+                if expect("("):
+                    for ii in [parseFunction(),parseExpression()]:
+                        if ii!=None:
+                            lineBody.append(ii)
+                    expect(")")
+            if lineBody!=[]:
+                return lineBody
+            else:
+                return None
         i=0
         line=""
         #This is the root loop
@@ -481,7 +489,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource))
+print(transpile(latinSource)[0].BODY)
 #Not yet fit for use
 #with open(outputFile,'w') as f:
 #    f.write(transpile(latinSource))

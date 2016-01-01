@@ -226,8 +226,8 @@ def transpile(inputSource):
         def handleOperation(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
+            OPERAND1=realNumber(0.0)
+            OPERAND2=realNumber(0.0)
             if expect(operationString):
                 OPERAND1=takevalue_beforeoperation(operationString)
                 expect(operationString)
@@ -311,8 +311,8 @@ def transpile(inputSource):
         def handleAssignment(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber("0.0")
-            OPERAND2=realNumber("0.0")
+            OPERAND1=realNumber(0.0)
+            OPERAND2=realNumber(0.0)
             if expect(operationString):
                 #Takename before needs an argument for what the operationString is
                 #So that it can go as far back as it needs to and I don't have

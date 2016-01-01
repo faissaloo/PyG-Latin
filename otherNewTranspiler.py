@@ -119,7 +119,8 @@ def transpile(inputSource):
                 self.OPERANDS=OPERAND1,OPERAND2
 
         #Datatypes
-        class realNumber(): #Real numbers are just all floats, because screw having two different types
+        #Real numbers are just all floats, because screw having two different types
+        class realNumber():
             def __init__(self,REAL):
                 self.REAL=REAL
 
@@ -134,7 +135,6 @@ def transpile(inputSource):
         def expect(string,enforce=False):
             nonlocal i
             nonlocal source
-            #print(source[i:i+len(string)],"=",string)
             if source[i:i+len(string)]==string:
                 i+=len(string)#Skip over the thing
                 return True
@@ -186,7 +186,8 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             i-=len(operationString)+1
-            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_": #Goes back until there's no numerical/period character
+            #Goes back until there's no alphanumeric or underscore character
+            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_":
                 i-=1
             i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
@@ -291,7 +292,12 @@ def transpile(inputSource):
             expressionBody=[]
             while i<len(source)-1 and source[i] not in endOn: #It's stopping here when it needs to
                 i+=1
-                for ii in [parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString(),parseVariable()]:
+                for ii in [parseDivision(),
+                    parseMultiplication(),
+                    parseAddition(),
+                    parseSubtraction(),
+                    parseString(),
+                    parseVariable()]:
                     if ii!=None:
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
@@ -313,7 +319,6 @@ def transpile(inputSource):
                 #To deal with it
                 expect_whitespacebefore()
                 OPERAND1=takename_before(operationString)
-                #print(source[i],operationString)
                 expect(operationString)
                 expect_whitespace()
                 OPERAND2=parseExpression("{\n")
@@ -349,7 +354,7 @@ def transpile(inputSource):
         def parseIfStatement():
             nonlocal i
             nonlocal source
-            if expect("if") and expect_whitespace(True): #This if statement is spilling, fix pls
+            if expect("if") and expect_whitespace(True):
                     ifExpression=parseExpression()
                     ifBody=parseCodeBlock()
                     return ifStatement(ifExpression,ifBody)
@@ -372,7 +377,7 @@ def transpile(inputSource):
             body=[]
             line=[]
             if expect("{",True):
-                while i<len(source)-1 and source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
+                while i<len(source)-1 and source[i]!="}":
                     i+=1
                     whileloop=parseWhileStatement()
                     ifcomp=parseIfStatement()
@@ -388,9 +393,6 @@ def transpile(inputSource):
                     #    if line!=None:
                     #        print("\n",line)
                     #        body.append(line)
-                    #elif line!=None:
-                    #    print("YAY",line)
-                    #    body.append(line)
                 expect("}",True)
             return body
 
@@ -431,7 +433,7 @@ def transpile(inputSource):
         def parseEventDefinition():
             nonlocal i
             nonlocal source
-            if expect("event") and expect_whitespace(True): #Nesting them because I need them in this specific order and I'm not sure how Python's parsing tree for logic statements works
+            if expect("event") and expect_whitespace(True):
                 eventName=takename()
                 expect_whitespace()
                 eventBody=parseCodeBlock()
@@ -457,7 +459,16 @@ def transpile(inputSource):
             if expect("\n"):
                 while i<len(source)-1 and source[i] not in "\n}":
                     i+=1
-                    for ii in [parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
+                    for ii in [parseDivisionAssignment(),
+                        parseMultiplicationAssignment(),
+                        parseAdditionAssignment(),
+                        parseSubtractionAssignment(),
+                        parseSimpleAssignment(),
+                        parseDivision(),
+                        parseMultiplication(),
+                        parseAddition(),
+                        parseSubtraction(),
+                        parseString()]:
                         if ii!=None:
                             lineBody.append(ii)
                     if expect("("):
@@ -478,7 +489,14 @@ def transpile(inputSource):
             #Put all the other parse*() functions here
             #Adding parseExpression() to the end of this for loop is unconditionally
             #appending it to rawParsedData, fix
-            for ii in [parseEventDefinition(),parseObjDefinition(),parseRoomDefinition(),parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment()]:
+            for ii in [parseEventDefinition(),
+                parseObjDefinition(),
+                parseRoomDefinition(),
+                parseDivisionAssignment(),
+                parseMultiplicationAssignment(),
+                parseAdditionAssignment(),
+                parseSubtractionAssignment(),
+                parseSimpleAssignment()]:
                 if ii!=None:
                     rawParsedData.append(ii)
             i+=1

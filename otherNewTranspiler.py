@@ -394,7 +394,10 @@ def transpile(inputSource):
                     #        print("\n",line)
                     #        body.append(line)
                 expect("}",True)
-            return body
+            if body!=[]:
+                return body
+            else:
+                return None
 
         def parseString():
             nonlocal i

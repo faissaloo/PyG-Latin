@@ -370,19 +370,24 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             body=[]
+            line=[]
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}": #This is causing issues when trying to parse lines, idk why tho
                     i+=1
                     whileloop=parseWhileStatement()
                     ifcomp=parseIfStatement()
                     event=parseEventDefinition()
-                    #line=parseLine()
                     if whileloop!=None:
                         body.append(whileloop)
                     elif ifcomp!=None:
                         body.append(ifcomp)
                     elif event!=None:
                         body.append(event)
+                    #else:
+                    #    line=parseLine()
+                    #    if line!=None:
+                    #        print("\n",line)
+                    #        body.append(line)
                     #elif line!=None:
                     #    print("YAY",line)
                     #    body.append(line)
@@ -449,18 +454,21 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             lineBody=[]
-            while i<len(source)-1 and source[i] not in "\n}":
-                i+=1
-                for ii in [parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
-                    if ii!=None:
-                        lineBody.append(ii)
-                if expect("("):
-                    for ii in [parseFunction(),parseExpression()]:
+            if expect("\n"):
+                while i<len(source)-1 and source[i] not in "\n}":
+                    i+=1
+                    for ii in [parseDivisionAssignment(),parseMultiplicationAssignment(),parseAdditionAssignment(),parseSubtractionAssignment(),parseSimpleAssignment(),parseDivision(),parseMultiplication(),parseAddition(),parseSubtraction(),parseString()]:
                         if ii!=None:
                             lineBody.append(ii)
-                    expect(")")
-            if lineBody!=[]:
-                return lineBody
+                    if expect("("):
+                        for ii in [parseFunction(),parseExpression()]:
+                            if ii!=None:
+                                lineBody.append(ii)
+                        expect(")")
+                if lineBody!=[]:
+                    return lineBody
+                else:
+                    return None
             else:
                 return None
         i=0

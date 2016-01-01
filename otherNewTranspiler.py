@@ -270,9 +270,9 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             argsBody=[]
-            argsBody.append(parseExpression("(),"))
+            argsBody.append(parseExpression("),"))
             while expect(","):
-                argsBody.append(parseExpression("(),"))
+                argsBody.append(parseExpression("),"))
             #print(argsBody)
             return argsBody
 

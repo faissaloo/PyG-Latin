@@ -379,15 +379,18 @@ def transpile(inputSource):
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
-                    whileloop=parseWhileStatement()
-                    ifcomp=parseIfStatement()
-                    event=parseEventDefinition()
-                    if whileloop!=None:
-                        body.append(whileloop)
-                    elif ifcomp!=None:
-                        body.append(ifcomp)
-                    elif event!=None:
-                        body.append(event)
+                    for ii in [parseWhileStatement(),
+                        parseIfStatement(),
+                        parseEventDefinition(),
+                        parseDivisionAssignment(),
+                        parseMultiplicationAssignment(),
+                        parseAdditionAssignment(),
+                        parseSubtractionAssignment(),
+                        parseString()
+                        #,parseFunction() #This is currently having problems
+                        ]:
+                        if ii!=None:
+                            body.append(ii)
                     #else:
                     #    line=parseLine()
                     #    if line!=None:
@@ -455,36 +458,6 @@ def transpile(inputSource):
             else:
                 return None
 
-        def parseLine():
-            nonlocal i
-            nonlocal source
-            lineBody=[]
-            if expect("\n"):
-                while i<len(source)-1 and source[i] not in "\n}":
-                    i+=1
-                    for ii in [parseDivisionAssignment(),
-                        parseMultiplicationAssignment(),
-                        parseAdditionAssignment(),
-                        parseSubtractionAssignment(),
-                        parseSimpleAssignment(),
-                        parseDivision(),
-                        parseMultiplication(),
-                        parseAddition(),
-                        parseSubtraction(),
-                        parseString()]:
-                        if ii!=None:
-                            lineBody.append(ii)
-                    if expect("("):
-                        for ii in [parseFunction(),parseExpression()]:
-                            if ii!=None:
-                                lineBody.append(ii)
-                        expect(")")
-                if lineBody!=[]:
-                    return lineBody
-                else:
-                    return None
-            else:
-                return None
         i=0
         line=""
         #This is the root loop

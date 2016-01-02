@@ -35,6 +35,9 @@ outputFile = args.outputFile
 latinSource = ""
 def transpile(inputSource):
     rawParsedData=[]
+    class codeBlock():
+        def __init__(self,BODY):
+            self.BODY=BODY
     #Special case statements
     class objDefinition():
         def __init__(self,NAME,BODY):
@@ -396,7 +399,7 @@ def transpile(inputSource):
                             body.append(ii)
                 expect("}",True)
             if body!=[]:
-                return body
+                return codeBlock(body)
             else:
                 return None
 

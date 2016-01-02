@@ -476,7 +476,13 @@ def transpile(inputSource):
             i+=1
         #Debug
         return rawParsedData
-    return parse(inputSource)
+
+    def transpileToPython(structure):
+        pythonCode=""
+        for i in structure:
+            pythonCode+=i.py3()
+
+    return transpileToPython(parse(inputSource))
 
 with open(inputFile,'r') as f:
     latinSource = f.read()

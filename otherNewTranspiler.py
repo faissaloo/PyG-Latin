@@ -35,35 +35,86 @@ outputFile = args.outputFile
 latinSource = ""
 def transpile(inputSource):
     rawParsedData=[]
+    currentTabulation=0
+    def getCorrectTabulation():
+        nonlocal currentTabulation
+        tabString=""
+        for i in range(currentTabulation+1):
+            tabString+="\t"
+        return tabString
+
     class codeBlock():
         def __init__(self,BODY):
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            #To do: Add code for handling tabulation
+            currentTabulation+=1
+            codeToReturn=""
+            for i in self.BODY:
+                codeToReturn+=getCorrectTabulation()+i.py3()+"\n"
+            currentTabulation-=1
+            return codeToReturn
     #Special case statements
     class objDefinition():
         def __init__(self,NAME,BODY):
             self.NAME=NAME
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
+            if self.BODY!=None:
+                codeToReturn+=self.BODY.py3()
+            return codeToReturn
 
     class eventDefinition():
         def __init__(self,TYPE,BODY):
             self.TYPE=TYPE
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            if self.TYPE!="create":
+                codeToReturn=getCorrectTabulation()+"def "+self.TYPE+"(self):"
+            else:
+                codeToReturn=getCorrectTabulation()+"def __init__(self):"
+            #Add your own code here
+            if self.BODY!=None:
+                codeToReturn+=self.BODY.py3()
+            return codeToReturn
 
     class roomDefinition():
         def __init__(self,NAME,BODY):
             self.NAME=NAME
             self.BODY=BODY
-
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
+            currentTabulation+=1
+            codeToReturn+=getCorrectTabulation()+"def __init__(self):\n"
+            codeToReturn+=self.BODY.py3()
+            codeToReturn+=getCorrectTabulation()+"instanceList=[]\n"
+            currentTabulation-=1
+            return codeToReturn
     #General Statements
     class ifStatement():
         def __init__(self,EXPRESSION,BODY):
             self.EXPRESSION=EXPRESSION
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+"if ("+self.EXPRESSION.py3()+"):\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
 
     class whileStatement():
         def __init__(self,EXPRESSION,BODY):
             self.EXPRESSION=EXPRESSION
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+"while ("+self.EXPRESSION.py3()+"):\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
     class forStatement():
         def __init__(self,EXPRESSION,BODY):
             self.EXPRESSION=EXPRESSION
@@ -73,65 +124,115 @@ def transpile(inputSource):
     class variable():
         def __init__(self,VARIABLENAME):
             self.VARIABLENAME=VARIABLENAME
+        def py3(self):
+            return self.VARIABLENAME
 
     class expression():
         def __init__(self,BODY):
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=""
+            for i in self.BODY:
+                codeToReturn+=i.py3()
+            return codeToReturn
 
     class function():
         def __init__(self,FUNCTIONNAME,ARGUMENTS):
             self.FUNCTIONNAME=FUNCTIONNAME
             self.ARGUMENTS=ARGUMENTS #Arguments should be a list
+        def py3(self):
+            return self.FUNCTIONNAME+"("+self.ARGUMENTS.py3()+")"
+
+    class arguments():
+        def __init__(self,ARGUMENTS):
+            self.ARGUMENTS=ARGUMENTS
+        def py3(self):
+            codeToReturn=""
+            for i in range(len(self.ARGUMENTS)):
+                codeToReturn+=self.ARGUMENTS[i].py3()
+                if i!=len(self.ARGUMENTS)-1:
+                    codeToReturn+=","
+            return codeToReturn
 
     class additionOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0].py3()+"+"+self.OPERANDS[1].py3()
 
     class subtractionOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0].py3()+"-"+self.OPERANDS[1].py3()
 
     class multiplicationOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0].py3()+"*"+self.OPERANDS[1].py3()
 
     class divisionOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0].py3()+"/"+self.OPERANDS[1].py3()
 
     class additionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0]+"+="+self.OPERANDS[1].py3()
 
     class subtractionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0]+"-="+self.OPERANDS[1].py3()
 
     class multiplicationAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0]+"*="+self.OPERANDS[1].py3()
 
     class divideAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0]+"/="+self.OPERANDS[1].py3()
 
     class simpleAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
+        def py3(self):
+            return self.OPERANDS[0]+"="+self.OPERANDS[1].py3()
 
     #Datatypes
     #Real numbers are just all floats, because screw having two different types
     class realNumber():
         def __init__(self,REAL):
             self.REAL=REAL
+        def py3(self):
+            return str(self.REAL)
 
     class string():
         def __init__(self,STRING):
             self.STRING=STRING
+        def py3(self):
+            return '"'+self.STRING+'"'
 
     class list():
         def __init__(self,LIST):
             self.LIST=LIST
+        def py3(self):
+            codeToReturn="["
+            for i in range(len(self.LIST)):
+                codeToReturn+=self.LIST[i].py3()
+                if i!=len(self.LIST)-1:
+                    codeToReturn+=","
+            codeToReturn+="]"
     def parse(source):
 
 
@@ -277,7 +378,7 @@ def transpile(inputSource):
             while expect(","):
                 argsBody.append(parseExpression("),"))
             #print(argsBody)
-            return argsBody
+            return arguments(argsBody)
 
         def parseFunction():
             nonlocal i
@@ -484,7 +585,7 @@ def transpile(inputSource):
         pythonCode=""
         for i in structure:
             pythonCode+=i.py3()
-
+        return pythonCode
     return transpileToPython(parse(inputSource))
 
 with open(inputFile,'r') as f:

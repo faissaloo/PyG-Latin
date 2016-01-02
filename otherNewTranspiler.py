@@ -279,10 +279,13 @@ def transpile(inputSource):
         def parseFunction():
             nonlocal i
             nonlocal source
-            FUNCTIONNAME=takename_before("(")
-            ARGUMENTS=parseArguments()
-            if FUNCTIONNAME!=None:
-                return function(FUNCTIONNAME,ARGUMENTS)
+            if expect("("):
+                FUNCTIONNAME=takename_before("(")
+                ARGUMENTS=parseArguments()
+                if FUNCTIONNAME!=None:
+                    return function(FUNCTIONNAME,ARGUMENTS)
+                else:
+                    return None
             else:
                 return None
 
@@ -386,16 +389,11 @@ def transpile(inputSource):
                         parseMultiplicationAssignment(),
                         parseAdditionAssignment(),
                         parseSubtractionAssignment(),
-                        parseString()
-                        #,parseFunction() #This is currently having problems
+                        parseString(),
+                        parseFunction() #This is currently having problems
                         ]:
                         if ii!=None:
                             body.append(ii)
-                    #else:
-                    #    line=parseLine()
-                    #    if line!=None:
-                    #        print("\n",line)
-                    #        body.append(line)
                 expect("}",True)
             if body!=[]:
                 return body

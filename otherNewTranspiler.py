@@ -35,102 +35,102 @@ outputFile = args.outputFile
 latinSource = ""
 def transpile(inputSource):
     rawParsedData=[]
+    #Special case statements
+    class objDefinition():
+        def __init__(self,NAME,BODY):
+            self.NAME=NAME
+            self.BODY=BODY
 
+    class eventDefinition():
+        def __init__(self,TYPE,BODY):
+            self.TYPE=TYPE
+            self.BODY=BODY
+
+    class roomDefinition():
+        def __init__(self,NAME,BODY):
+            self.NAME=NAME
+            self.BODY=BODY
+
+    #General Statements
+    class ifStatement():
+        def __init__(self,EXPRESSION,BODY):
+            self.EXPRESSION=EXPRESSION
+            self.BODY=BODY
+
+    class whileStatement():
+        def __init__(self,EXPRESSION,BODY):
+            self.EXPRESSION=EXPRESSION
+            self.BODY=BODY
+    class forStatement():
+        def __init__(self,EXPRESSION,BODY):
+            self.EXPRESSION=EXPRESSION
+            self.BODY=BODY
+
+    #Maths stuff
+    class variable():
+        def __init__(self,VARIABLENAME):
+            self.VARIABLENAME=VARIABLENAME
+
+    class expression():
+        def __init__(self,BODY):
+            self.BODY=BODY
+
+    class function():
+        def __init__(self,FUNCTIONNAME,ARGUMENTS):
+            self.FUNCTIONNAME=FUNCTIONNAME
+            self.ARGUMENTS=ARGUMENTS #Arguments should be a list
+
+    class additionOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class subtractionOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class multiplicationOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class divisionOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class additionAssignmentOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class subtractionAssignmentOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class multiplicationAssignmentOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class divideAssignmentOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    class simpleAssignmentOperation():
+        def __init__(self,OPERAND1,OPERAND2):
+            self.OPERANDS=OPERAND1,OPERAND2
+
+    #Datatypes
+    #Real numbers are just all floats, because screw having two different types
+    class realNumber():
+        def __init__(self,REAL):
+            self.REAL=REAL
+
+    class string():
+        def __init__(self,STRING):
+            self.STRING=STRING
+
+    class list():
+        def __init__(self,LIST):
+            self.LIST=LIST
     def parse(source):
-        #Special case statements
-        class objDefinition():
-            def __init__(self,NAME,BODY):
-                self.NAME=NAME
-                self.BODY=BODY
 
-        class eventDefinition():
-            def __init__(self,TYPE,BODY):
-                self.TYPE=TYPE
-                self.BODY=BODY
-
-        class roomDefinition():
-            def __init__(self,NAME,BODY):
-                self.NAME=NAME
-                self.BODY=BODY
-
-        #General Statements
-        class ifStatement():
-            def __init__(self,EXPRESSION,BODY):
-                self.EXPRESSION=EXPRESSION
-                self.BODY=BODY
-
-        class whileStatement():
-            def __init__(self,EXPRESSION,BODY):
-                self.EXPRESSION=EXPRESSION
-                self.BODY=BODY
-        class forStatement():
-            def __init__(self,EXPRESSION,BODY):
-                self.EXPRESSION=EXPRESSION
-                self.BODY=BODY
-
-        #Maths stuff
-        class variable():
-            def __init__(self,VARIABLENAME):
-                self.VARIABLENAME=VARIABLENAME
-
-        class expression():
-            def __init__(self,BODY):
-                self.BODY=BODY
-
-        class function():
-            def __init__(self,FUNCTIONNAME,ARGUMENTS):
-                self.FUNCTIONNAME=FUNCTIONNAME
-                self.ARGUMENTS=ARGUMENTS #Arguments should be a list
-
-        class additionOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class subtractionOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class multiplicationOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class divisionOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class additionAssignmentOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class subtractionAssignmentOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class multiplicationAssignmentOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class divideAssignmentOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        class simpleAssignmentOperation():
-            def __init__(self,OPERAND1,OPERAND2):
-                self.OPERANDS=OPERAND1,OPERAND2
-
-        #Datatypes
-        #Real numbers are just all floats, because screw having two different types
-        class realNumber():
-            def __init__(self,REAL):
-                self.REAL=REAL
-
-        class string():
-            def __init__(self,STRING):
-                self.STRING=STRING
-
-        class list():
-            def __init__(self,LIST):
-                self.LIST=LIST
 
         def expect(string,enforce=False):
             nonlocal i

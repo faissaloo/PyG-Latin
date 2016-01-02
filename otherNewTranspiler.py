@@ -39,8 +39,9 @@ def transpile(inputSource):
     def getCorrectTabulation():
         nonlocal currentTabulation
         tabString=""
-        for i in range(currentTabulation+1):
+        for i in range(currentTabulation):
             tabString+="\t"
+        #print(tabString.replace("\t","\ta"))
         return tabString
 
     class codeBlock():
@@ -65,6 +66,10 @@ def transpile(inputSource):
             codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
             if self.BODY!=None:
                 codeToReturn+=self.BODY.py3()
+            else:
+                currentTabulation+=1
+                codeToReturn+=getCorrectTabulation()+"pass"
+                currentTabulation-=1
             return codeToReturn
 
     class eventDefinition():
@@ -74,12 +79,16 @@ def transpile(inputSource):
         def py3(self):
             nonlocal currentTabulation
             if self.TYPE!="create":
-                codeToReturn=getCorrectTabulation()+"def "+self.TYPE+"(self):"
+                codeToReturn=getCorrectTabulation()+"def "+self.TYPE+"(self):\n"
             else:
-                codeToReturn=getCorrectTabulation()+"def __init__(self):"
+                codeToReturn=getCorrectTabulation()+"def __init__(self):\n"
             #Add your own code here
             if self.BODY!=None:
                 codeToReturn+=self.BODY.py3()
+            else:
+                currentTabulation+=1
+                codeToReturn+=getCorrectTabulation()+"pass"
+                currentTabulation-=1
             return codeToReturn
 
     class roomDefinition():
@@ -92,8 +101,9 @@ def transpile(inputSource):
             currentTabulation+=1
             codeToReturn+=getCorrectTabulation()+"def __init__(self):\n"
             codeToReturn+=self.BODY.py3()
+            currentTabulation+=1
             codeToReturn+=getCorrectTabulation()+"instanceList=[]\n"
-            currentTabulation-=1
+            currentTabulation-=2
             return codeToReturn
     #General Statements
     class ifStatement():
@@ -103,7 +113,7 @@ def transpile(inputSource):
         def py3(self):
             nonlocal currentTabulation
             codeToReturn=getCorrectTabulation()+"if ("+self.EXPRESSION.py3()+"):\n"
-            codeToReturn+=self.BODY.py3()
+            codeToReturn+=getCorrectTabulation()+self.BODY.py3()
             return codeToReturn
 
     class whileStatement():

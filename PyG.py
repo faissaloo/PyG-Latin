@@ -76,7 +76,7 @@ def keyboard_check(key):
 
 def keyboard_check_pressed(key):
     global keyboard_lastkey
-    if (keyboard_lastkey==key):
+    if (keyboard_lastkey==int(key)):
         keyboard_lastkey=-1
         return True
     else:

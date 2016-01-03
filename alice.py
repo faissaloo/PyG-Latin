@@ -520,6 +520,8 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             def parseStringDeliniator(deliniator):
+                nonlocal i
+                nonlocal source
                 STRING=""
                 if expect(deliniator):
                     while source[i]!=deliniator:

@@ -38,11 +38,7 @@ def transpile(inputSource):
     currentTabulation=0
     def getCorrectTabulation():
         nonlocal currentTabulation
-        tabString=""
-        for i in range(currentTabulation):
-            tabString+="\t"
-        #print(tabString.replace("\t","\ta"))
-        return tabString
+        return "\t"*currentTabulation
 
     class codeBlock():
         def __init__(self,BODY):

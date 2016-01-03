@@ -389,6 +389,7 @@ def transpile(inputSource):
             nonlocal source
             if expect("("):
                 FUNCTIONNAME=takename_before("(")
+                expect("(")
                 ARGUMENTS=parseArguments()
                 if FUNCTIONNAME!=None:
                     return function(FUNCTIONNAME,ARGUMENTS)

@@ -593,9 +593,10 @@ def transpile(inputSource):
         return rawParsedData
 
     def transpileToPython(structure):
-        pythonCode=""
+        pythonCode="#!/usr/bin/env python3\nfrom PyG import *\n"
         for i in structure:
             pythonCode+=i.py3()
+        pythonCode+="\ngame_init()\ngame_main()"
         return pythonCode
     return transpileToPython(parse(inputSource))
 

@@ -6,7 +6,8 @@ obj player {
     }
     event step
     {
-        if 1 + 1
+
+        if keyboard_check_pressed(97)
         {
             self.x-=1
         }
@@ -14,6 +15,15 @@ obj player {
         {
             self.x+=1
         }
+        if keyboard_check_pressed(119)
+        {
+            self.y-=1
+        }
+        if keyboard_check_pressed(115)
+        {
+            self.y+=1
+        }
+
     }
     event draw
     {

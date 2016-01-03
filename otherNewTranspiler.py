@@ -409,12 +409,11 @@ def transpile(inputSource):
                     parseMultiplication(),
                     parseAddition(),
                     parseSubtraction(),
-                    parseString(),
-                    parseVariable()]:
+                    parseString()]:
                     if ii!=None:
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
-                if expect("("):
+                if source[i]=="(":
                     for ii in [parseFunction(),parseExpression()]:
                         if ii!=None:
                             expressionBody.append(ii)

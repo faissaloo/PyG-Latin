@@ -17,6 +17,7 @@ obj player {
     }
     event draw
     {
+        a=1
         draw_point(y,x)
     }
 }

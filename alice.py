@@ -504,6 +504,7 @@ def transpile(inputSource):
                         parseMultiplicationAssignment(),
                         parseAdditionAssignment(),
                         parseSubtractionAssignment(),
+                        parseSimpleAssignment(),
                         parseString(),
                         parseFunction() #This is currently having problems
                         ]:
@@ -588,7 +589,6 @@ def transpile(inputSource):
                 if ii!=None:
                     rawParsedData.append(ii)
             i+=1
-        #Debug
         return rawParsedData
 
     def transpileToPython(structure):
@@ -601,5 +601,7 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
+a=transpile(latinSource)
+print(a)
 with open(outputFile,'w') as f:
-    f.write(transpile(latinSource))
+    f.write(a)

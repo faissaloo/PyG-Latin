@@ -401,6 +401,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             expressionBody=[]
+            start=i
             while i<len(source)-1 and source[i] not in endOn: #It's stopping here when it needs to
                 i+=1
                 for ii in [parseDivision(),
@@ -417,6 +418,12 @@ def transpile(inputSource):
                         if ii!=None:
                             expressionBody.append(ii)
                     expect(")")
+            #If nothing is found assume there is this simple value
+            if expressionBody==[]:
+                i=start
+                for ii in [takevalue(),parseVariable()]:
+                    if ii!=None:
+                        expressionBody.append(ii)
             return expression(expressionBody)
 
         def handleAssignment(operationString,classToStoreIn):

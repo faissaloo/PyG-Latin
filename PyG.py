@@ -155,7 +155,7 @@ def instance_destroy():
 #Room handling functions
 def room_goto(room):
     global current_room
-    current_room=room
+    current_room=room()
 
 def game_init():
     start_keyboard_thread()

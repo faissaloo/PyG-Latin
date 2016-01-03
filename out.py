@@ -25,6 +25,6 @@ class rm1():
 		room_height=88.0
 		instance_create(10.0,10.0,player)
 		instanceList=[]
-current_room=rm1
+current_room=rm1()
 game_init()
 game_main()

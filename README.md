@@ -46,20 +46,6 @@ or
 ```
 room_goto(<ROOMNAME>)
 ```
-Note: If you do the following:
-```
-obj <OBJECTNAME>
-{
-
-}
-```
-instead of:
-```
-obj <OBJECTNAME> {
-
-}
-```
-It will cause an error in indentation when transpiling to Python. This is unintentional and should be fixed in future. This also applies to room definitions
 
 In addition to the normal Python functions, the following functions are added by the PyG library:
 * sleep(float seconds)

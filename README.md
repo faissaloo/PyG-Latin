@@ -1,12 +1,12 @@
 PyG-Latin is an object oriented programming language intended for creating games that use the curses library.
 The way it works is loosely based on the Enigma Game Maker in that it uses a library to implement
 custom functions but keeps most of the syntax of the language it's transpiling to (obviously, with a bit of modification).
-The language itself is based on GML
+The language itself is based on GML.
 
 
 In this repo you will 3 things:
-1. The Python library which implements the engine, this is called PyG
-2. The transpiler for the language
+1. The Python library which implements the engine functionality, this is called PyG.py
+2. The transpiler for the language, this is called alice.py
 3. Small games with which to test compilation and functionality
 
 An object is structured like so:

@@ -116,6 +116,26 @@ def transpile(inputSource):
             codeToReturn+=self.BODY.py3()
             return codeToReturn
 
+    class elseifStatement():
+        def __init__(self,EXPRESSION,BODY):
+            self.EXPRESSION=EXPRESSION
+            self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn="elif ("+self.EXPRESSION.py3()+"):\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
+
+    class elseStatement():
+        def __init__(self,EXPRESSION,BODY):
+            self.EXPRESSION=EXPRESSION
+            self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn="else:\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
+
     class whileStatement():
         def __init__(self,EXPRESSION,BODY):
             self.EXPRESSION=EXPRESSION
@@ -487,6 +507,20 @@ def transpile(inputSource):
             else:
                 return None
 
+        def parseElseIfStatement():
+            nonlocal i
+            nonlocal source
+            if expect("else") and expect_whitespace(True):
+                    if expect("if") and expect_whitespace(True):
+                        elseifExpression=parseExpression()
+                        elseifBody=parseCodeBlock()
+                        return elseifStatement(elseifExpression,elseifBody)
+                    else:
+                        elseBody=parseCodeBlock()
+                        return elseStatement(elseBody)
+            else:
+                return None
+
         def parseWhileStatement():
             nonlocal i
             nonlocal source
@@ -505,7 +539,8 @@ def transpile(inputSource):
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
-                    for ii in [parseWhileStatement(),
+                    for ii in [parseElseIfStatement(),
+                        parseWhileStatement(),
                         parseIfStatement(),
                         parseEventDefinition(),
                         parseDivisionAssignment(),

@@ -10,13 +10,13 @@ class player():
 		if (keyboard_check_pressed(97.0)):
 			self.x-=1.0
 
-		if (keyboard_check_pressed(100.0)):
+		elif (keyboard_check_pressed(100.0)):
 			self.x+=1.0
 
-		if (keyboard_check_pressed(119.0)):
+		elif (keyboard_check_pressed(119.0)):
 			self.y-=1.0
 
-		if (keyboard_check_pressed(115.0)):
+		elif (keyboard_check_pressed(115.0)):
 			self.y+=1.0
 
 

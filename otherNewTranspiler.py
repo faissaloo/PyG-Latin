@@ -75,9 +75,9 @@ def transpile(inputSource):
         def py3(self):
             nonlocal currentTabulation
             if self.TYPE!="create":
-                codeToReturn=getCorrectTabulation()+"def "+self.TYPE+"(self):\n"
+                codeToReturn="def "+self.TYPE+"(self):\n"
             else:
-                codeToReturn=getCorrectTabulation()+"def __init__(self):\n"
+                codeToReturn="def __init__(self):\n"
             #Add your own code here
             if self.BODY!=None:
                 codeToReturn+=self.BODY.py3()
@@ -93,7 +93,7 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
+            codeToReturn="class "+self.NAME+"():\n"
             currentTabulation+=1
             codeToReturn+=getCorrectTabulation()+"def __init__(self):\n"
             codeToReturn+=self.BODY.py3()
@@ -108,8 +108,8 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            codeToReturn=getCorrectTabulation()+"if ("+self.EXPRESSION.py3()+"):\n"
-            codeToReturn+=getCorrectTabulation()+self.BODY.py3()
+            codeToReturn="if ("+self.EXPRESSION.py3()+"):\n"
+            codeToReturn+=self.BODY.py3()
             return codeToReturn
 
     class whileStatement():

@@ -27,4 +27,4 @@ room rm1 {
     room_height=88
     instance_create(10,10,player)
 }
-current_rm=rm1
+current_room=rm1

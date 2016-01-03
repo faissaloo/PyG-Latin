@@ -562,7 +562,6 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             expect_whitespace()
-            #This is causing issues whenever room is in something else because it is being skipped over
             if expect("room") and expect_whitespace(True):
                     roomName=takename()
                     expect_whitespace()

@@ -601,7 +601,5 @@ def transpile(inputSource):
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-print(transpile(latinSource))
-#Not yet fit for use
-#with open(outputFile,'w') as f:
-#    f.write(transpile(latinSource))
+with open(outputFile,'w') as f:
+    f.write(transpile(latinSource))

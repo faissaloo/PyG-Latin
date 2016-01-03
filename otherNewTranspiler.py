@@ -240,8 +240,6 @@ def transpile(inputSource):
                     codeToReturn+=","
             codeToReturn+="]"
     def parse(source):
-
-
         def expect(string,enforce=False):
             nonlocal i
             nonlocal source

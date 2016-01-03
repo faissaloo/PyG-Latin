@@ -3,20 +3,20 @@
 from PyG import *
 class player():
 	def __init__(self):
-		y=0.0
-		x=0.0
+		self.y=0.0
+		self.x=0.0
 
 	def step(self):
 		if (1.0+1.0):
-			x-=1.0
+			self.x-=1.0
 
 		if (keyboard_check_pressed(100.0)):
-			x+=1.0
+			self.x+=1.0
 
 
 	def draw(self):
 		a=1.0
-		draw_point(y,x)
+		draw_point(self.y,self.x)
 
 class rm1():
 	def __init__(self):

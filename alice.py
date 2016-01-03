@@ -40,6 +40,10 @@ def transpile(inputSource):
         nonlocal currentTabulation
         return "\t"*currentTabulation
 
+    class itemClass():
+        def __init__(self,NAME):
+            self.NAME=NAME
+
     class codeBlock():
         def __init__(self,BODY):
             self.BODY=BODY
@@ -279,7 +283,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             name=""
-            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_":
+            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.":
                 name+=source[i]
                 i+=1
             #print(name)
@@ -294,14 +298,18 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             i-=len(operationString)+1
+            itemOfClass=""
             #Goes back until there's no alphanumeric or underscore character
-            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_":
+            while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.":
                 i-=1
             i+=1 #Go 1 position forward because it goes 1 over
             name=takename(True)
             expect_whitespace()
             if name!="":
-                return name
+                if itemOfClass!="":
+                    return itemOfClass+"."+name
+                else:
+                    return name
             else:
                 return None
 

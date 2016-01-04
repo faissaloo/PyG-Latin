@@ -619,13 +619,13 @@ def transpile(inputSource):
         i=0
         line=""
         #This is the root loop
-        while i<len(source):
+        while i<len(source)-1:
             #Put all the other parse*() functions here
             #Adding parseExpression() to the end of this for loop is unconditionally
             #appending it to rawParsedData, fix
-            for ii in [parseEventDefinition(),
+            for ii in [parseRoomDefinition(),
+                parseEventDefinition(),
                 parseObjDefinition(),
-                parseRoomDefinition(),
                 parseDivisionAssignment(),
                 parseMultiplicationAssignment(),
                 parseAdditionAssignment(),

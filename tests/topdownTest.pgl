@@ -1,4 +1,5 @@
-obj player {
+obj player
+{
     event create
     {
         self.y=0
@@ -27,11 +28,17 @@ obj player {
     }
     event draw
     {
-        a=1
         draw_point(self.y,self.x)
     }
 }
 
+obj ctrl
+{
+  event draw
+  {
+    draw_text(10,10)
+  }
+}
 room rm1 {
     room_speed=60
     room_width=24

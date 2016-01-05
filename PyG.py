@@ -27,7 +27,7 @@
 from time import sleep
 import curses
 from threading import Thread
-import random
+from random import *
 from math import *
 
 

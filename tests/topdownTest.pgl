@@ -32,6 +32,40 @@ obj player
     }
 }
 
+obj mobTest
+{
+    event create
+    {
+        self.y=0
+        self.x=0
+    }
+    event step
+    {
+
+        if randrange(0,2)
+        {
+            self.x-=1
+        }
+        if randrange(0,2)
+        {
+            self.x+=1
+        }
+        if randrange(0,2)
+        {
+            self.y-=1
+        }
+        if randrange(0,2)
+        {
+            self.y+=1
+        }
+
+    }
+    event draw
+    {
+        draw_point(self.y,self.x)
+    }
+}
+
 obj ctrl
 {
   event draw
@@ -45,5 +79,6 @@ room rm1 {
     room_height=88
     instance_create(10,10,player)
     instance_create(3,4,ctrl)
+    instance_create(20,20,mobTest)
 }
 current_room=rm1()

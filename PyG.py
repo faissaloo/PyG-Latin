@@ -165,7 +165,9 @@ def game_main():
         sleep(1/current_room.room_speed)
         #Draw
         for i in current_room.instanceList:
-            i.draw()
+            if hasattr(i, 'draw'):
+                i.draw()
         for i in current_room.instanceList:
-            i.step()
+            if hasattr(i, 'step'):
+                i.step()
         redraw()

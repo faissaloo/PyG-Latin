@@ -189,25 +189,25 @@ def transpile(inputSource):
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0].py3()+"+"+self.OPERANDS[1].py3()
+            return "("+self.OPERANDS[0].py3()+")+("+self.OPERANDS[1].py3()+")"
 
     class subtractionOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0].py3()+"-"+self.OPERANDS[1].py3()
+            return "("+self.OPERANDS[0].py3()+")-("+self.OPERANDS[1].py3()+")"
 
     class multiplicationOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0].py3()+"*"+self.OPERANDS[1].py3()
+            return "("+self.OPERANDS[0].py3()+")*("+self.OPERANDS[1].py3()+")"
 
     class divisionOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0].py3()+"/"+self.OPERANDS[1].py3()
+            return "("+self.OPERANDS[0].py3()+")/("+self.OPERANDS[1].py3()+")"
 
     class additionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
@@ -366,9 +366,13 @@ def transpile(inputSource):
             OPERAND2=realNumber(0.0)
             if expect(operationString):
                 OPERAND1=takevalue_beforeoperation(operationString)
+                #Add a parseExpressionBefore function and put it here
                 expect(operationString)
                 expect_whitespace()
-                OPERAND2=takevalue()
+                OPERAND2=parseExpression("\n")
+                #Add a check incase the OPERANDS aren't reals but instead
+                #A function or expression
+
                 return classToStoreIn(OPERAND1,OPERAND2)
             else:
                 return None

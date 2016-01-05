@@ -436,8 +436,7 @@ def transpile(inputSource):
                 for ii in [parseDivision(),
                     parseMultiplication(),
                     parseAddition(),
-                    parseSubtraction(),
-                    parseString()]:
+                    parseSubtraction()]:
                     if ii!=None:
                         expressionBody.append(ii)
                 #Add something to interpret functions here pls so that the expression parser doesn't get it
@@ -449,7 +448,7 @@ def transpile(inputSource):
             #If nothing is found assume there is this simple value
             if expressionBody==[]:
                 i=start
-                for ii in [takevalue(),parseVariable()]:
+                for ii in [takevalue(),parseVariable(),parseString()]:
                     if ii!=None:
                         expressionBody.append(ii)
             return expression(expressionBody)
@@ -538,7 +537,7 @@ def transpile(inputSource):
             line=[]
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}":
-                    i+=1
+                    i+=1 #This means that the " immediately beginning an argument will be ignored by parseString
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
@@ -548,7 +547,6 @@ def transpile(inputSource):
                         parseAdditionAssignment(),
                         parseSubtractionAssignment(),
                         parseSimpleAssignment(),
-                        parseString(),
                         parseFunction() #This is currently having problems
                         ]:
                         if ii!=None:
@@ -566,16 +564,13 @@ def transpile(inputSource):
                 nonlocal i
                 nonlocal source
                 STRING=""
-                if expect(deliniator):
+                if expect(deliniator): #No need to use expect() for this since we do i+=1 in the while loop
                     while source[i]!=deliniator:
-                        i+=1
-                        #Escape the deliniator by handling it before looping back
-                        #To source[i]!=deliniator so it doesn't catch it
-                        #Using or because we don't want escape codes to only works
-                        #When using one deliniator
-                        if expect("\\") and (expect("\"") or expect("\'")):
+                        if expect("\\") and (expect("\\\"") or expect("\\\'")):
                             STRING+=deliniator
-                        STRING+=source[i]
+                        else:
+                            STRING+=source[i]
+                        i+=1
                     expect(deliniator,True)
                     return string(STRING)
                 else:

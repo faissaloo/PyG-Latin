@@ -23,24 +23,18 @@ class player():
 	def draw(self):
 		draw_point(self.y,self.x)
 
-class rm1():
-	def __init__(self):
-		room_speed=60.0
-		room_width=24.0
-		room_height=88.0
-		instance_create(10.0,10.0,player)
-		instanceList=[]
-class rm1():
-	def __init__(self):
-		room_speed=60.0
-		room_width=24.0
-		room_height=88.0
-		instance_create(10.0,10.0,player)
-		instanceList=[]
 class ctrl():
 	def draw(self):
-		draw_text(10.0,10.0)
+		draw_text(3.0,4.0,"Topdown Game Demo")
 
+class rm1():
+	def __init__(self):
+		room_speed=60.0
+		room_width=24.0
+		room_height=88.0
+		instance_create(10.0,10.0,player)
+		instance_create(3.0,4.0,ctrl)
+		instanceList=[]
 current_room=rm1()
 game_init()
 game_main()

@@ -36,7 +36,7 @@ obj ctrl
 {
   event draw
   {
-    draw_text(10,10)
+    draw_text(3,4,"Topdown Game Demo")
   }
 }
 room rm1 {
@@ -44,5 +44,6 @@ room rm1 {
     room_width=24
     room_height=88
     instance_create(10,10,player)
+    instance_create(3,4,ctrl)
 }
 current_room=rm1()

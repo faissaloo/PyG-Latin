@@ -53,7 +53,8 @@ def transpile(inputSource):
             currentTabulation+=1
             codeToReturn=""
             for i in self.BODY:
-                codeToReturn+=getCorrectTabulation()+i.py3()+"\n"
+                returnedStr=i.py3()
+                codeToReturn+=getCorrectTabulation()+returnedStr+"\n"
             currentTabulation-=1
             return codeToReturn
     #Special case statements
@@ -157,16 +158,6 @@ def transpile(inputSource):
         def py3(self):
             return self.VARIABLENAME
 
-    class expression():
-        def __init__(self,BODY):
-            self.BODY=BODY
-        def py3(self):
-            nonlocal currentTabulation
-            codeToReturn=""
-            for i in self.BODY:
-                codeToReturn+=i.py3()
-            return codeToReturn
-
     class function():
         def __init__(self,FUNCTIONNAME,ARGUMENTS):
             self.FUNCTIONNAME=FUNCTIONNAME
@@ -180,34 +171,35 @@ def transpile(inputSource):
         def py3(self):
             codeToReturn=""
             for i in range(len(self.ARGUMENTS)):
-                codeToReturn+=self.ARGUMENTS[i].py3()
-                if i!=len(self.ARGUMENTS)-1:
-                    codeToReturn+=","
+                if self.ARGUMENTS[i]!=None:
+                    codeToReturn+=self.ARGUMENTS[i].py3()
+                    if i!=len(self.ARGUMENTS)-1:
+                        codeToReturn+=","
             return codeToReturn
 
     class additionOperation():
-        def __init__(self,OPERAND1,OPERAND2):
-            self.OPERANDS=OPERAND1,OPERAND2
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
         def py3(self):
-            return "("+self.OPERANDS[0].py3()+")+("+self.OPERANDS[1].py3()+")"
+            return "+"+self.OPERAND.py3()
 
     class subtractionOperation():
-        def __init__(self,OPERAND1,OPERAND2):
-            self.OPERANDS=OPERAND1,OPERAND2
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
         def py3(self):
-            return "("+self.OPERANDS[0].py3()+")-("+self.OPERANDS[1].py3()+")"
+            return "-"+self.OPERAND.py3()
 
     class multiplicationOperation():
-        def __init__(self,OPERAND1,OPERAND2):
-            self.OPERANDS=OPERAND1,OPERAND2
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
         def py3(self):
-            return "("+self.OPERANDS[0].py3()+")*("+self.OPERANDS[1].py3()+")"
+            return "*"+self.OPERAND.py3()
 
     class divisionOperation():
-        def __init__(self,OPERAND1,OPERAND2):
-            self.OPERANDS=OPERAND1,OPERAND2
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
         def py3(self):
-            return "("+self.OPERANDS[0].py3()+")/("+self.OPERANDS[1].py3()+")"
+            return "/"+self.OPERAND.py3()
 
     class additionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
@@ -238,6 +230,18 @@ def transpile(inputSource):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
             return self.OPERANDS[0]+"="+self.OPERANDS[1].py3()
+
+    class expression():
+        def __init__(self,VALUE,NEXT):
+            self.VALUE=VALUE #Either REAL or STR (later add list etc)
+            self.NEXT=NEXT
+            #We use this to store the staircase format
+        def py3(self):
+            nonlocal currentTabulation
+            if self.NEXT!=None:
+                return self.VALUE.py3()+self.NEXT.py3()
+            else:
+                return self.VALUE.py3()
 
     #Datatypes
     #Real numbers are just all floats, because screw having two different types
@@ -311,7 +315,7 @@ def transpile(inputSource):
                 return name
             else:
                 if enforce:
-                    print("Error: Expected name")
+                    print("Error: Expected name, got "+source[i]+" instead")
                 return None #Just incase there's no name
 
         def takename_before(operationString):
@@ -346,43 +350,48 @@ def transpile(inputSource):
             else:
                 return None
 
-        def takevalue_beforeoperation(operationString):
+        def parseExpression():
             nonlocal i
             nonlocal source
-            i-=len(operationString)+1
-            expect_whitespacebefore()
-            while source[i] in "0123456789.": #Goes back until there's no numerical/period character
-                i-=1
-            i+=1
-            value=takevalue()
+            realValue=""
             expect_whitespace()
-            return value
-
-        #For handling things like "+" and "/" etc
-        def handleOperation(operationString,classToStoreIn):
-            nonlocal i
-            nonlocal source
-            OPERAND1=realNumber(0.0)
-            OPERAND2=realNumber(0.0)
-            if expect(operationString):
-                OPERAND1=takevalue_beforeoperation(operationString)
-                #Add a parseExpressionBefore function and put it here
-                expect(operationString)
-                expect_whitespace()
-                OPERAND2=parseExpression("\n")
-                #Add a check incase the OPERANDS aren't reals but instead
-                #A function or expression
-
-                return classToStoreIn(OPERAND1,OPERAND2)
+            #Add check to tell if value is a string or a real or a function
+            for ii in [takevalue(),
+                parseName(),
+                parseString()]:
+                if ii!=None:
+                    return expression(ii,getNextOperation())
+        #^This^ and vthisv are meant to replace the oldparseExpression()
+        def getNextOperation():
+            expect_whitespace()
+            for ii in [parseDivision(),
+                parseMultiplication(),
+                parseAddition(),
+                parseSubtraction()]:
+                if ii!=None:
+                    return ii
             else:
                 return None
 
-        def parseVariable():
+        def handleOperation(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
-            VARIABLENAME=takename()
-            if VARIABLENAME!=None:
-                return variable(VARIABLENAME)
+            OPERAND=None
+            if expect(operationString):
+                OPERAND=parseExpression()
+                return classToStoreIn(OPERAND)
+
+        def parseName(allowVar=True,allowFunc=True): #Replaces both parseFunction() and parseVariable()
+            nonlocal i
+            nonlocal source
+            NAME=takename()
+            if NAME!=None:
+                if expect("(") and allowFunc: #If there's a bracket parse this as a function
+                    ARGUMENTS=parseArguments()
+                    expect(")")
+                    return function(NAME,ARGUMENTS)
+                elif allowVar:
+                    return variable(NAME)
             else:
                 return None
 
@@ -410,67 +419,26 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             argsBody=[]
-            argsBody.append(parseExpression("),"))
+            argsBody.append(parseExpression())
             while expect(","):
-                argsBody.append(parseExpression("),"))
+                argsBody.append(parseExpression())
             #print(argsBody)
             return arguments(argsBody)
-
-        def parseFunction():
-            nonlocal i
-            nonlocal source
-            if expect("("):
-                FUNCTIONNAME=takename_before("(")
-                expect("(")
-                ARGUMENTS=parseArguments()
-                if FUNCTIONNAME!=None:
-                    return function(FUNCTIONNAME,ARGUMENTS)
-                else:
-                    return None
-            else:
-                return None
-
-        def parseExpression(endOn="{"):
-            nonlocal i
-            nonlocal source
-            expressionBody=[]
-            start=i
-            while i<len(source)-1 and source[i] not in endOn: #It's stopping here when it needs to
-                i+=1
-                for ii in [parseDivision(),
-                    parseMultiplication(),
-                    parseAddition(),
-                    parseSubtraction()]:
-                    if ii!=None:
-                        expressionBody.append(ii)
-                #Add something to interpret functions here pls so that the expression parser doesn't get it
-                if source[i]=="(":
-                    for ii in [parseFunction(),parseExpression()]:
-                        if ii!=None:
-                            expressionBody.append(ii)
-                    expect(")")
-            #If nothing is found assume there is this simple value
-            if expressionBody==[]:
-                i=start
-                for ii in [takevalue(),parseVariable(),parseString()]:
-                    if ii!=None:
-                        expressionBody.append(ii)
-            return expression(expressionBody)
 
         def handleAssignment(operationString,classToStoreIn):
             nonlocal i
             nonlocal source
-            OPERAND1=realNumber(0.0)
+            OPERAND1=parseName(True,False)
             OPERAND2=realNumber(0.0)
             if expect(operationString):
                 #Takename before needs an argument for what the operationString is
                 #So that it can go as far back as it needs to and I don't have
                 #To deal with it
-                expect_whitespacebefore()
+                expect_whitespace()
                 OPERAND1=takename_before(operationString)
                 expect(operationString)
                 expect_whitespace()
-                OPERAND2=parseExpression("{\n")
+                OPERAND2=parseExpression()
                 return classToStoreIn(OPERAND1,OPERAND2)
             else:
                 return None
@@ -546,12 +514,12 @@ def transpile(inputSource):
                         parseWhileStatement(),
                         parseIfStatement(),
                         parseEventDefinition(),
+                        parseName(False), #This is currently having problems
                         parseDivisionAssignment(),
                         parseMultiplicationAssignment(),
                         parseAdditionAssignment(),
                         parseSubtractionAssignment(),
-                        parseSimpleAssignment(),
-                        parseFunction() #This is currently having problems
+                        parseSimpleAssignment()
                         ]:
                         if ii!=None:
                             body.append(ii)
@@ -637,8 +605,11 @@ def transpile(inputSource):
 
     def transpileToPython(structure):
         pythonCode="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\n"
+        tempForObject=None
         for i in structure:
-            pythonCode+=i.py3()
+            tempForObject=i.py3()
+            if tempForObject!=None:
+                pythonCode+=tempForObject
         pythonCode+="\ngame_init()\ngame_main()"
         return pythonCode
     return transpileToPython(parse(inputSource))

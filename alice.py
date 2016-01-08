@@ -150,6 +150,16 @@ def transpile(inputSource):
             self.EXPRESSION=EXPRESSION
             self.BODY=BODY
 
+    class scriptStatement():
+        def __init__(self,FUNCTION,BODY):
+            self.FUNCTION=FUNCTION
+            self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn="def "+self.FUNCTION.py3()+":\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
+
     #Maths stuff
     class variable():
         def __init__(self,VARIABLENAME):
@@ -445,7 +455,15 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             return handleAssignment("=",simpleAssignmentOperation)
-
+        
+        def parseScriptStatement():
+            nonlocal i
+            nonlocal source
+            if expect("script") and expect_whitespace(True):
+                    scriptFunction=parseName(False,True)
+                    scriptBody=parseCodeBlock()
+                    return scriptStatement(scriptFunction,scriptBody)
+        
         def parseIfStatement():
             nonlocal i
             nonlocal source
@@ -479,12 +497,14 @@ def transpile(inputSource):
             nonlocal source
             body=[]
             line=[]
+            expect_whitespace()
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
+                        parseScriptStatement(),
                         parseEventDefinition(),
                         parseName(False),
                         parseDivisionAssignment(),
@@ -557,6 +577,7 @@ def transpile(inputSource):
             for ii in [parseRoomDefinition(),
                 parseEventDefinition(),
                 parseObjDefinition(),
+                parseScriptStatement(),
                 parseDivisionAssignment(),
                 parseMultiplicationAssignment(),
                 parseAdditionAssignment(),

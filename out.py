@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from PyG import *
+def test():
+	print("Hey")
 class player():
 	def __init__(self):
 		self.y=0.0

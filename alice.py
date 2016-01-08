@@ -573,6 +573,7 @@ def transpile(inputSource):
                 expect(operationString)
                 expect_whitespace()
                 OPERAND2=parseExpression()
+                i-=1
                 return classToStoreIn(OPERAND1,OPERAND2)
 
         def parseAdditionAssignment():

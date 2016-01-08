@@ -7,7 +7,7 @@ class player():
 		self.x=0.0
 
 	def step(self):
-		if (keyboard_check_pressed(97.0)==1.0&1.0):
+		if (keyboard_check_pressed(97.0)):
 			self.x-=1.0
 
 		elif (keyboard_check_pressed(100.0)):
@@ -54,7 +54,7 @@ class rm1():
 		room_speed=60.0
 		room_width=24.0
 		room_height=88.0
-		nstance_create(10.0,10.0,player)
+		instance_create(10.0,10.0,player)
 		instance_create(3.0,4.0,ctrl)
 		instance_create(20.0,20.0,mobTest)
 		instanceList=[]

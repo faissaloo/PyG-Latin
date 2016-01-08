@@ -145,6 +145,27 @@ def make_color_rgb(R,G,B):
             closest=i
     return termcolorsAsRGB.index(closest)
 
+def sprite_add(fname):
+    #Script to read 32-bit bitmaps (with alpha)
+    with open(fname,"rb") as file:
+        text=file.read()
+        if chr(text[0])=="B" and chr(text[1])=="M":
+        	pos=text[10] #Tells us the offset
+        	image_array=[]
+        	pixels=0
+        	row=[]
+        	while pos<len(text):
+        		if pixels%text[18]==0:
+        			image_array.append(row)
+        			row=[]
+        		if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
+        			row.append(make_color_rgb(text[pos+1],text[pos+2],text[pos+3]))
+        		else:
+        			row.append(None)
+        		pos+=4
+        		pixels+=1
+        	return image_array[1:]
+
 def redraw():
     screen.refresh()
     screen.clear()

@@ -145,6 +145,19 @@ def make_color_rgb(R,G,B):
             closest=i
     return termcolorsAsRGB.index(closest)
 
+def draw_sprite(sprite,y,x):
+    yy=0
+    xx=0
+    for i in sprite:
+        yy+=1
+        xx=0
+        for ii in i:
+            xx+=1
+            if ii!=None:
+                draw_set_color(ii)
+                draw_point(y+yy,x+xx)
+    draw_set_color(c_white)
+#To test use: draw_sprite(sprite_add("tests/test.bmp"),10,10)
 def sprite_add(fname):
     #Script to read 32-bit bitmaps (with alpha)
     with open(fname,"rb") as file:

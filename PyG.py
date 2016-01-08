@@ -30,7 +30,6 @@ from threading import Thread
 from random import *
 from math import *
 
-
 #Color constants
 c_black=0
 c_red=1
@@ -40,6 +39,8 @@ c_blue=4
 c_magenta=5
 c_cyan=6
 c_white=7
+#This is based on what it looks like on the default XFCE4 terminal, it's good enough
+termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[170,85,0],[0,0,170],[170,0,170],[0,170,170]]
 
 #Start basic screen drawing stuff
 screen=curses.initscr()
@@ -134,6 +135,15 @@ def draw_line(y,x,yy,xx):
 def draw_path(y,x,path):
     for i in range(len(path)-1):
         draw_line(path[i][0],path[i][1],path[i+1][0],path[i+1][1])
+
+#Color functions
+def make_color_rgb(R,G,B):
+    closest=[0,0,0]
+    #Find the nearest value to [R,G,B] in termcolorsAsRGB
+    for i in termcolorsAsRGB:
+        if abs(R-closest[0])>abs(R-i[0]) or abs(G-closest[1])>abs(G-i[1]) or abs(B-closest[2])>abs(B-i[2]):
+            closest=i
+    return termcolorsAsRGB.index(closest)
 
 def redraw():
     screen.refresh()

@@ -246,6 +246,42 @@ def transpile(inputSource):
         def py3(self):
             return "/"+self.OPERAND.py3()
 
+    class notOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "not "+self.OPERAND.py3()
+
+    class andOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "&"+self.OPERAND.py3()
+
+    class orOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "|"+self.OPERAND.py3()
+
+    class xorOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "^"+self.OPERAND.py3()
+
+    class lshiftOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "<<"+self.OPERAND.py3()
+
+    class rshiftOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return ">>"+self.OPERAND.py3()
+
     class additionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
@@ -398,7 +434,13 @@ def transpile(inputSource):
         #^This^ and vthisv are meant to replace the old parseExpression()
         def getNextOperation():
             expect_whitespace()
-            for ii in [parseDivision(),
+            for ii in [parseNotOperation(),
+                parseAndOperation(),
+                parseOrOperation(),
+                parseXorOperation(),
+                parseLshiftOperation(),
+                parseRshiftOperation(),
+                parseDivision(),
                 parseMultiplication(),
                 parseAddition(),
                 parseSubtraction(),
@@ -480,6 +522,36 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             return handleOperation("/",divisionOperation)
+
+        def parseNotOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("NOT",notOperation)
+
+        def parseAndOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("AND",andOperation)
+
+        def parseOrOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("OR",orOperation)
+
+        def parseXorOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("XOR",xorOperation)
+
+        def parseLshiftOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("LSHIFT",lshiftOperation)
+
+        def parseRshiftOperation():
+            nonlocal i
+            nonlocal source
+            return handleOperation("RSHIFT",rshiftOperation)
 
         def parseArguments():
             nonlocal i

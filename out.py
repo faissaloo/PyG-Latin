@@ -7,7 +7,7 @@ class player():
 		self.x=0.0
 
 	def step(self):
-		if (keyboard_check_pressed(97.0)):
+		if (keyboard_check_pressed(97.0)==1.0&1.0):
 			self.x-=1.0
 
 		elif (keyboard_check_pressed(100.0)):

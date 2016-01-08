@@ -186,6 +186,42 @@ def transpile(inputSource):
                         codeToReturn+=","
             return codeToReturn
 
+    class notEqualToComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "!="+self.OPERAND.py3()
+
+    class greaterThanComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return ">"+self.OPERAND.py3()
+
+    class greaterThanEqualToComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return ">="+self.OPERAND.py3()
+
+    class lessThanComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "<"+self.OPERAND.py3()
+
+    class lessThanEqualToComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "<="+self.OPERAND.py3()
+
+    class equalToComparison():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "=="+self.OPERAND.py3()
+
     class additionOperation():
         def __init__(self,OPERAND):
             self.OPERAND=OPERAND
@@ -365,7 +401,13 @@ def transpile(inputSource):
             for ii in [parseDivision(),
                 parseMultiplication(),
                 parseAddition(),
-                parseSubtraction()]:
+                parseSubtraction(),
+                parseGreaterThanEqualTo(),
+                parseGreaterThan(),
+                parseLessThanEqualTo(),
+                parseLessThan(),
+                parseNotEqual(),
+                parseEqualTo()]:
                 if ii!=None:
                     return ii
 
@@ -388,6 +430,36 @@ def transpile(inputSource):
                     return function(NAME,ARGUMENTS)
                 elif allowVar:
                     return variable(NAME)
+
+        def parseNotEqual():
+            nonlocal i
+            nonlocal source
+            return handleOperation("!=",notEqualToComparison)
+
+        def parseGreaterThan():
+            nonlocal i
+            nonlocal source
+            return handleOperation(">",greaterThanComparison)
+
+        def parseGreaterThanEqualTo():
+            nonlocal i
+            nonlocal source
+            return handleOperation(">=",greaterThanEqualToComparison)
+
+        def parseLessThan():
+            nonlocal i
+            nonlocal source
+            return handleOperation("<",lessThanComparison)
+
+        def parseLessThanEqualTo():
+            nonlocal i
+            nonlocal source
+            return handleOperation("<=",lessThanEqualToComparison)
+
+        def parseEqualTo():
+            nonlocal i
+            nonlocal source
+            return handleOperation("=",equalToComparison)
 
         def parseAddition():
             nonlocal i
@@ -455,7 +527,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             return handleAssignment("=",simpleAssignmentOperation)
-        
+
         def parseScriptStatement():
             nonlocal i
             nonlocal source
@@ -463,7 +535,7 @@ def transpile(inputSource):
                     scriptFunction=parseName(False,True)
                     scriptBody=parseCodeBlock()
                     return scriptStatement(scriptFunction,scriptBody)
-        
+
         def parseIfStatement():
             nonlocal i
             nonlocal source

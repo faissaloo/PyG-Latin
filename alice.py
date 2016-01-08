@@ -49,7 +49,6 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            #To do: Add code for handling tabulation
             currentTabulation+=1
             codeToReturn=""
             for i in self.BODY:
@@ -300,7 +299,7 @@ def transpile(inputSource):
                 return False
             else:
                 while source[i] in " \t\n" and i>0:
-                    i-=1 #Skip over whitespace, for some reason this is going to far
+                    i-=1
                 return True
 
         def takename(enforce=False):
@@ -310,19 +309,16 @@ def transpile(inputSource):
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.":
                 name+=source[i]
                 i+=1
-            #print(name)
             if name!="" and not name.isdigit():
                 return name
             else:
                 if enforce:
                     print("Error: Expected name, got "+source[i]+" instead")
-                return None #Just incase there's no name
 
         def takename_before(operationString):
             nonlocal i
             nonlocal source
             i-=len(operationString)+1
-            itemOfClass=""
             #Goes back until there's no alphanumeric or underscore character
             while source[i] in "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.":
                 i-=1
@@ -330,12 +326,7 @@ def transpile(inputSource):
             name=takename(True)
             expect_whitespace()
             if name!="":
-                if itemOfClass!="":
-                    return itemOfClass+"."+name
-                else:
-                    return name
-            else:
-                return None
+                return name
 
         def takevalue():
             nonlocal i
@@ -347,21 +338,18 @@ def transpile(inputSource):
                 i+=1
             if value!="":
                 return realNumber(float(value))
-            else:
-                return None
 
         def parseExpression():
             nonlocal i
             nonlocal source
             realValue=""
             expect_whitespace()
-            #Add check to tell if value is a string or a real or a function
             for ii in [takevalue(),
                 parseName(),
                 parseString()]:
                 if ii!=None:
                     return expression(ii,getNextOperation())
-        #^This^ and vthisv are meant to replace the oldparseExpression()
+        #^This^ and vthisv are meant to replace the old parseExpression()
         def getNextOperation():
             expect_whitespace()
             for ii in [parseDivision(),
@@ -370,8 +358,6 @@ def transpile(inputSource):
                 parseSubtraction()]:
                 if ii!=None:
                     return ii
-            else:
-                return None
 
         def handleOperation(operationString,classToStoreIn):
             nonlocal i
@@ -381,7 +367,7 @@ def transpile(inputSource):
                 OPERAND=parseExpression()
                 return classToStoreIn(OPERAND)
 
-        def parseName(allowVar=True,allowFunc=True): #Replaces both parseFunction() and parseVariable()
+        def parseName(allowVar=True,allowFunc=True): #Replaces both the old parseFunction() and parseVariable()
             nonlocal i
             nonlocal source
             NAME=takename()
@@ -392,8 +378,6 @@ def transpile(inputSource):
                     return function(NAME,ARGUMENTS)
                 elif allowVar:
                     return variable(NAME)
-            else:
-                return None
 
         def parseAddition():
             nonlocal i
@@ -422,7 +406,6 @@ def transpile(inputSource):
             argsBody.append(parseExpression())
             while expect(","):
                 argsBody.append(parseExpression())
-            #print(argsBody)
             return arguments(argsBody)
 
         def handleAssignment(operationString,classToStoreIn):
@@ -431,17 +414,12 @@ def transpile(inputSource):
             OPERAND1=parseName(True,False)
             OPERAND2=realNumber(0.0)
             if expect(operationString):
-                #Takename before needs an argument for what the operationString is
-                #So that it can go as far back as it needs to and I don't have
-                #To deal with it
                 expect_whitespace()
                 OPERAND1=takename_before(operationString)
                 expect(operationString)
                 expect_whitespace()
                 OPERAND2=parseExpression()
                 return classToStoreIn(OPERAND1,OPERAND2)
-            else:
-                return None
 
         def parseAdditionAssignment():
             nonlocal i
@@ -475,8 +453,6 @@ def transpile(inputSource):
                     ifExpression=parseExpression()
                     ifBody=parseCodeBlock()
                     return ifStatement(ifExpression,ifBody)
-            else:
-                return None
 
         def parseElseIfStatement():
             nonlocal i
@@ -489,8 +465,6 @@ def transpile(inputSource):
                     else:
                         elseBody=parseCodeBlock()
                         return elseStatement(elseBody)
-            else:
-                return None
 
         def parseWhileStatement():
             nonlocal i
@@ -499,8 +473,6 @@ def transpile(inputSource):
                     whileExpression=parseExpression(takeexpression())
                     whileBody=parseCodeBlock()
                     return whileStatement(whileExpression,whileBody)
-            else:
-                return None
 
         def parseCodeBlock():
             nonlocal i
@@ -509,12 +481,12 @@ def transpile(inputSource):
             line=[]
             if expect("{",True):
                 while i<len(source)-1 and source[i]!="}":
-                    i+=1 #This means that the " immediately beginning an argument will be ignored by parseString
+                    i+=1
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
                         parseEventDefinition(),
-                        parseName(False), #This is currently having problems
+                        parseName(False),
                         parseDivisionAssignment(),
                         parseMultiplicationAssignment(),
                         parseAdditionAssignment(),
@@ -526,8 +498,6 @@ def transpile(inputSource):
                 expect("}",True)
             if body!=[]:
                 return codeBlock(body)
-            else:
-                return None
 
         def parseString():
             nonlocal i
@@ -536,7 +506,7 @@ def transpile(inputSource):
                 nonlocal i
                 nonlocal source
                 STRING=""
-                if expect(deliniator): #No need to use expect() for this since we do i+=1 in the while loop
+                if expect(deliniator):
                     while source[i]!=deliniator:
                         if expect("\\") and (expect("\\\"") or expect("\\\'")):
                             STRING+=deliniator
@@ -559,8 +529,6 @@ def transpile(inputSource):
                     expect_whitespace()
                     objBody=parseCodeBlock()
                     return objDefinition(objName,objBody)
-            else:
-                return None
 
         def parseEventDefinition():
             nonlocal i
@@ -580,16 +548,12 @@ def transpile(inputSource):
                     expect_whitespace()
                     roomBody=parseCodeBlock()
                     return roomDefinition(roomName,roomBody)
-            else:
-                return None
 
         i=0
         line=""
         #This is the root loop
         while i<len(source)-1:
-            #Put all the other parse*() functions here
-            #Adding parseExpression() to the end of this for loop is unconditionally
-            #appending it to rawParsedData, fix
+            #Put all the parse*() functions here
             for ii in [parseRoomDefinition(),
                 parseEventDefinition(),
                 parseObjDefinition(),

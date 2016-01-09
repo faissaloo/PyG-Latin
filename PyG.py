@@ -106,7 +106,7 @@ def draw_text(y,x, string):
     for i in range(len(str(string))):
         #Replace this with an 'if inside room thing'
         if round(y)<current_room.room_width and round(x+i)<current_room.room_height and round(y)>0 and round(x+i)>0:
-            screen.addstr(round(y),round(x+i),str(string[i]))
+            screen.addstr(round(y),round(x+i),str(string[i]),curses.color_pair(current_color))
 
 def draw_rectangle(y,x,yy,xx,outline):
     for i in range(y,yy+1):

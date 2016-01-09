@@ -95,6 +95,7 @@ def draw_set_color(color):
 def draw_point(y,x):
     global screen
     global current_room
+    global current_color
     if round(y)<current_room.room_width and round(x)<current_room.room_height and round(y)>0 and round(x)>0:
         screen.addstr(round(y),round(x),"█",curses.color_pair(current_color+10))
 

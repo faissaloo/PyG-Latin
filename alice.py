@@ -283,7 +283,7 @@ def transpile(inputSource):
             return ">>"+self.OPERAND.py3()
 
     class additionAssignmentOperation():
-        def __init__(self,OPERAND1,OPERAND2):
+        def __init__(self,OPERAND1,OPERAND2,LIST=None):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
             return self.OPERANDS[0]+"+="+self.OPERANDS[1].py3()
@@ -346,6 +346,14 @@ def transpile(inputSource):
             codeToReturn+=self.LIST.py3()
             codeToReturn+="]"
             return codeToReturn
+
+    class itemInList():
+        def __init__(self,LISTNAME,EXPRESSION):
+            self.LISTNAME=LISTNAME
+            self.EXPRESSION=EXPRESSION #Arguments should be a list
+        def py3(self):
+            return self.LISTNAME+"["+self.EXPRESSION.py3()+"]"
+
     def parse(source):
         def expect(string,enforce=False):
             nonlocal i
@@ -470,6 +478,11 @@ def transpile(inputSource):
                     ARGUMENTS=parseArguments()
                     expect(")")
                     return function(NAME,ARGUMENTS)
+                elif expect("[") and allowVar:
+                    EXPRESSION=parseExpression()
+                    expect("]")
+                    if EXPRESSION!=None:
+                        return itemInList(NAME,EXPRESSION)
                 elif allowVar:
                     return variable(NAME)
 

@@ -11,7 +11,7 @@ obj animation
     {
         if self.image_index=0
         {
-          draw_sprite(self.spriteA,self.y,self.x)
+          draw_sprite(self.sprite,self.y,self.x)
           self.image_index=1
         }
         else if self.image_index=1

@@ -47,8 +47,10 @@ screen=curses.initscr()
 curses.start_color()
 curses.noecho()
 screen.clear()
-curses.init_pair(1, c_white, c_black)
-
+curses.use_default_colors()
+current_color=0
+for i in range(0, 8):
+    curses.init_pair(i + 1, i, -1)
 #Variables
 keyboard_lastkey=-1
 
@@ -85,17 +87,19 @@ def keyboard_check_pressed(key):
 
 #Drawing functions
 def draw_set_color(color):
-    curses.init_pair(1, color, c_black)
+    global current_color
+    current_color=color
 
 def draw_point(y,x):
     global screen
     global current_room
     if round(y)<current_room.room_width and round(x)<current_room.room_height and round(y)>0 and round(x)>0:
-        screen.addstr(round(y),round(x),"█",curses.color_pair(1))
+        screen.addstr(round(y),round(x),"█",curses.color_pair(current_color))
 
 def draw_text(y,x, string):
     global screen
     global current_room
+    global current_color
     for i in range(len(str(string))):
         #Replace this with an 'if inside room thing'
         if round(y)<current_room.room_width and round(x+i)<current_room.room_height and round(y)>0 and round(x+i)>0:

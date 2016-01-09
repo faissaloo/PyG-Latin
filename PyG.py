@@ -152,6 +152,7 @@ def make_color_rgb(R,G,B):
             closest=i
     return termcolorsAsRGB.index(closest)
 
+#Sprite functions
 def draw_sprite(sprite,y,x):
     yy=0
     xx=0
@@ -185,6 +186,12 @@ def sprite_add(fname):
         		pos+=4
         		pixels+=1
         	return image_array
+
+def sprite_get_height(sprite):
+    return len(sprite)
+
+def sprite_get_width(sprite):
+    return len(sprite[0])
 
 def redraw():
     screen.refresh()

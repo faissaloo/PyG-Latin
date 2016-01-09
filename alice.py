@@ -338,16 +338,14 @@ def transpile(inputSource):
         def py3(self):
             return '"'+self.STRING+'"'
 
-    class list():
+    class listType():
         def __init__(self,LIST):
             self.LIST=LIST
         def py3(self):
             codeToReturn="["
-            for i in range(len(self.LIST)):
-                codeToReturn+=self.LIST[i].py3()
-                if i!=len(self.LIST)-1:
-                    codeToReturn+=","
+            codeToReturn+=self.LIST.py3()
             codeToReturn+="]"
+            return codeToReturn
     def parse(source):
         def expect(string,enforce=False):
             nonlocal i
@@ -427,8 +425,10 @@ def transpile(inputSource):
             realValue=""
             expect_whitespace()
             for ii in [takevalue(),
+                parseList(),
                 parseName(),
-                parseString()]:
+                parseString()
+                ]:
                 if ii!=None:
                     return expression(ii,getNextOperation())
         #^This^ and vthisv are meant to replace the old parseExpression()
@@ -663,6 +663,15 @@ def transpile(inputSource):
                 expect("}",True)
             if body!=[]:
                 return codeBlock(body)
+
+        def parseList():
+            nonlocal i
+            nonlocal source
+            LIST=[]
+            if expect("["):
+                LIST=parseArguments()
+                expect("]",True)
+                return listType(LIST)
 
         def parseString():
             nonlocal i

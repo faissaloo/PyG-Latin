@@ -184,7 +184,7 @@ def sprite_add(fname):
         			row.append(None)
         		pos+=4
         		pixels+=1
-        	return image_array[1:]
+        	return image_array
 
 def redraw():
     screen.refresh()

@@ -40,7 +40,7 @@ c_magenta=5
 c_cyan=6
 c_white=7
 #This is based on what it looks like on the default XFCE4 terminal, it's good enough
-termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[170,85,0],[0,0,170],[170,0,170],[0,170,170],[255,255,255]]
+termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
 
 #Start basic screen drawing stuff
 screen=curses.initscr()

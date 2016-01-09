@@ -51,6 +51,8 @@ curses.use_default_colors()
 current_color=0
 for i in range(0, 8):
     curses.init_pair(i + 1, i, -1)
+for i in range(0, 8):
+    curses.init_pair(i + 10, i, i)
 #Variables
 keyboard_lastkey=-1
 
@@ -94,7 +96,7 @@ def draw_point(y,x):
     global screen
     global current_room
     if round(y)<current_room.room_width and round(x)<current_room.room_height and round(y)>0 and round(x)>0:
-        screen.addstr(round(y),round(x),"█",curses.color_pair(current_color))
+        screen.addstr(round(y),round(x),"█",curses.color_pair(current_color+10))
 
 def draw_text(y,x, string):
     global screen

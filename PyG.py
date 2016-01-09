@@ -109,15 +109,15 @@ def draw_text(y,x, string):
 
 def draw_rectangle(y,x,yy,xx,outline):
     for i in range(y,yy+1):
-        draw_point(scr,i,x,"█")
-        draw_point(scr,i,xx,"█")
+        draw_point(i,x)
+        draw_point(i,xx)
         if (outline):
             for ii in range(x+1,xx): #Fill it in
-                draw_point(scr,i,ii,"█")
+                draw_point(i,ii)
 
     for i in range(x,xx+1):
-        draw_point(scr,y,i,"█")
-        draw_point(scr,yy,i,"█")
+        draw_point(y,i)
+        draw_point(yy,i)
 
 def draw_circle(y,x,r,outline):
     if outline:

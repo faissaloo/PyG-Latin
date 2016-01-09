@@ -146,9 +146,11 @@ def draw_path(y,x,path):
 #Color functions
 def make_color_rgb(R,G,B):
     closest=[0,0,0]
+    def euclideanDistance(color1, color2):
+        return sqrt(sum([(e1-e2)**2 for e1, e2 in zip(color1, color2)]))
     #Find the nearest value to [R,G,B] in termcolorsAsRGB
     for i in termcolorsAsRGB:
-        if abs(R-closest[0])>abs(R-i[0]) or abs(G-closest[1])>abs(G-i[1]) or abs(B-closest[2])>abs(B-i[2]):
+        if euclideanDistance([R,G,B],closest)>euclideanDistance([R,G,B],i):
             closest=i
     return termcolorsAsRGB.index(closest)
 

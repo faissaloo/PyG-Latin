@@ -363,7 +363,7 @@ def transpile(inputSource):
         def expect_whitespace(enforce=False):
             nonlocal i
             nonlocal source
-            if source[i] not in " \t\n" and enforce:
+            if source[i] not in " \t\n":
                 if enforce:
                     print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False

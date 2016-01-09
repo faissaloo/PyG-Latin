@@ -109,6 +109,19 @@ Sprites
 --
 Sprites are 2D lists of a number between 0 and 8, these represent the color of each pixel. This is what is returned by sprite_add().
 
+Datastructures
+===
+Lists/arrays
+--
+Lists are datastructures that can store effectively, a list of any other datatype or datastructure. Lists are defined list this:
+```
+<LISTNAME>=[<LISTITEM>,<LISTITEM>,...]
+```
+To get an item for a list you do the following:
+```
+<LISTNAME>[<EXPRESSION>]
+```
+
 Statements
 ===
 

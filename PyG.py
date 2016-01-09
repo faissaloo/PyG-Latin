@@ -176,7 +176,7 @@ def sprite_add(fname):
         	row=[]
         	while pos<len(text):
         		if pixels%text[18]==0:
-        			image_array.append(row)
+        			image_array.insert(0,row)
         			row=[]
         		if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
         			row.append(make_color_rgb(text[pos+1],text[pos+2],text[pos+3]))

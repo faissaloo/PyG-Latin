@@ -127,8 +127,7 @@ def transpile(inputSource):
             return codeToReturn
 
     class elseStatement():
-        def __init__(self,EXPRESSION,BODY):
-            self.EXPRESSION=EXPRESSION
+        def __init__(self,BODY):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation

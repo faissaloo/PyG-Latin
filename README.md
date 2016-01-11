@@ -170,15 +170,28 @@ while <EXPRESSION>
 
 }
 ```
-for
+for * from loop
 --
-For loops aren't working yet, I have yet to decide whether I wish to go for a c style. Input on this matter would be very much appreciated.
+This is a for loop that allows for a few things:
+1. The modification of the iterator variable during iteration
+2. Having different increments
+
+The first value is the variable you wish to store the current value in, the second is the starting point, the third is the end point and the fourth is the increment. This is suited for thing such as parsers which may require moving back and fourth through the text during the loop.
 ```
-for (ii=0;ii<10;i+=1)
+for <VARIABLENAME> from <VALUE> to <VALUE> by <VALUE>
+{
+
+}
 ```
-or a
+
+for * in loop
+--
+This is a for loop that goes through a list, unlike for from loops you can not simply modify the variable in the loop as the change will not be constantly reflected throughout the rest of the list.
 ```
-for i in range(10)
+for <VARIABLENAME> in <LIST>
+{
+
+}
 ```
 Operations
 ===

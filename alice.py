@@ -152,7 +152,7 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            codeToReturn=getCorrectTabulation()+"for "+self.VARNAME.py3()+" in "+self.LIST.py3()+":\n"
+            codeToReturn="for "+self.VARNAME.py3()+" in "+self.LIST.py3()+":\n"
             codeToReturn+=self.BODY.py3()
             return codeToReturn
     #C style

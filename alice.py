@@ -145,10 +145,36 @@ def transpile(inputSource):
             codeToReturn=getCorrectTabulation()+"while ("+self.EXPRESSION.py3()+"):\n"
             codeToReturn+=self.BODY.py3()
             return codeToReturn
-    class forStatement():
-        def __init__(self,EXPRESSION,BODY):
-            self.EXPRESSION=EXPRESSION
+    #Python style
+    class forInStatement():
+        def __init__(self,VARNAME,LIST,BODY):
+            self.VARNAME=VARNAME
+            self.LIST=LIST
             self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+"for "+self.VARNAME+" in "+self.LIST.py3()+":\n"
+            codeToReturn+=self.BODY.py3()
+            return codeToReturn
+    #C style
+    class forFromStatement():
+        def __init__(self,VARNAME,START,END,BY,BODY):
+            self.VARNAME=VARNAME
+            self.START=START
+            self.END=END
+            if BY!=None:
+                self.BY=BY
+            else:
+                self.BY=1
+            self.BODY=BODY
+        def py3(self):
+            nonlocal currentTabulation
+            codeToReturn=getCorrectTabulation()+self.VARNAME+"="+self.START.py3()
+            codeToReturn+=getCorrectTabulation()+"while ("+self.VARNAME+"<"+self.END.py3()+"):\n"
+            codeToReturn+=self.BODY.py3()
+            currentTabulation+=1
+            codeToReturn+=getCorrectTabulation()+self.VARNAME+"+="+self.BY+"\n"
+            currentTabulation-=2
 
     class scriptStatement():
         def __init__(self,FUNCTION,BODY):
@@ -439,6 +465,7 @@ def transpile(inputSource):
                 ]:
                 if ii!=None:
                     return expression(ii,getNextOperation())
+
         #^This^ and vthisv are meant to replace the old parseExpression()
         def getNextOperation():
             expect_whitespace()
@@ -641,6 +668,33 @@ def transpile(inputSource):
                     else:
                         elseBody=parseCodeBlock()
                         return elseStatement(elseBody)
+        def parseForStatement():
+            nonlocal i
+            nonlocal source
+            if expect("for") and expect_whitespace(True):
+                VARNAME=parseName(True,False)
+                expect_whitespace()
+                #C style: for n from 0 to 50 by 5
+                if expect("from"):
+                    expect_whitespace()
+                    START=parseExpression()
+                    expect("to")
+                    expect_whitespace()
+                    END=parseExpression()
+                    expect("by")
+                    expect_whitespace()
+                    BY=parseExpression()
+                    BODY=parseCodeBlock()
+                    return forFromStatement(VARNAME,START,END,BY,BODY)
+
+                #Py style:for elt in collection
+                elif expect("in"):
+                    expect_whitespace()
+                    LIST=parseExpression()
+                    BODY=parseCodeBlock()
+                    return forInStatement(VARNAME,LIST,BODY)
+
+                parseExpression()
 
         def parseWhileStatement():
             nonlocal i
@@ -662,6 +716,7 @@ def transpile(inputSource):
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
+                        parseForStatement(),
                         parseScriptStatement(),
                         parseEventDefinition(),
                         parseName(False),

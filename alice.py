@@ -152,7 +152,7 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            codeToReturn=getCorrectTabulation()+"for "+self.VARNAME+" in "+self.LIST.py3()+":\n"
+            codeToReturn=getCorrectTabulation()+"for "+self.VARNAME.py3()+" in "+self.LIST.py3()+":\n"
             codeToReturn+=self.BODY.py3()
             return codeToReturn
     #C style
@@ -168,12 +168,13 @@ def transpile(inputSource):
             self.BODY=BODY
         def py3(self):
             nonlocal currentTabulation
-            codeToReturn=getCorrectTabulation()+self.VARNAME+"="+self.START.py3()
-            codeToReturn+=getCorrectTabulation()+"while ("+self.VARNAME+"<"+self.END.py3()+"):\n"
+            codeToReturn=self.VARNAME.py3()+"="+self.START.py3()+"\n"
+            codeToReturn+=getCorrectTabulation()+"while ("+self.VARNAME.py3()+"<"+self.END.py3()+"):\n"
             codeToReturn+=self.BODY.py3()
             currentTabulation+=1
-            codeToReturn+=getCorrectTabulation()+self.VARNAME+"+="+self.BY+"\n"
-            currentTabulation-=2
+            codeToReturn+=getCorrectTabulation()+self.VARNAME.py3()+"+="+self.BY.py3()+"\n"
+            currentTabulation-=1
+            return codeToReturn
 
     class scriptStatement():
         def __init__(self,FUNCTION,BODY):
@@ -692,8 +693,6 @@ def transpile(inputSource):
                     LIST=parseExpression()
                     BODY=parseCodeBlock()
                     return forInStatement(VARNAME,LIST,BODY)
-
-                parseExpression()
 
         def parseWhileStatement():
             nonlocal i

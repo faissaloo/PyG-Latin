@@ -381,6 +381,26 @@ def transpile(inputSource):
             return self.LISTNAME+"["+self.EXPRESSION.py3()+"]"
 
     def parse(source):
+        def raiseException(string):
+            nonlocal i
+            nonlocal source
+            def getLineAndColumn():
+                nonlocal i
+                nonlocal source
+                line=0
+                column=0
+                for ii in range(len(source)):
+                    if source[ii]=="\n":
+                        line+=1
+                        column=0
+                    else:
+                        column+=1
+                    if i==ii:
+                        break
+                return line,column
+            currentPos=getLineAndColumn()
+            print("Error: "+string+" on line "+str(currentPos[0])+" column "+str(currentPos[1]))
+            exit()
         def expect(string,enforce=False):
             nonlocal i
             nonlocal source

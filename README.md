@@ -6,10 +6,10 @@ custom functions but keeps most of the syntax of the language it's transpiling t
 The language itself is based on GML. It is case sensitive, but not tab sensitive.
 
 
-In this repo you will 3 things:
-1. The Python library which implements the engine functionality, this is called PyG.py
-2. The transpiler for the language, this is called alice.py
-3. Small games and programs with which to test compilation and functionality
+In this repo you will 3 things:  
+1. The Python library which implements the engine functionality, this is called PyG.py  
+2. The transpiler for the language, this is called alice.py  
+3. Small games and programs with which to test compilation and functionality  
 
 Objects
 ===

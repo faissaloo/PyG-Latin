@@ -4,6 +4,7 @@ obj player
     {
         self.y=0
         self.x=0
+        self.mask_index=[[1]]
     }
     event step
     {
@@ -29,6 +30,10 @@ obj player
     event draw
     {
         draw_point(self.y,self.x)
+        if place_empty(self,self.y+1,self.x)=0
+        {
+            draw_text(self.y-1,self.x, "Hey!")
+        }
     }
 }
 
@@ -38,23 +43,24 @@ obj mobTest
     {
         self.y=0
         self.x=0
+        self.mask_index=[[1]]
     }
     event step
     {
 
-        if randrange(0,2)
+        if randrange(0,100)=0
         {
             self.x-=1
         }
-        if randrange(0,2)
+        if randrange(0,100)=0
         {
             self.x+=1
         }
-        if randrange(0,2)
+        if randrange(0,100)=0
         {
             self.y-=1
         }
-        if randrange(0,2)
+        if randrange(0,100)=0
         {
             self.y+=1
         }

@@ -212,6 +212,99 @@ def instance_destroy():
     global current_room
     current_room.instanceList.remove(self)
     self.destroyed() #Executes the destroyed event
+
+#Collisions
+##################################################################
+#Function            Checks using   Checks against     Returns
+#-----------------------------------------------------------------
+#place_free          mask           solid objects      boolean
+#place_empty         mask           all objects        boolean
+#place_meeting       mask           specified object   boolean
+#position_empty      point          all objects        boolean
+#position_meeting    point          specified object   boolean
+#instance_place      mask           specified object   instance
+#instance_position   point          specified object   instance
+##################################################################
+#collision_
+#Checks if a point collides with an instance
+def collision_point(self,y,x,instance):
+    obj_collidablePoints=[]
+    yy=0
+    xx=0
+    for i in obj.mask_index:
+        yy+=1
+        for ii in i:
+            xx+=1
+            if ii!=None:
+                obj_collidablePoints.append((obj.y+yy,obj.x+xx))
+    if (y,x) in obj_collidablePoints:
+        return True
+    else:
+        return False
+
+def collision_circle(self,y,x,r,instance):
+    for i in range(round(r)):
+        for ii in range(10*round((2*(pi*r)))):
+            collision_point(y+(cos(ii/10)*i),x+(sin(ii/10)*i),instance)
+#place_
+#Checks if it would be safe to move to a position
+def place_free(self,y,x):
+    if not hasattr(self,'mask_index'): #Save ourselves some calculations and just return True if there is no mask
+        return True
+
+    obj_collidablePoints=[]
+    self_collidablePoints=[]
+    for i in current_room.instanceList:
+        if hasattr(i,'solid') and i.solid and hasattr(i,'mask_index'): #Place_free is only supposed to do collisions with solid objects
+            yy=0
+            xx=0
+            for ii in i.mask_index:
+                yy+=1
+                for iii in ii:
+                    xx+=1
+                    if iii!=None:
+                        obj_collidablePoints.append((i.y+yy,i.x+xx))
+    yy=0
+    xx=0
+    for ii in self.mask_index:
+        yy+=1
+        for iii in i:
+            xx+=1
+            if iii!=None:
+                points.append((y+yy,x+xx))
+    for i in self_collidablePoints:
+        if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
+            return False
+    return True
+
+#Like place_free but for all objects, not just solid ones
+def place_empty(self,y,x):
+    if not hasattr(self,'mask_index'): #Save ourselves some calculations and just return True if there is no mask
+        return True
+    obj_collidablePoints=[]
+    self_collidablePoints=[]
+    for i in current_room.instanceList:
+        yy=0
+        xx=0
+        if hasattr(i,'mask_index'):
+            for ii in i.mask_index:
+                yy+=1
+                for iii in ii:
+                    xx+=1
+                    if iii!=None:
+                        obj_collidablePoints.append((i.y+yy,i.x+xx))
+    yy=0
+    xx=0
+    for i in self.mask_index:
+        yy+=1
+        for ii in i:
+            xx+=1
+            if ii!=None:
+                self_collidablePoints.append((y+yy,x+xx))
+    for i in self_collidablePoints:
+        if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
+            return False
+    return True
 #Room handling functions
 def room_goto(room):
     global current_room

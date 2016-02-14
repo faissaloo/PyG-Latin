@@ -700,14 +700,18 @@ def transpile(inputSource):
                     if expect("from"):
                         expect_whitespace()
                         START=parseExpression()
-                        expect("to")
-                        expect_whitespace()
-                        END=parseExpression()
-                        expect("by")
-                        expect_whitespace()
-                        BY=parseExpression()
-                        BODY=parseCodeBlock()
-                        return forFromStatement(VARNAME,START,END,BY,BODY)
+                        if expect("to"):
+                            expect_whitespace()
+                            END=parseExpression()
+                            if expect("by"):
+                                expect_whitespace()
+                                BY=parseExpression()
+                                BODY=parseCodeBlock()
+                                return forFromStatement(VARNAME,START,END,BY,BODY)
+                            else:
+                                raiseException("Expected 'by'")
+                        else:
+                            raiseException("Expected 'to'")
 
                     #Py style:for elt in collection
                     elif expect("in"):

@@ -200,9 +200,9 @@ def redraw():
     screen.clear()
 
 #Instance handling functions
-def instance_create(y,x,object):
+def instance_create(y,x,obj):
     global current_room
-    inst=object()
+    inst=obj()
     inst.y=y
     inst.x=x
     current_room.instanceList.append(inst)

@@ -5,7 +5,7 @@ obj animation
         self.x=0
         self.y=0
         self.image_index=0
-        self.sprite=[sprite_add("tests/testSprite/1.bmp"),sprite_add("tests/testSprite/2.bmp"),sprite_add("tests/testSprite/3.bmp")]
+        self.sprite=[image_add("tests/testSprite/1.bmp"),image_add("tests/testSprite/2.bmp"),image_add("tests/testSprite/3.bmp")]
     }
     event draw
     {

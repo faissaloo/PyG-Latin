@@ -167,8 +167,8 @@ def draw_sprite(sprite,y,x):
                 draw_set_color(ii)
                 draw_point(y+yy,x+xx)
     draw_set_color(c_white)
-#To test use: draw_sprite(sprite_add("tests/test.bmp"),10,10)
-def sprite_add(fname):
+#To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
+def image_add(fname):
     #Script to read 32-bit bitmaps (with alpha)
     with open(fname,"rb") as file:
         text=file.read()

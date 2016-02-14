@@ -351,7 +351,6 @@ def transpile(inputSource):
                 return self.VALUE.py3()
 
     #Datatypes
-    #Real numbers are just all floats, because screw having two different types
     class realNumber():
         def __init__(self,REAL):
             self.REAL=REAL
@@ -467,7 +466,7 @@ def transpile(inputSource):
                 value+=source[i]
                 i+=1
             if value!="":
-                return realNumber(float(value))
+                return realNumber(value)
 
         def parseExpression():
             nonlocal i

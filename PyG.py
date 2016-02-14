@@ -208,10 +208,10 @@ def instance_create(y,x,object):
     current_room.instanceList.append(inst)
     return inst
 
-def instance_destroy():
+def instance_destroy(obj):
     global current_room
-    current_room.instanceList.remove(self)
-    self.destroyed() #Executes the destroyed event
+    current_room.instanceList.remove(obj)
+    obj.destroyed() #Executes the destroyed event
 
 #Collisions
 ##################################################################

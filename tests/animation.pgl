@@ -10,7 +10,7 @@ obj animation
     event draw
     {
         draw_sprite(self.sprite[self.image_index],self.y,self.x)
-        if self.image_index<3
+        if self.image_index<len(self.sprite)-1
         {
             self.image_index+=1
         }

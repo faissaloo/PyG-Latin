@@ -691,28 +691,32 @@ def transpile(inputSource):
         def parseForStatement():
             nonlocal i
             nonlocal source
-            if expect("for") and expect_whitespace(True):
-                VARNAME=parseName(True,False)
-                expect_whitespace()
-                #C style: for n from 0 to 50 by 5
-                if expect("from"):
-                    expect_whitespace()
-                    START=parseExpression()
-                    expect("to")
-                    expect_whitespace()
-                    END=parseExpression()
-                    expect("by")
-                    expect_whitespace()
-                    BY=parseExpression()
-                    BODY=parseCodeBlock()
-                    return forFromStatement(VARNAME,START,END,BY,BODY)
 
-                #Py style:for elt in collection
-                elif expect("in"):
+            if expect("for"):
+                if expect_whitespace(True):
+                    VARNAME=parseName(True,False)
                     expect_whitespace()
-                    LIST=parseExpression()
-                    BODY=parseCodeBlock()
-                    return forInStatement(VARNAME,LIST,BODY)
+                    #C style: for n from 0 to 50 by 5
+                    if expect("from"):
+                        expect_whitespace()
+                        START=parseExpression()
+                        expect("to")
+                        expect_whitespace()
+                        END=parseExpression()
+                        expect("by")
+                        expect_whitespace()
+                        BY=parseExpression()
+                        BODY=parseCodeBlock()
+                        return forFromStatement(VARNAME,START,END,BY,BODY)
+
+                    #Py style:for elt in collection
+                    elif expect("in"):
+                        expect_whitespace()
+                        LIST=parseExpression()
+                        BODY=parseCodeBlock()
+                        return forInStatement(VARNAME,LIST,BODY)
+                    else:
+                        raiseException("Expected 'from' or 'in' statement")
 
         def parseWhileStatement():
             nonlocal i

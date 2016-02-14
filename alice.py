@@ -408,16 +408,12 @@ def transpile(inputSource):
                 i+=len(string)#Skip over the thing
                 return True
             else:
-                if enforce:
-                    print("Error: Expected '"+string+"'")
                 return False
 
         def expect_whitespace(enforce=False):
             nonlocal i
             nonlocal source
             if source[i] not in " \t\n":
-                if enforce:
-                    print("Error: Expected whitespace, got "+source[i]+" instead")
                 return False
             else:
                 while source[i] in " \t\n" and i<len(source)-1:
@@ -754,7 +750,8 @@ def transpile(inputSource):
                         ]:
                         if ii!=None:
                             body.append(ii)
-                expect("}",True)
+                if not expect("}",True):
+                    raiseException("Unterminated block")
             if body!=[]:
                 return codeBlock(body)
 

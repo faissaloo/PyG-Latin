@@ -473,7 +473,8 @@ def transpile(inputSource):
             nonlocal source
             realValue=""
             expect_whitespace()
-            for ii in [takevalue(),
+            for ii in [parseNotOperation(),
+                takevalue(),
                 parseList(),
                 parseName(),
                 parseString()
@@ -484,8 +485,7 @@ def transpile(inputSource):
         #^This^ and vthisv are meant to replace the old parseExpression()
         def getNextOperation():
             expect_whitespace()
-            for ii in [parseNotOperation(),
-                parseAndOperation(),
+            for ii in [parseAndOperation(),
                 parseOrOperation(),
                 parseXorOperation(),
                 parseLshiftOperation(),

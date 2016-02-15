@@ -276,7 +276,7 @@ def transpile(inputSource):
         def __init__(self,OPERAND):
             self.OPERAND=OPERAND
         def py3(self):
-            return "not "+self.OPERAND.py3()
+            return "~"+self.OPERAND.py3()
 
     class andOperation():
         def __init__(self,OPERAND):

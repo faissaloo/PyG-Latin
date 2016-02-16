@@ -338,17 +338,25 @@ def transpile(inputSource):
         def py3(self):
             return self.OPERANDS[0]+"="+self.OPERANDS[1].py3()
 
+
     class expression():
-        def __init__(self,VALUE,NEXT):
+        def __init__(self,VALUE,NEXT,BRACKETED=False):
             self.VALUE=VALUE #Either REAL or STR (later add list etc)
             self.NEXT=NEXT
+            self.BRACKETED=BRACKETED
             #We use this to store the staircase format
         def py3(self):
             nonlocal currentTabulation
-            if self.NEXT!=None:
-                return self.VALUE.py3()+self.NEXT.py3()
+            if not self.BRACKETED:
+                if self.NEXT!=None:
+                    return self.VALUE.py3()+self.NEXT.py3()
+                else:
+                    return self.VALUE.py3()
             else:
-                return self.VALUE.py3()
+                if self.NEXT!=None:
+                    return "("+self.VALUE.py3()+self.NEXT.py3()+")"
+                else:
+                    return "("+self.VALUE.py3()+")"
 
     #Datatypes
     class realNumber():
@@ -463,7 +471,7 @@ def transpile(inputSource):
             if value!="":
                 return realNumber(value)
 
-        def parseExpression():
+        def parseExpression(bracketed=False):
             nonlocal i
             nonlocal source
             realValue=""
@@ -472,11 +480,19 @@ def transpile(inputSource):
                 takevalue(),
                 parseList(),
                 parseName(),
-                parseString()
+                parseString(),
+                parseBracketedExpression()
                 ]:
                 if ii!=None:
-                    return expression(ii,getNextOperation())
+                    return expression(ii,getNextOperation(),bracketed)
 
+        def parseBracketedExpression():
+            nonlocal i
+            nonlocal source
+            if expect("("):
+                EXPR=parseExpression(True)
+                expect(")")
+                return EXPR
         #^This^ and vthisv are meant to replace the old parseExpression()
         def getNextOperation():
             expect_whitespace()

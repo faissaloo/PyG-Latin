@@ -120,16 +120,26 @@ def draw_rectangle(y,x,yy,xx,outline):
         draw_point(y,i)
         draw_point(yy,i)
 
-def draw_circle(y,x,r,outline):
-    if outline:
-        for i in range(round(r)):
-            for ii in range(10*round((2*(pi*r)))):
-                #draw_line(y+(cos(ii/10)*i),x+(sin(ii/10)*r),y+(cos((ii/10))*i)+1,x+(sin((ii/10))*r)+1)
-                draw_point(y+(cos(ii/10)*i),x+(sin(ii/10)*i))
-    else:
-        for ii in range(10*round((2*(pi*r)))):
-            #draw_line(y+(cos(ii/10)*i),x+(sin(ii/10)*r),y+(cos((ii/10))*i)+1,x+(sin((ii/10))*r)+1)
-            draw_point(y+(cos(ii/10)*r),x+(sin(ii/10)*r))
+def draw_circle(y,x,r,outline=False):
+    workingX=r
+    workingY=0
+    decOverTwo=1-workingX
+    while workingY<=workingX:
+        draw_point(workingX+x,workingY+y)
+        draw_point(workingY+x,workingX+y)
+        draw_point(-workingX+x,workingY+y)
+        draw_point(-workingY+x,workingX+y)
+        draw_point(-workingX+x,-workingY+y)
+        draw_point(-workingY+x,-workingX+y)
+        draw_point(workingX+x,-workingY+y)
+        draw_point(workingY+x,-workingX+y)
+        workingY+=1
+        if decOverTwo<=0:
+            decOverTwo+=2 * workingY + 1
+        else:
+            workingX-=1
+            decOverTwo+=2 * (workingY - workingX) + 1
+
 def draw_line(y,x,yy,xx):
     def safeDivide(a,b): #Return 0 if it can't be divided
         try:

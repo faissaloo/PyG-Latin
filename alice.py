@@ -493,7 +493,7 @@ def transpile(inputSource):
                 EXPR=parseExpression(True)
                 expect(")")
                 return EXPR
-        #^This^ and vthisv are meant to replace the old parseExpression()
+        
         def getNextOperation():
             expect_whitespace()
             for ii in [parseAndOperation(),

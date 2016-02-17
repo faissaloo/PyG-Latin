@@ -303,10 +303,23 @@ def collision_line(y,x,yy,xx,instance):
             err-=1
     return False
 
-def collision_circle(self,y,x,r,instance):
-    for i in range(round(r)):
-        for ii in range(10*round((2*(pi*r)))):
-            collision_point(y+(cos(ii/10)*i),x+(sin(ii/10)*i),instance)
+def collision_circle(y,x,r,instance):
+    workingX=r
+    workingY=0
+    decOverTwo=1-workingX
+    while workingY<=workingX:
+        if (collision_line(x+workingX,y-workingY,x+workingX,y+workingY,instance) or
+            collision_line(y+workingY,x-workingX,y+workingY,x+workingX,instance) or
+            collision_line(y-workingY,x-workingX,y-workingY,x+workingX,instance) or
+            collision_line(y-workingX,x-workingY,y-workingX,x+workingY,instance)):
+            return True
+        workingY+=1
+        if decOverTwo<=0:
+            decOverTwo+=2 * workingY + 1
+        else:
+            workingX-=1
+            decOverTwo+=2 * (workingY - workingX) + 1
+    return False
 #place_
 #Checks if it would be safe to move to a position
 def place_free(self,y,x):

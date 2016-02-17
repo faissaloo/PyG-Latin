@@ -141,13 +141,21 @@ def draw_circle(y,x,r,outline=False):
             decOverTwo+=2 * (workingY - workingX) + 1
 
 def draw_line(y,x,yy,xx):
-    def safeDivide(a,b): #Return 0 if it can't be divided
-        try:
-            return a/b
-        except ZeroDivisionError:
-            return 0
-    for i in range(round(abs(xx-x))):
-        draw_point(y + safeDivide((yy - y) * (i - x) , (xx - x)),x+i)
+    deltaX=xx-x
+    deltaY=yy-y
+    err=0
+    deltaErr=abs(deltaY/deltaX)
+    workingY=y
+    for i in range(min(x,xx),max(x,xx)):
+        draw_point(workingY,i)
+        err+=deltaErr
+        while err>=0.5:
+            draw_point(workingY,i)
+            if deltaY<0:
+                workingY+=1
+            else:
+                workingY-=1
+            err-=1
 #Paths are stored as lists of points
 def draw_path(y,x,path):
     for i in range(len(path)-1):

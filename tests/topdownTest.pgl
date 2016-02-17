@@ -80,9 +80,9 @@ obj ctrl
   }
 }
 room rm1 {
-    room_speed=60
-    room_width=24
-    room_height=88
+    self.room_speed=60
+    self.room_width=24
+    self.room_height=88
     instance_create(10,10,player)
     instance_create(3,4,ctrl)
     instance_create(20,20,mobTest)

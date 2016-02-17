@@ -149,8 +149,7 @@ def draw_line(y,x,yy,xx):
     if x<xx:
         rnge=range(x,xx)
     else:
-        rnge=range(xx, x,-1)
-
+        rnge=range(x, xx,-1)
     deltaX=xx-x
     deltaY=yy-y
     err=0

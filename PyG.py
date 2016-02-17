@@ -146,12 +146,17 @@ def draw_line(y,x,yy,xx):
             return numerator/divisor
         else:
             return 0
+    if x<xx:
+        rnge=range(x,xx)
+    else:
+        rnge=range(xx, x,-1)
+
     deltaX=xx-x
     deltaY=yy-y
     err=0
     deltaErr=abs(safeDivide(deltaY,deltaX))
     workingY=y
-    for i in range(min(x,xx),max(x,xx)):
+    for i in rnge:
         draw_point(workingY,i)
         err+=deltaErr
         while err>=0.5:

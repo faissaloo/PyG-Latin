@@ -120,19 +120,25 @@ def draw_rectangle(y,x,yy,xx,outline):
         draw_point(y,i)
         draw_point(yy,i)
 
-def draw_circle(y,x,r,outline=False):
+def draw_circle(y,x,r,outline):
     workingX=r
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:
-        draw_point(workingX+x,workingY+y)
-        draw_point(workingY+x,workingX+y)
-        draw_point(-workingX+x,workingY+y)
-        draw_point(-workingY+x,workingX+y)
-        draw_point(-workingX+x,-workingY+y)
-        draw_point(-workingY+x,-workingX+y)
-        draw_point(workingX+x,-workingY+y)
-        draw_point(workingY+x,-workingX+y)
+        if outline:
+            draw_point(workingX+x,workingY+y)
+            draw_point(workingY+x,workingX+y)
+            draw_point(-workingX+x,workingY+y)
+            draw_point(-workingY+x,workingX+y)
+            draw_point(-workingX+x,-workingY+y)
+            draw_point(-workingY+x,-workingX+y)
+            draw_point(workingX+x,-workingY+y)
+            draw_point(workingY+x,-workingX+y)
+        else:
+            draw_line(x+workingX,y-workingY,x+workingX,y+workingY)
+            draw_line(y+workingY,x-workingX,y+workingY,x+workingX)
+            draw_line(y-workingY,x-workingX,y-workingY,x+workingX)
+            draw_line(y-workingX,x-workingY,y-workingX,x+workingY)
         workingY+=1
         if decOverTwo<=0:
             decOverTwo+=2 * workingY + 1

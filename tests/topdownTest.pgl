@@ -34,7 +34,7 @@ obj player
         {
             draw_text(self.y-1,self.x, "Hey!")
         }
-        draw_circle(10,10,10,False)
+
     }
 }
 

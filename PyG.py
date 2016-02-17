@@ -260,20 +260,48 @@ def instance_destroy(obj):
 ##################################################################
 #collision_
 #Checks if a point collides with an instance
-def collision_point(self,y,x,instance):
-    obj_collidablePoints=[]
+def collision_point(y,x,instance):
+    inst_collidablePoints=[]
     yy=0
     xx=0
-    for i in obj.mask_index:
+    for i in instance.mask_index:
         yy+=1
         for ii in i:
             xx+=1
             if ii!=None:
-                obj_collidablePoints.append((obj.y+yy,obj.x+xx))
-    if (y,x) in obj_collidablePoints:
+                inst_collidablePoints.append((instance.y+yy,instance.x+xx))
+    if (y,x) in inst_collidablePoints:
         return True
     else:
         return False
+
+def collision_line(y,x,yy,xx,instance):
+    def safeDivide(numerator,divisor):
+        if divisor:
+            return numerator/divisor
+        else:
+            return 0
+    if x<xx:
+        rnge=range(x,xx)
+    else:
+        rnge=range(x, xx,-1)
+    deltaX=xx-x
+    deltaY=yy-y
+    err=0
+    deltaErr=abs(safeDivide(deltaY,deltaX))
+    workingY=y
+    for i in rnge:
+        if collision_point(workingY,i,instance):
+            return True
+        err+=deltaErr
+        while err>=0.5:
+            draw_point(workingY,i)
+            if deltaY<0:
+                workingY+=1
+            else:
+                workingY-=1
+            err-=1
+    return False
 
 def collision_circle(self,y,x,r,instance):
     for i in range(round(r)):

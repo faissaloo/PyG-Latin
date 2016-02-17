@@ -141,10 +141,15 @@ def draw_circle(y,x,r,outline=False):
             decOverTwo+=2 * (workingY - workingX) + 1
 
 def draw_line(y,x,yy,xx):
+    def safeDivide(numerator,divisor):
+        if divisor:
+            return numerator/divisor
+        else:
+            return 0
     deltaX=xx-x
     deltaY=yy-y
     err=0
-    deltaErr=abs(deltaY/deltaX)
+    deltaErr=abs(safeDivide(deltaY,deltaX))
     workingY=y
     for i in range(min(x,xx),max(x,xx)):
         draw_point(workingY,i)

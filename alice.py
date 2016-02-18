@@ -476,7 +476,9 @@ def transpile(inputSource):
             nonlocal source
             realValue=""
             expect_whitespace()
-            for ii in [parseNotOperation(),
+            for ii in [parseSubtraction(),
+                parseAddition(),
+                parseNotOperation(),
                 takevalue(),
                 parseList(),
                 parseName(),
@@ -493,7 +495,7 @@ def transpile(inputSource):
                 EXPR=parseExpression(True)
                 expect(")")
                 return EXPR
-        
+
         def getNextOperation():
             expect_whitespace()
             for ii in [parseAndOperation(),

@@ -354,7 +354,10 @@ def transpile(inputSource):
                     return self.VALUE.py3()
             else:
                 if self.NEXT!=None:
-                    return "("+self.VALUE.py3()+self.NEXT.py3()+")"
+                    try:
+                        return str(eval("("+self.VALUE.py3()+self.NEXT.py3()+")"))
+                    except:
+                        return "("+self.VALUE.py3()+self.NEXT.py3()+")"
                 else:
                     return "("+self.VALUE.py3()+")"
 

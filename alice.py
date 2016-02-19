@@ -413,7 +413,7 @@ def transpile(inputSource):
             currentPos=getLineAndColumn()
             print("Error: "+string+" on line "+str(currentPos[0])+" column "+str(currentPos[1]))
             exit()
-        def expect(string,enforce=False):
+        def expect(string):
             nonlocal i
             nonlocal source
             if source[i:i+len(string)]==string:
@@ -749,7 +749,7 @@ def transpile(inputSource):
             body=[]
             line=[]
             expect_whitespace()
-            if expect("{",True):
+            if expect("{"):
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
                     for ii in [parseElseIfStatement(),
@@ -767,7 +767,7 @@ def transpile(inputSource):
                         ]:
                         if ii!=None:
                             body.append(ii)
-                if not expect("}",True):
+                if not expect("}"):
                     raiseException("Unterminated block")
             if body!=[]:
                 return codeBlock(body)
@@ -778,7 +778,7 @@ def transpile(inputSource):
             LIST=[]
             if expect("["):
                 LIST=parseArguments()
-                expect("]",True)
+                expect("]")
                 return listType(LIST)
 
         def parseString():
@@ -795,7 +795,7 @@ def transpile(inputSource):
                         else:
                             STRING+=source[i]
                         i+=1
-                    expect(deliniator,True)
+                    expect(deliniator)
                     return string(STRING)
                 else:
                     return None

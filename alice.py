@@ -413,11 +413,18 @@ def transpile(inputSource):
             currentPos=getLineAndColumn()
             print("Error: "+string+" on line "+str(currentPos[0])+" column "+str(currentPos[1]))
             exit()
-        def expect(string):
+        def expect(string,whitespace=False):
             nonlocal i
             nonlocal source
+            originali=i
             if source[i:i+len(string)]==string:
                 i+=len(string)#Skip over the thing
+                if whitespace:
+                    if expect_whitespace():
+                        return True
+                    else:
+                        i=originali
+                        return False
                 return True
             else:
                 return False
@@ -825,7 +832,7 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             expect_whitespace()
-            if expect("room") and expect_whitespace():
+            if expect("room",True):
                     roomName=takename()
                     expect_whitespace()
                     roomBody=parseCodeBlock()

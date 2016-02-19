@@ -684,7 +684,7 @@ def transpile(inputSource):
         def parseScriptStatement():
             nonlocal i
             nonlocal source
-            if expect("script") and expect_whitespace():
+            if expect("script",True):
                     scriptFunction=parseName(False,True)
                     scriptBody=parseCodeBlock()
                     return scriptStatement(scriptFunction,scriptBody)
@@ -700,8 +700,8 @@ def transpile(inputSource):
         def parseElseIfStatement():
             nonlocal i
             nonlocal source
-            if expect("else") and expect_whitespace():
-                    if expect("if") and expect_whitespace():
+            if expect("else",True):
+                    if expect("if",True):
                         elseifExpression=parseExpression()
                         elseifBody=parseCodeBlock()
                         return elseifStatement(elseifExpression,elseifBody)
@@ -712,40 +712,35 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
 
-            if expect("for"):
-                if expect_whitespace():
-                    VARNAME=parseName(True,False)
-                    expect_whitespace()
-                    #C style: for n from 0 to 50 by 5
-                    if expect("from"):
-                        expect_whitespace()
-                        START=parseExpression()
-                        if expect("to"):
-                            expect_whitespace()
-                            END=parseExpression()
-                            if expect("by"):
-                                expect_whitespace()
-                                BY=parseExpression()
-                                BODY=parseCodeBlock()
-                                return forFromStatement(VARNAME,START,END,BY,BODY)
-                            else:
-                                raiseException("Expected 'by'")
+            if expect("for",True):
+                VARNAME=parseName(True,False)
+                expect_whitespace()
+                #C style: for n from 0 to 50 by 5
+                if expect("from",True):
+                    START=parseExpression()
+                    if expect("to",True):
+                        END=parseExpression()
+                        if expect("by",True):
+                            BY=parseExpression()
+                            BODY=parseCodeBlock()
+                            return forFromStatement(VARNAME,START,END,BY,BODY)
                         else:
-                            raiseException("Expected 'to'")
+                            raiseException("Expected 'by'")
+                    else:
+                        raiseException("Expected 'to'")
 
                     #Py style:for elt in collection
-                    elif expect("in"):
-                        expect_whitespace()
-                        LIST=parseExpression()
-                        BODY=parseCodeBlock()
-                        return forInStatement(VARNAME,LIST,BODY)
-                    else:
-                        raiseException("Expected 'from' or 'in' statement")
+                elif expect("in",True):
+                    LIST=parseExpression()
+                    BODY=parseCodeBlock()
+                    return forInStatement(VARNAME,LIST,BODY)
+                else:
+                    raiseException("Expected 'from' or 'in' statement")
 
         def parseWhileStatement():
             nonlocal i
             nonlocal source
-            if expect("while") and expect_whitespace():
+            if expect("while",True):
                     whileExpression=parseExpression(takeexpression())
                     whileBody=parseCodeBlock()
                     return whileStatement(whileExpression,whileBody)
@@ -813,7 +808,7 @@ def transpile(inputSource):
         def parseObjDefinition():
             nonlocal i
             nonlocal source
-            if expect("obj") and expect_whitespace():
+            if expect("obj",True):
                     objName=takename()
                     expect_whitespace()
                     objBody=parseCodeBlock()
@@ -822,7 +817,7 @@ def transpile(inputSource):
         def parseEventDefinition():
             nonlocal i
             nonlocal source
-            if expect("event") and expect_whitespace():
+            if expect("event",True):
                 eventName=takename()
                 expect_whitespace()
                 eventBody=parseCodeBlock()

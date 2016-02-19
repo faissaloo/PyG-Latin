@@ -88,4 +88,4 @@ room rm1 {
     instance_create(3,4,ctrl)
     instance_create(20,20,mobTest)
 }
-current_room=rm1()
+engineVars.current_room=rm1()

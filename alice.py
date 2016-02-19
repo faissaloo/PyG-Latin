@@ -100,9 +100,11 @@ def transpile(inputSource):
             codeToReturn="class "+self.NAME+"():\n"
             currentTabulation+=1
             codeToReturn+=getCorrectTabulation()+"def __init__(self):\n"
-            codeToReturn+=self.BODY.py3()
             currentTabulation+=1
-            codeToReturn+=getCorrectTabulation()+"instanceList=[]\n"
+            codeToReturn+=getCorrectTabulation()+"engineVars.current_room=self\n"
+            codeToReturn+=getCorrectTabulation()+"self.instanceList=[]\n"
+            currentTabulation-=1
+            codeToReturn+=self.BODY.py3()
             currentTabulation-=2
             return codeToReturn
     #General Statements
@@ -849,7 +851,7 @@ def transpile(inputSource):
         return rawParsedData
 
     def transpileToPython(structure):
-        pythonCode="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\n"
+        pythonCode="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\nimport engineVars\n"
         tempForObject=None
         for i in structure:
             tempForObject=i.py3()

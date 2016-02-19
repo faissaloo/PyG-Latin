@@ -837,9 +837,15 @@ def transpile(inputSource):
         while i<len(source)-1:
             #Put all the parse*() functions here
             for ii in [parseRoomDefinition(),
-                parseEventDefinition(),
                 parseObjDefinition(),
                 parseScriptStatement(),
+                parseElseIfStatement(),
+                parseWhileStatement(),
+                parseIfStatement(),
+                parseForStatement(),
+                parseScriptStatement(),
+                parseEventDefinition(),
+                parseName(False),
                 parseDivisionAssignment(),
                 parseMultiplicationAssignment(),
                 parseAdditionAssignment(),

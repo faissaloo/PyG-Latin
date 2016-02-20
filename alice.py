@@ -463,6 +463,13 @@ def transpile(inputSource):
                     i-=1
                 return True
 
+        def expectComment():
+            nonlocal i
+            nonlocal source
+            if expect("//"):
+                while source[i]!="\n":
+                    i+=1
+
         def takename():
             nonlocal i
             nonlocal source
@@ -524,6 +531,7 @@ def transpile(inputSource):
 
         def getNextOperation():
             expect_whitespace()
+            expectComment()
             for ii in [parseAndOperation(),
                 parseOrOperation(),
                 parseXorOperation(),

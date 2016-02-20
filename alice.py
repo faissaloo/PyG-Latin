@@ -42,7 +42,8 @@ def transpile(inputSource):
         "c_magenta":"5",
         "c_cyan":"6",
         "c_white":"7",
-        "pi":"3.141592653589793"}
+        "pi":"3.141592653589793",
+        "tau":"6.283185307179586"}
     rawParsedData=[]
     currentTabulation=0
     def getCorrectTabulation():

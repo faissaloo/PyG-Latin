@@ -705,7 +705,7 @@ def transpile(inputSource):
         def parseIfStatement():
             nonlocal i
             nonlocal source
-            if expect("if") and expect_whitespace():
+            if expect("if",True):
                     ifExpression=parseExpression()
                     ifBody=parseCodeBlock()
                     return ifStatement(ifExpression,ifBody)

@@ -34,6 +34,15 @@ outputFile = args.outputFile
 
 latinSource = ""
 def transpile(inputSource):
+    constants={"c_black":"0",
+        "c_red":"1",
+        "c_green":"2",
+        "c_yellow":"3",
+        "c_blue":"4",
+        "c_magenta":"5",
+        "c_cyan":"6",
+        "c_white":"7",
+        "pi":"3.141592653589793"}
     rawParsedData=[]
     currentTabulation=0
     def getCorrectTabulation():
@@ -193,7 +202,11 @@ def transpile(inputSource):
         def __init__(self,VARIABLENAME):
             self.VARIABLENAME=VARIABLENAME
         def py3(self):
-            return self.VARIABLENAME
+            #Here we check if the 'variable' is a constant and return the constant value if so
+            try:
+                return constants[self.VARIABLENAME]
+            except KeyError:
+                return self.VARIABLENAME
 
     class function():
         def __init__(self,FUNCTIONNAME,ARGUMENTS):

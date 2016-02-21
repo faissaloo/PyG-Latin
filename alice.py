@@ -431,6 +431,8 @@ def transpile(inputSource):
                         break
                 return line,column
             currentPos=getLineAndColumn()
+            print("\t"+source.split("\n")[currentPos[0]])
+            print("\t"+(" "*currentPos[1])+"^")
             print("Error: "+string+" on line "+str(currentPos[0])+" column "+str(currentPos[1]))
             exit()
         def expect(string,whitespace=False):

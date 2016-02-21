@@ -526,6 +526,7 @@ def transpile(inputSource):
                 ]:
                 if ii!=None:
                     return expression(ii,getNextOperation(),bracketed)
+            raiseException("Invalid syntax")
 
         def parseBracketedExpression():
             nonlocal i

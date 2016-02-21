@@ -533,7 +533,8 @@ def transpile(inputSource):
             nonlocal source
             if expect("("):
                 EXPR=parseExpression(True)
-                expect(")")
+                if not expect(")"):
+                    raiseException("Invalid syntax; missing bracket")
                 return EXPR
 
         def getNextOperation():
@@ -573,11 +574,13 @@ def transpile(inputSource):
             if NAME!=None:
                 if expect("(") and allowFunc: #If there's a bracket parse this as a function
                     ARGUMENTS=parseArguments()
-                    expect(")")
+                    if not expect(")"):
+                        raiseException("Invalid syntax; missing bracket")
                     return function(NAME,ARGUMENTS)
                 elif expect("[") and allowVar:
                     EXPRESSION=parseExpression()
-                    expect("]")
+                    if not expect("]"):
+                        raiseException("Invalid syntax; missing square bracket")
                     if EXPRESSION!=None:
                         return itemInList(NAME,EXPRESSION)
                 elif allowVar:

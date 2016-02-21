@@ -372,10 +372,8 @@ def place_empty(self,y,x):
 def room_goto(room):
     room()
 
-def game_init():
-    start_keyboard_thread()
-
 def game_main():
+    start_keyboard_thread()
     while True:
         sleep(1/engineVars.current_room.room_speed)
         #Draw

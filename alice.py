@@ -899,7 +899,7 @@ def transpile(inputSource):
             tempForObject=i.py3()
             if tempForObject!=None:
                 pythonCode+=tempForObject
-        pythonCode+="\ngame_init()\ngame_main()"
+        pythonCode+="\ngame_main()"
         return pythonCode
     return transpileToPython(parse(inputSource))
 

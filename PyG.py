@@ -370,7 +370,7 @@ def place_empty(self,y,x):
     return True
 #Room handling functions
 def room_goto(room):
-    engineVars.current_room=room()
+    room()
 
 def game_init():
     start_keyboard_thread()

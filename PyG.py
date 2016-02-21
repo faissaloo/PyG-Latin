@@ -27,7 +27,7 @@
 from time import sleep
 import curses
 from threading import Thread
-from random import *
+import random
 from math import *
 import engineVars
 
@@ -372,6 +372,15 @@ def place_empty(self,y,x):
 def room_goto(room):
     room()
 
+#Random number functions
+#Since most of this stuff is already implemented by the builting random.
+#module I'll just make aliases for them
+irandom=random.randrange
+random=random.uniform
+choose=random.choice
+random_set_seed=random.seed
+
+def random():
 def game_main():
     start_keyboard_thread()
     while True:

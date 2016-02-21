@@ -49,19 +49,19 @@ obj mobTest
     event step
     {
 
-        if randrange(0,100)=0
+        if irandom(0,100)=0
         {
             self.x-=1
         }
-        if randrange(0,100)=0
+        if irandom(0,100)=0
         {
             self.x+=1
         }
-        if randrange(0,100)=0
+        if irandom(0,100)=0
         {
             self.y-=1
         }
-        if randrange(0,100)=0
+        if irandom(0,100)=0
         {
             self.y+=1
         }

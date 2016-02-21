@@ -288,6 +288,12 @@ def transpile(inputSource):
         def py3(self):
             return "/"+self.OPERAND.py3()
 
+    class powerOperation():
+        def __init__(self,OPERAND):
+            self.OPERAND=OPERAND
+        def py3(self):
+            return "**"+self.OPERAND.py3()
+
     class notOperation():
         def __init__(self,OPERAND):
             self.OPERAND=OPERAND
@@ -537,6 +543,7 @@ def transpile(inputSource):
                 parseXorOperation(),
                 parseLshiftOperation(),
                 parseRshiftOperation(),
+                parsePower(),
                 parseDivision(),
                 parseMultiplication(),
                 parseAddition(),
@@ -624,6 +631,11 @@ def transpile(inputSource):
             nonlocal i
             nonlocal source
             return handleOperation("/",divisionOperation)
+
+        def parsePower():
+            nonlocal i
+            nonlocal source
+            return handleOperation("^",powerOperation)
 
         def parseNotOperation():
             nonlocal i

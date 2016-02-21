@@ -848,6 +848,8 @@ def transpile(inputSource):
             nonlocal source
             if expect("obj",True):
                     objName=takename()
+                    if objName==None:
+                        raiseException("Syntax error; name missing from object definition")
                     expect_whitespace()
                     objBody=parseCodeBlock()
                     return objDefinition(objName,objBody)
@@ -857,6 +859,8 @@ def transpile(inputSource):
             nonlocal source
             if expect("event",True):
                 eventName=takename()
+                if eventName==None:
+                    raiseException("Syntax error; name missing from event definition")
                 expect_whitespace()
                 eventBody=parseCodeBlock()
                 return eventDefinition(eventName,eventBody)
@@ -867,6 +871,8 @@ def transpile(inputSource):
             expect_whitespace()
             if expect("room",True):
                     roomName=takename()
+                    if roomName==None:
+                        raiseException("Syntax error; name missing from room definition")
                     expect_whitespace()
                     roomBody=parseCodeBlock()
                     return roomDefinition(roomName,roomBody)

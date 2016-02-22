@@ -585,6 +585,7 @@ def transpile(inputSource):
             NAME=takename()
             if NAME!=None:
                 if expect("(") and allowFunc: #If there's a bracket parse this as a function
+                    expect_whitespace()
                     if not expect(")"): #Don't bother parsing arguments if there are none
                         ARGUMENTS=parseArguments()
                         if not expect(")"):

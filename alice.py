@@ -339,31 +339,31 @@ def transpile(inputSource):
         def __init__(self,OPERAND1,OPERAND2,LIST=None):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0]+"+="+self.OPERANDS[1].py3()
+            return self.OPERANDS[0].py3()+"+="+self.OPERANDS[1].py3()
 
     class subtractionAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0]+"-="+self.OPERANDS[1].py3()
+            return self.OPERANDS[0].py3()+"-="+self.OPERANDS[1].py3()
 
     class multiplicationAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0]+"*="+self.OPERANDS[1].py3()
+            return self.OPERANDS[0].py3()+"*="+self.OPERANDS[1].py3()
 
     class divideAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0]+"/="+self.OPERANDS[1].py3()
+            return self.OPERANDS[0].py3()+"/="+self.OPERANDS[1].py3()
 
     class simpleAssignmentOperation():
         def __init__(self,OPERAND1,OPERAND2):
             self.OPERANDS=OPERAND1,OPERAND2
         def py3(self):
-            return self.OPERANDS[0]+"="+self.OPERANDS[1].py3()
+            return self.OPERANDS[0].py3()+"="+self.OPERANDS[1].py3()
 
 
     class expression():
@@ -504,7 +504,7 @@ def transpile(inputSource):
             name=takename()
             expect_whitespace()
             if name!="":
-                return name
+                return variable(name)
 
         def takevalue():
             nonlocal i

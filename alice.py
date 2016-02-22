@@ -207,7 +207,10 @@ def transpile(inputSource):
             try:
                 return constants[self.VARIABLENAME]
             except KeyError:
-                return self.VARIABLENAME
+                if self.VARIABLENAME[:len("current_room")]=="current_room":
+                    return "engineVars."+self.VARIABLENAME
+                else:
+                    return self.VARIABLENAME
 
     class function():
         def __init__(self,FUNCTIONNAME,ARGUMENTS):
@@ -581,7 +584,7 @@ def transpile(inputSource):
                             raiseException("Invalid syntax; missing bracket")
                     else:
                         ARGUMENTS=arguments("")
-                    
+
                     return function(NAME,ARGUMENTS)
                 elif expect("[") and allowVar:
                     EXPRESSION=parseExpression()

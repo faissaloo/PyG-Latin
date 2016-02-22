@@ -207,8 +207,10 @@ def transpile(inputSource):
             try:
                 return constants[self.VARIABLENAME]
             except KeyError:
-                if self.VARIABLENAME[:len("current_room")]=="current_room":
+                if self.VARIABLENAME[:len("current_room.")]=="current_room.":
                     return "engineVars."+self.VARIABLENAME
+                elif self.VARIABLENAME[:len("global.")]=="global.":
+                    return "engineVars.globalVars."+self.VARIABLENAME[len("global."):]
                 else:
                     return self.VARIABLENAME
 

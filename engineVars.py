@@ -4,3 +4,7 @@ class emptyRm(): #Just a placeholder room for room initialisation
     room_width=24
     room_height=88
 current_room=emptyRm()
+
+class globalVarHolder():
+    pass
+globalVars=globalVarHolder()

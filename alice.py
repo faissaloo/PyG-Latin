@@ -43,7 +43,9 @@ def transpile(inputSource):
         "c_cyan":"6",
         "c_white":"7",
         "pi":"3.141592653589793",
-        "tau":"6.283185307179586"}
+        "tau":"6.283185307179586",
+        "true":"True",
+        "false":"False"}
     rawParsedData=[]
     currentTabulation=0
     def getCorrectTabulation():
@@ -207,7 +209,10 @@ def transpile(inputSource):
             try:
                 return constants[self.VARIABLENAME]
             except KeyError:
-                if self.VARIABLENAME[:len("room_current.")]=="room_current.":
+                #Here we're just checking if it matches any of the special variables
+                #that we'll want to override
+                if (self.VARIABLENAME[:len("room_current.")]=="room_current." or
+                    self.VARIABLENAME=="room_current"):
                     return "engineVars."+self.VARIABLENAME
                 elif self.VARIABLENAME[:len("global.")]=="global.":
                     return "engineVars.globalVars."+self.VARIABLENAME[len("global."):]

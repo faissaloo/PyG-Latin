@@ -376,9 +376,9 @@ def room_goto(room):
 #Since most of this stuff is already implemented by the builting random.
 #module I'll just make aliases for them
 irandom=random.randrange
-random=random.uniform
 choose=random.choice
 random_set_seed=random.seed
+random=random.uniform
 
 def game_main():
     start_keyboard_thread()

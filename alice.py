@@ -929,7 +929,7 @@ def transpile(inputSource):
         for i in structure:
             tempForObject=i.py3()
             if tempForObject!=None:
-                pythonCode+=tempForObject
+                pythonCode+=tempForObject+"\n"
         pythonCode+="\ngame_main()"
         return pythonCode
     return transpileToPython(parse(inputSource))

@@ -380,7 +380,6 @@ random=random.uniform
 choose=random.choice
 random_set_seed=random.seed
 
-def random():
 def game_main():
     start_keyboard_thread()
     while True:

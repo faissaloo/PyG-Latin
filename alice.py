@@ -832,11 +832,15 @@ def transpile(inputSource):
         def parseList():
             nonlocal i
             nonlocal source
-            LIST=[]
             if expect("["):
-                LIST=parseArguments()
-                expect("]")
-                return listType(LIST)
+                expect_whitespace()
+                if not expect("]"):
+                    LIST=parseArguments()
+                    expect("]")
+                    return listType(LIST)
+                else:
+                    LIST=arguments("")
+                    return listType(LIST)
 
         def parseString():
             nonlocal i

@@ -88,7 +88,7 @@ def draw_set_color(color):
 def draw_point(y,x):
     global screen
     global current_color
-    if round(y)<engineVars.current_room.room_width and round(x)<engineVars.current_room.room_height and round(y)>0 and round(x)>0:
+    if round(y)<engineVars.room_current.room_width and round(x)<engineVars.room_current.room_height and round(y)>0 and round(x)>0:
         screen.addstr(round(y),round(x),"█",curses.color_pair(current_color+10))
 
 def draw_text(y,x, string):
@@ -96,7 +96,7 @@ def draw_text(y,x, string):
     global current_color
     for i in range(len(str(string))):
         #Replace this with an 'if inside room thing'
-        if round(y)<engineVars.current_room.room_width and round(x+i)<engineVars.current_room.room_height and round(y)>0 and round(x+i)>0:
+        if round(y)<engineVars.room_current.room_width and round(x+i)<engineVars.room_current.room_height and round(y)>0 and round(x+i)>0:
             screen.addstr(round(y),round(x+i),str(string[i]),curses.color_pair(current_color))
 
 def draw_rectangle(y,x,yy,xx,outline):
@@ -228,11 +228,11 @@ def instance_create(y,x,obj):
     inst=obj()
     inst.y=y
     inst.x=x
-    engineVars.current_room.instanceList.append(inst)
+    engineVars.room_current.instanceList.append(inst)
     return inst
 
 def instance_destroy(obj):
-    engineVars.current_room.instanceList.remove(obj)
+    engineVars.room_current.instanceList.remove(obj)
     obj.destroyed() #Executes the destroyed event
 
 #Collisions
@@ -317,7 +317,7 @@ def place_free(self,y,x):
 
     obj_collidablePoints=[]
     self_collidablePoints=[]
-    for i in engineVars.current_room.instanceList:
+    for i in engineVars.room_current.instanceList:
         if hasattr(i,'solid') and i.solid and hasattr(i,'mask_index'): #Place_free is only supposed to do collisions with solid objects
             yy=0
             xx=0
@@ -346,7 +346,7 @@ def place_empty(self,y,x):
         return True
     obj_collidablePoints=[]
     self_collidablePoints=[]
-    for i in engineVars.current_room.instanceList:
+    for i in engineVars.room_current.instanceList:
         yy=0
         xx=0
         if hasattr(i,'mask_index'):
@@ -383,12 +383,12 @@ random=random.uniform
 def game_main():
     start_keyboard_thread()
     while True:
-        sleep(1/engineVars.current_room.room_speed)
+        sleep(1/engineVars.room_current.room_speed)
         #Draw
-        for i in engineVars.current_room.instanceList:
+        for i in engineVars.room_current.instanceList:
             if hasattr(i, 'draw'):
                 i.draw()
-        for i in engineVars.current_room.instanceList:
+        for i in engineVars.room_current.instanceList:
             if hasattr(i, 'step'):
                 i.step()
         redraw()

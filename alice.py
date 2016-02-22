@@ -111,7 +111,7 @@ def transpile(inputSource):
             currentTabulation+=1
             codeToReturn+=getCorrectTabulation()+"def __init__(self):\n"
             currentTabulation+=1
-            codeToReturn+=getCorrectTabulation()+"engineVars.current_room=self\n"
+            codeToReturn+=getCorrectTabulation()+"engineVars.room_current=self\n"
             codeToReturn+=getCorrectTabulation()+"self.instanceList=[]\n"
             currentTabulation-=1
             codeToReturn+=self.BODY.py3()
@@ -207,7 +207,7 @@ def transpile(inputSource):
             try:
                 return constants[self.VARIABLENAME]
             except KeyError:
-                if self.VARIABLENAME[:len("current_room.")]=="current_room.":
+                if self.VARIABLENAME[:len("room_current.")]=="room_current.":
                     return "engineVars."+self.VARIABLENAME
                 elif self.VARIABLENAME[:len("global.")]=="global.":
                     return "engineVars.globalVars."+self.VARIABLENAME[len("global."):]

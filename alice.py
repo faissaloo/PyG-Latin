@@ -575,9 +575,13 @@ def transpile(inputSource):
             NAME=takename()
             if NAME!=None:
                 if expect("(") and allowFunc: #If there's a bracket parse this as a function
-                    ARGUMENTS=parseArguments()
-                    if not expect(")"):
-                        raiseException("Invalid syntax; missing bracket")
+                    if not expect(")"): #Don't bother parsing arguments if there are none
+                        ARGUMENTS=parseArguments()
+                        if not expect(")"):
+                            raiseException("Invalid syntax; missing bracket")
+                    else:
+                        ARGUMENTS=arguments("")
+                    
                     return function(NAME,ARGUMENTS)
                 elif expect("[") and allowVar:
                     EXPRESSION=parseExpression()

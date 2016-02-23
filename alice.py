@@ -416,11 +416,15 @@ def transpile(inputSource):
             return codeToReturn
 
     class itemInList():
-        def __init__(self,EXPRESSION1,EXPRESSION2):
+        def __init__(self,EXPRESSION1,EXPRESSION2,EXPRESSION3=None):
             self.EXPRESSION1=EXPRESSION1
             self.EXPRESSION2=EXPRESSION2 #Arguments should be a list
+            self.EXPRESSION3=EXPRESSION3
         def py3(self):
-            return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+"]"
+            if self.EXPRESSION3==None:
+                return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+"]"
+            else:
+                return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+":"+self.EXPRESSION3.py3()+"]"
 
     def parse(source):
         def raiseException(string):
@@ -541,11 +545,16 @@ def transpile(inputSource):
                     while expect("["):
                         expect_whitespace()
                         EXPRESSION2=parseExpression()
+                        EXPRESSION3=None
+                        expect_whitespace()
+                        if expect(":"):
+                            EXPRESSION3=parseExpression()
+                        expect_whitespace()
                         if not expect("]"):
                             raiseException("Invalid syntax; missing square brackets")
                         expect_whitespace()
                         if EXPRESSION2!=None:
-                            ii=itemInList(ii,EXPRESSION2)
+                            ii=itemInList(ii,EXPRESSION2,EXPRESSION3)
                     #
                     return expression(ii,getNextOperation(),bracketed)
             raiseException("Invalid syntax")

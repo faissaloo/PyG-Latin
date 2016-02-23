@@ -1,3 +1,9 @@
+script draw_func(self,string)
+{
+    draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,True)
+    draw_text(24,1,string)
+}
+
 obj player
 {
     event create
@@ -69,6 +75,7 @@ obj mobTest
     event draw
     {
         draw_point(self.y,self.x)
+        draw_func(self,"test")
     }
 }
 
@@ -81,8 +88,8 @@ obj ctrl
 }
 room rm1 {
     self.room_speed=60
-    self.room_width=24
-    self.room_height=88
+    self.room_width=88
+    self.room_height=24
     instance_create(10,10,player)
     instance_create(3,4,ctrl)
     instance_create(20,20,mobTest)

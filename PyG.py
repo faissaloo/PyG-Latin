@@ -88,7 +88,7 @@ def draw_set_color(color):
 def draw_point(y,x):
     global screen
     global current_color
-    if round(y)<engineVars.room_current.room_width and round(x)<engineVars.room_current.room_height and round(y)>0 and round(x)>0:
+    if round(y)<engineVars.room_current.room_height and round(x)<engineVars.room_current.room_width and round(y)>0 and round(x)>0:
         screen.addstr(round(y),round(x),"█",curses.color_pair(current_color+10))
 
 def draw_text(y,x, string):
@@ -96,11 +96,11 @@ def draw_text(y,x, string):
     global current_color
     for i in range(len(str(string))):
         #Replace this with an 'if inside room thing'
-        if round(y)<engineVars.room_current.room_width and round(x+i)<engineVars.room_current.room_height and round(y)>0 and round(x+i)>0:
+        if round(y)<engineVars.room_current.room_height and round(x+i)<engineVars.room_current.room_width and round(y)>0 and round(x+i)>0:
             screen.addstr(round(y),round(x+i),str(string[i]),curses.color_pair(current_color))
 
 def draw_rectangle(y,x,yy,xx,outline):
-    for i in range(y,yy+1):
+    for i in range(round(y),round(yy+1)):
         draw_point(i,x)
         draw_point(i,xx)
         if (outline):

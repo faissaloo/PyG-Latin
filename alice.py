@@ -206,9 +206,9 @@ def transpile(inputSource):
             self.VARIABLENAME=VARIABLENAME
         def py3(self):
             #Here we check if the 'variable' is a constant and return the constant value if so
-            try:
+            if self.VARIABLENAME in constants:
                 return constants[self.VARIABLENAME]
-            except KeyError:
+            else:
                 #Here we're just checking if it matches any of the special variables
                 #that we'll want to override
                 if (self.VARIABLENAME[:len("room_current.")]=="room_current." or

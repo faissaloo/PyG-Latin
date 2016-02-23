@@ -416,11 +416,11 @@ def transpile(inputSource):
             return codeToReturn
 
     class itemInList():
-        def __init__(self,LISTNAME,EXPRESSION):
-            self.LISTNAME=LISTNAME
-            self.EXPRESSION=EXPRESSION #Arguments should be a list
+        def __init__(self,EXPRESSION1,EXPRESSION2):
+            self.EXPRESSION1=EXPRESSION1
+            self.EXPRESSION2=EXPRESSION2 #Arguments should be a list
         def py3(self):
-            return self.LISTNAME+"["+self.EXPRESSION.py3()+"]"
+            return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+"]"
 
     def parse(source):
         def raiseException(string):
@@ -527,16 +527,26 @@ def transpile(inputSource):
             nonlocal source
             realValue=""
             expect_whitespace()
-            for ii in [parseSubtraction(),
+            for ii in [parseList(),
+                parseSubtraction(),
                 parseAddition(),
                 parseNotOperation(),
                 takevalue(),
-                parseList(),
                 parseName(),
                 parseString(),
                 parseBracketedExpression()
                 ]:
                 if ii!=None:
+                    #This is how we're parsing stuff like list[item]
+                    while expect("["):
+                        expect_whitespace()
+                        EXPRESSION2=parseExpression()
+                        if not expect("]"):
+                            raiseException("Invalid syntax; missing square brackets")
+                        expect_whitespace()
+                        if EXPRESSION2!=None:
+                            ii=itemInList(ii,EXPRESSION2)
+                    #
                     return expression(ii,getNextOperation(),bracketed)
             raiseException("Invalid syntax")
 
@@ -594,12 +604,6 @@ def transpile(inputSource):
                         ARGUMENTS=arguments("")
 
                     return function(NAME,ARGUMENTS)
-                elif expect("[") and allowVar:
-                    EXPRESSION=parseExpression()
-                    if not expect("]"):
-                        raiseException("Invalid syntax; missing square bracket")
-                    if EXPRESSION!=None:
-                        return itemInList(NAME,EXPRESSION)
                 elif allowVar:
                     return variable(NAME)
 

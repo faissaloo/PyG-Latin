@@ -1,9 +1,22 @@
-script draw_func(self,string)
+obj textbox
 {
-    draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,True)
-    draw_text(room_current.room_height,1,string)
+    event create
+    {
+        self.string=""
+        self.strIndex=0
+    }
+    event draw
+    {
+        draw_set_color(c_black)
+        draw_rectangle(room_current.room_height,0,(room_current.room_height/3)*2,room_current.room_width,True)
+        draw_set_color(c_white)
+        draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
+        if self.strIndex<len(self.string)
+        {
+            self.strIndex+=0.2
+        }
+    }
 }
-
 obj player
 {
     event create
@@ -37,7 +50,7 @@ obj player
         draw_point(self.y,self.x)
         if place_empty(self,self.y+1,self.x)=0
         {
-            draw_text(self.y-1,self.x, "Hey!")
+            room_current.textboxInst.string="Hey, how are you doing?"
         }
 
     }
@@ -62,11 +75,11 @@ obj mobTest
         {
             self.x+=1
         }
-        if irandom(0,100)=0
+        if irandom(0,100)=0 AND self.y>0
         {
             self.y-=1
         }
-        if irandom(0,100)=0
+        if irandom(0,100)=0 AND self.y<room_current.room_height
         {
             self.y+=1
         }
@@ -75,7 +88,6 @@ obj mobTest
     event draw
     {
         draw_point(self.y,self.x)
-        draw_func(self,"test")
     }
 }
 
@@ -92,6 +104,7 @@ room rm1 {
     self.room_height=24
     instance_create(10,10,player)
     instance_create(3,4,ctrl)
-    instance_create(20,20,mobTest)
+    instance_create(3,3,mobTest)
+    self.textboxInst=instance_create(2,2,textbox)
 }
 room_goto(rm1)

@@ -107,13 +107,13 @@ def draw_rectangle(y,x,yy,xx,outline):
     for i in rnge:
         draw_point(i,x)
         draw_point(i,xx)
-        if (outline):
+        if not (outline):
             for ii in range(x+1,xx): #Fill it in
                 draw_point(i,ii)
-
-    for i in range(x,xx+1):
-        draw_point(y,i)
-        draw_point(yy,i)
+    draw_line(yy,x,yy,xx+1)
+    draw_line(y,x,y,xx)
+    draw_line(y,xx,yy,xx)
+    draw_line(y,x,yy,x)
 
 def draw_circle(y,x,r,outline):
     workingX=r

@@ -8,7 +8,7 @@ obj textbox
     event draw
     {
         draw_set_color(c_black)
-        draw_rectangle(room_current.room_height-1,1,(room_current.room_height/3)*2,room_current.room_width-1,true)
+        draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,true)
         draw_set_color(c_white)
         draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
         if self.strIndex<len(self.string)

@@ -223,10 +223,6 @@ def sprite_get_height(sprite):
 def sprite_get_width(sprite):
     return len(sprite[0])
 
-def redraw():
-    screen.refresh()
-    screen.clear()
-
 #Instance handling functions
 def instance_create(y,x,obj):
     inst=obj()
@@ -388,6 +384,7 @@ def game_main():
     start_keyboard_thread()
     while True:
         sleep(1/engineVars.room_current.room_speed)
+        screen.clear()
         #Draw
         for i in engineVars.room_current.instanceList:
             if hasattr(i, 'draw'):
@@ -395,4 +392,4 @@ def game_main():
         for i in engineVars.room_current.instanceList:
             if hasattr(i, 'step'):
                 i.step()
-        redraw()
+        screen.refresh()

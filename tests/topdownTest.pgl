@@ -4,16 +4,24 @@ obj textbox
     {
         self.string=""
         self.strIndex=0
+        self.doneWritingFlag=0
     }
     event draw
     {
-        draw_set_color(c_black)
-        draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,true)
-        draw_set_color(c_white)
-        draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
-        if self.strIndex<len(self.string)
+        if self.string!=""
         {
-            self.strIndex+=0.2
+            draw_set_color(c_black)
+            draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,true)
+            draw_set_color(c_white)
+            draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
+            if self.strIndex<len(self.string)
+            {
+                self.strIndex+=len(self.string)/100
+            }
+            else
+            {
+                self.doneWritingFlag+=0.2
+            }
         }
     }
 }
@@ -24,6 +32,8 @@ obj player
         self.y=0
         self.x=0
         self.mask_index=[[1]]
+        self.conversation=["You: Morning!","Mum: Did you see the news","You: No... Why?","Mum: The sky split in two!"]
+        self.conversationIndex=0
     }
     event step
     {
@@ -44,14 +54,24 @@ obj player
             self.y+=1
         }
 
+        if place_empty(self,self.y+1,self.x)=0
+        {
+            self.conversationIndex=0
+            room_current.textboxInst.string=self.conversation[self.conversationIndex]
+        }
+        if (room_current.textboxInst.doneWritingFlag>1) AND (self.conversationIndex<len(self.conversation)-1)
+        {
+            room_current.textboxInst.doneWritingFlag=0
+            room_current.textboxInst.strIndex=0
+            self.conversationIndex+=1
+            room_current.textboxInst.string=self.conversation[self.conversationIndex]
+        }
+
     }
     event draw
     {
+        draw_set_color(c_black)
         draw_point(self.y,self.x)
-        if place_empty(self,self.y+1,self.x)=0
-        {
-            room_current.textboxInst.string="Hey, how are you doing?\ntest"
-        }
 
     }
 }

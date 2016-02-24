@@ -864,10 +864,7 @@ def transpile(inputSource):
                 STRING=""
                 if expect(deliniator):
                     while source[i]!=deliniator:
-                        if expect("\\") and (expect("\\\"") or expect("\\\'")):
-                            STRING+=deliniator
-                        else:
-                            STRING+=source[i]
+                        STRING+=source[i]
                         i+=1
                     expect(deliniator)
                     return string(STRING)

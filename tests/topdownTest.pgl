@@ -50,7 +50,7 @@ obj player
         draw_point(self.y,self.x)
         if place_empty(self,self.y+1,self.x)=0
         {
-            room_current.textboxInst.string="Hey, how are you doing?"
+            room_current.textboxInst.string="Hey, how are you doing?\ntest"
         }
 
     }

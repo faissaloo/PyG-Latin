@@ -100,7 +100,11 @@ def draw_text(y,x, string):
             screen.addstr(round(y),round(x+i),str(string[i]),curses.color_pair(current_color))
 
 def draw_rectangle(y,x,yy,xx,outline):
-    for i in range(round(y),round(yy+1)):
+    if y<yy:
+        rnge=range(round(y),round(yy))
+    else:
+        rnge=range(round(y), round(yy),-1)
+    for i in rnge:
         draw_point(i,x)
         draw_point(i,xx)
         if (outline):

@@ -531,11 +531,11 @@ def transpile(inputSource):
             nonlocal source
             realValue=""
             expect_whitespace()
-            for ii in [parseList(),
-                parseSubtraction(),
+            for ii in [parseSubtraction(),
                 parseAddition(),
                 parseNotOperation(),
                 takevalue(),
+                parseList(),
                 parseName(),
                 parseString(),
                 parseBracketedExpression()

@@ -106,7 +106,7 @@ def draw_text(y,x, string):
             yOffset+=1
             currentLineLength=0
         else:
-            if round(y)<=engineVars.room_current.room_height and round(x+i)<=engineVars.room_current.room_width and round(y)>=0 and round(x+i)>=0:
+            if round(y+yOffset)<=engineVars.room_current.room_height and round(x+i-backwardsOffset)<=engineVars.room_current.room_width and round(y)>=0 and round(x+i)>=0:
                 screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
         i+=1
 

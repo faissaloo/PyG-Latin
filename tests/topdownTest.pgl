@@ -107,6 +107,7 @@ obj mobTest
     }
     event draw
     {
+        draw_set_color(c_green)
         draw_point(self.y,self.x)
     }
 }

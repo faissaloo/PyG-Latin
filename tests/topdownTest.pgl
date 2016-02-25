@@ -16,11 +16,11 @@ obj textbox
             draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
             if self.strIndex<len(self.string)
             {
-                self.strIndex+=len(self.string)/100
+                self.strIndex+=len(self.string)/150
             }
             else
             {
-                self.doneWritingFlag+=0.2
+                self.doneWritingFlag+=0.01
             }
         }
     }
@@ -32,7 +32,7 @@ obj player
         self.y=0
         self.x=0
         self.mask_index=[[1]]
-        self.conversation=["You: Morning!","Mum: Did you see the news","You: No... Why?","Mum: The sky split in two!"]
+        self.conversation=["roytheshort: I'm scared and confused please help or don't goodbye.","Tirous: conglaturations! =D\nyou won the gmc!\n*underwhelming confetti*","roytheshort: Well, at least nobody died as a result of my actions this week.","ImJoe: 'Nobody?'","makerofthegames: What are you talking about? I didn't change my avatar or anything...","Lukan Spellweaver: I also didn't change my avatar.","RujiK: Can someone please explain why no one is copying my avatar? Guys, I'm cool.\nseriously. For real.\nUh, I mean I would hate that so much...\nI hope no one does that...\nthat would make me so mad guys."]
         self.conversationIndex=0
     }
     event step

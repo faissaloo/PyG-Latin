@@ -54,7 +54,7 @@ obj player
             self.y+=1
         }
 
-        if collision_circle(self.y,self.x,1,room_current.mobInst)
+        if collision_circle(self.y,self.x,2,room_current.mobInst)
         {
             self.conversationIndex=0
             room_current.textboxInst.string=self.conversation[self.conversationIndex]

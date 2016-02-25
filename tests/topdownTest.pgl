@@ -54,7 +54,7 @@ obj player
             self.y+=1
         }
 
-        if place_empty(self,self.y+1,self.x)=0
+        if collision_circle(self.y,self.x,1,room_current.mobInst)
         {
             self.conversationIndex=0
             room_current.textboxInst.string=self.conversation[self.conversationIndex]
@@ -124,7 +124,7 @@ room rm1 {
     self.room_height=24
     instance_create(10,10,player)
     instance_create(3,4,ctrl)
-    instance_create(3,3,mobTest)
+    self.mobInst=instance_create(3,3,mobTest)
     self.textboxInst=instance_create(2,2,textbox)
 }
 room_goto(rm1)

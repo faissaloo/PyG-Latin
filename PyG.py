@@ -48,34 +48,24 @@ screen=curses.initscr()
 curses.start_color()
 curses.noecho()
 screen.clear()
+screen.nodelay(1)
 curses.use_default_colors()
 current_color=0
 for i in range(0, 8):
     curses.init_pair(i, i, -1)
 for i in range(0, 8):
     curses.init_pair(i + 10, i, i)
-#Variables
-keyboard_lastkey=-1
-#Keyboard handling
-def start_keyboard_thread():
-    global keyboard_lastkey
-    def checkKey():
-        while True:
-            global keyboard_lastkey
-            keyboard_lastkey=screen.getch()
-    Thread(target = checkKey).start()
 
+#Keyboard handling
 def keyboard_check(key):
-    global keyboard_lastkey
-    if (keyboard_lastkey==key):
+    if (engineVars.keyboard_lastkey==key):
         return True
     else:
         return False
 
 def keyboard_check_pressed(key):
-    global keyboard_lastkey
-    if (keyboard_lastkey==int(key)):
-        keyboard_lastkey=-1
+    if (engineVars.keyboard_lastkey==int(key)):
+        engineVars.keyboard_lastkey=-1
         return True
     else:
         return False
@@ -392,8 +382,8 @@ random_set_seed=random.seed
 random=random.uniform
 
 def game_main():
-    start_keyboard_thread()
     while True:
+        engineVars.keyboard_lastkey=screen.getch()
         sleep(1/engineVars.room_current.room_speed)
         screen.clear()
         #Draw

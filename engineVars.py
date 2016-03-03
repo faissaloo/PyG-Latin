@@ -8,3 +8,4 @@ room_current=emptyRm()
 class globalVarHolder():
     pass
 globalVars=globalVarHolder()
+keyboard_lastkey=-1

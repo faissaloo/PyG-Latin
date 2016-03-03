@@ -9,3 +9,6 @@ class globalVarHolder():
     pass
 globalVars=globalVarHolder()
 keyboard_lastkey=-1
+engineVars.mouse_x=0
+engineVars.mouse_y=0
+engineVars.mouse_last_button=-1

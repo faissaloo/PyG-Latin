@@ -48,6 +48,8 @@ curses.start_color()
 curses.noecho()
 screen.clear()
 screen.nodelay(1)
+curses.keypad(1)
+curses.mousemask(1)
 curses.use_default_colors()
 current_color=0
 for i in range(0, 8):
@@ -382,7 +384,14 @@ random=random.uniform
 
 def game_main():
     while True:
-        engineVars.keyboard_lastkey=screen.getch()
+        lastCh=screen.getch()
+        if False: #lastCh==curses.KEY_MOUSE:
+            mouseEvent=curses.getmouse()
+            engineVars.mouse_x=mouseEvent[1]
+            engineVars.mouse_y=mouseEvent[2]
+            engineVars.mouse_last_button=mouseEvent[4]
+        else:
+            engineVars.keyboard_lastkey=lastCh
         sleep(1/engineVars.room_current.room_speed)
         screen.clear()
         #Draw

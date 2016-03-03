@@ -48,7 +48,7 @@ curses.start_color()
 curses.noecho()
 screen.clear()
 screen.nodelay(1)
-curses.keypad(1)
+screen.keypad(1)
 curses.mousemask(1)
 curses.use_default_colors()
 current_color=0

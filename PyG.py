@@ -26,7 +26,6 @@
 #Use the functions from that library
 from time import sleep
 import curses
-from threading import Thread
 import random
 from math import *
 import engineVars

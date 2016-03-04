@@ -220,6 +220,9 @@ def transpile(inputSource):
                 if (self.VARIABLENAME[:len("room_current.")]=="room_current." or
                     self.VARIABLENAME=="room_current"):
                     return "engineVars."+self.VARIABLENAME
+                elif (self.VARIABLENAME[:len("view_current.")]=="view_current." or
+                    self.VARIABLENAME=="view_current"):
+                    return "engineVars."+self.VARIABLENAME
                 elif self.VARIABLENAME[:len("global.")]=="global.":
                     return "engineVars.globalVars."+self.VARIABLENAME[len("global."):]
                 else:

@@ -65,6 +65,15 @@ def keyboard_check(key):
         return False
 
 #Drawing functions
+#Views
+class view():
+    def __init__(self,enabled,view_yview,view_xview,view_wview,view_hview):
+        self.enabled=enabled
+        self.view_xview=view_xview
+        self.view_yview=view_yview
+        self.view_hview=view_hview
+        self.view_wview=view_wview
+
 def draw_set_color(color):
     global current_color
     current_color=color
@@ -72,8 +81,15 @@ def draw_set_color(color):
 def draw_point(y,x):
     global screen
     global current_color
-    if round(y)<=engineVars.room_current.room_height and round(x)<=engineVars.room_current.room_width and round(y)>=0 and round(x)>=0:
-        screen.addstr(round(y),round(x)," ",curses.color_pair(current_color+10))
+    if engineVars.view_current==None or engineVars.view_current.enabled==False:
+        if round(y)<=engineVars.room_current.room_height and round(x)<=engineVars.room_current.room_width and round(y)>=0 and round(x)>=0:
+            screen.addstr(round(y),round(x)," ",curses.color_pair(current_color+10))
+    else:
+        if (round(y-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and
+            round(x-engineVars.view_current.view_xview)<=engineVars.view_current.view_wview and
+            round(y-engineVars.view_current.view_yview)>=0 and
+            round(x-engineVars.view_current.view_xview)>=0):
+            screen.addstr(round(y-engineVars.view_current.view_yview),round(x-engineVars.view_current.view_xview)," ",curses.color_pair(current_color+10))
 
 def draw_text(y,x, string):
     global screen
@@ -90,8 +106,17 @@ def draw_text(y,x, string):
             yOffset+=1
             currentLineLength=0
         else:
-            if round(y+yOffset)<=engineVars.room_current.room_height and round(x+i-backwardsOffset)<=engineVars.room_current.room_width and round(y)>=0 and round(x+i)>=0:
-                screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
+            if engineVars.view_current==None or engineVars.view_current.enabled==False:
+                if (round(y+yOffset)<=engineVars.room_current.room_height and
+                    round(x+i-backwardsOffset)<=engineVars.room_current.room_width and
+                    round(y)>=0 and round(x+i)>=0):
+                    screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
+            else:
+                if (round(y+yOffset-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and
+                    round(x+i-backwardsOffset-engineVars.view_current.view_xview)<=engineVars.view_current.view_wview and
+                    round(y-engineVars.view_current.view_yview)>=0 and
+                    round(x+i-backwardsOffset-engineVars.view_current.view_xview)>=0):
+                    screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
         i+=1
 
 def draw_rectangle(y,x,yy,xx,outline):

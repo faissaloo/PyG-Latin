@@ -392,6 +392,8 @@ def game_main():
             engineVars.keyboard_lastkey=lastCh
         sleep(1/engineVars.room_current.room_speed)
         screen.clear()
+        engineVars.room_current.instanceList=\
+            sorted(engineVars.room_current.instanceList,key=lambda x: x.depth)
         #Draw
         for i in engineVars.room_current.instanceList:
             if hasattr(i, 'draw'):

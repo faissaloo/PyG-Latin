@@ -76,6 +76,10 @@ def transpile(inputSource):
         def py3(self):
             nonlocal currentTabulation
             codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
+            currentTabulation+=1
+            codeToReturn+=getCorrectTabulation()+"solid=0\n"
+            codeToReturn+=getCorrectTabulation()+"depth=0\n"
+            currentTabulation-=1
             if self.BODY!=None:
                 codeToReturn+=self.BODY.py3()
             else:

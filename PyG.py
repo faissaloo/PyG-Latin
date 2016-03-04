@@ -307,13 +307,13 @@ def collision_circle(y,x,r,instance):
 #place_
 #Checks if it would be safe to move to a position
 def place_free(self,y,x):
-    if not hasattr(self,'mask_index'): #Save ourselves some calculations and just return True if there is no mask
+    if self.mask_index==[]: #Save ourselves some calculations and just return True if there is no mask
         return True
 
     obj_collidablePoints=[]
     self_collidablePoints=[]
     for i in engineVars.room_current.instanceList:
-        if hasattr(i,'solid') and i.solid and hasattr(i,'mask_index'): #Place_free is only supposed to do collisions with solid objects
+        if i.solid: #Place_free is only supposed to do collisions with solid objects
             yy=0
             xx=0
             for ii in i.mask_index:
@@ -337,20 +337,19 @@ def place_free(self,y,x):
 
 #Like place_free but for all objects, not just solid ones
 def place_empty(self,y,x):
-    if not hasattr(self,'mask_index'): #Save ourselves some calculations and just return True if there is no mask
+    if self.mask_index==[]: #Save ourselves some calculations and just return True if there is no mask
         return True
     obj_collidablePoints=[]
     self_collidablePoints=[]
     for i in engineVars.room_current.instanceList:
         yy=0
         xx=0
-        if hasattr(i,'mask_index'):
-            for ii in i.mask_index:
-                yy+=1
-                for iii in ii:
-                    xx+=1
-                    if iii!=None:
-                        obj_collidablePoints.append((i.y+yy,i.x+xx))
+        for ii in i.mask_index:
+            yy+=1
+            for iii in ii:
+                xx+=1
+                if iii!=None:
+                    obj_collidablePoints.append((i.y+yy,i.x+xx))
     yy=0
     xx=0
     for i in self.mask_index:

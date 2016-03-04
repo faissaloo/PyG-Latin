@@ -77,6 +77,8 @@ def transpile(inputSource):
             nonlocal currentTabulation
             codeToReturn=getCorrectTabulation()+"class "+self.NAME+"():\n"
             currentTabulation+=1
+            codeToReturn+=getCorrectTabulation()+"sprite_index=[]\n"
+            codeToReturn+=getCorrectTabulation()+"mask_index=[]\n"
             codeToReturn+=getCorrectTabulation()+"solid=0\n"
             codeToReturn+=getCorrectTabulation()+"depth=0\n"
             currentTabulation-=1

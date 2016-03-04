@@ -217,11 +217,13 @@ def transpile(inputSource):
             else:
                 #Here we're just checking if it matches any of the special variables
                 #that we'll want to override
-                if (self.VARIABLENAME[:len("room_current.")]=="room_current." or
-                    self.VARIABLENAME=="room_current"):
-                    return "engineVars."+self.VARIABLENAME
-                elif (self.VARIABLENAME[:len("view_current.")]=="view_current." or
-                    self.VARIABLENAME=="view_current"):
+                if ((self.VARIABLENAME[:len("room_current.")]=="room_current." or
+                    self.VARIABLENAME=="room_current") or
+                    (self.VARIABLENAME[:len("view_current.")]=="view_current." or
+                    self.VARIABLENAME=="view_current") or
+                    (self.VARIABLENAME[:len("keyboard_lastkey.")]=="keyboard_lastkey." or
+                    self.VARIABLENAME=="keyboard_lastkey")
+                    ):
                     return "engineVars."+self.VARIABLENAME
                 elif self.VARIABLENAME[:len("global.")]=="global.":
                     return "engineVars.globalVars."+self.VARIABLENAME[len("global."):]

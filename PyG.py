@@ -64,13 +64,6 @@ def keyboard_check(key):
     else:
         return False
 
-def keyboard_check_pressed(key):
-    if (engineVars.keyboard_lastkey==int(key)):
-        engineVars.keyboard_lastkey=-1
-        return True
-    else:
-        return False
-
 #Drawing functions
 def draw_set_color(color):
     global current_color
@@ -385,6 +378,11 @@ random=random.uniform
 def game_main():
     while True:
         lastCh=screen.getch()
+        if lastCh!=engineVars.keyboard_lastkey:
+            engineVars.keyboard_state=1
+        else:
+            engineVars.keyboard_state=0
+
         if False: #lastCh==curses.KEY_MOUSE:
             mouseEvent=curses.getmouse()
             engineVars.mouse_x=mouseEvent[1]

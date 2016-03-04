@@ -833,6 +833,7 @@ def transpile(inputSource):
             if expect("{"):
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
+                    expectComment()
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
@@ -923,6 +924,7 @@ def transpile(inputSource):
         line=""
         #This is the root loop
         while i<len(source)-1:
+            expectComment()
             #Put all the parse*() functions here
             for ii in [parseRoomDefinition(),
                 parseObjDefinition(),

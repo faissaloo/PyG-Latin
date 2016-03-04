@@ -402,11 +402,6 @@ random=random.uniform
 def game_main():
     while True:
         lastCh=screen.getch()
-        if lastCh!=engineVars.keyboard_lastkey:
-            engineVars.keyboard_state=1
-        else:
-            engineVars.keyboard_state=0
-
         if False: #lastCh==curses.KEY_MOUSE:
             mouseEvent=curses.getmouse()
             engineVars.mouse_x=mouseEvent[1]

@@ -831,9 +831,13 @@ def transpile(inputSource):
             line=[]
             expect_whitespace()
             if expect("{"):
+                startForThisLoop=i
                 while i<len(source)-1 and source[i]!="}":
                     i+=1
+                    startForThisLoop=i
+                    expect_whitespace()
                     expectComment()
+                    expect_whitespace()
                     for ii in [parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
@@ -849,6 +853,9 @@ def transpile(inputSource):
                         ]:
                         if ii!=None:
                             body.append(ii)
+                    #If this goes off it means nothing valid was found
+                    if startForThisLoop==i and source[i]!="}":
+                        raiseException("Invalid syntax")
                 if not expect("}"):
                     raiseException("Unterminated block")
             if body!=[]:
@@ -922,9 +929,12 @@ def transpile(inputSource):
 
         i=0
         line=""
+        startForThisLoop=i
         #This is the root loop
         while i<len(source)-1:
+            expect_whitespace()
             expectComment()
+            expect_whitespace()
             #Put all the parse*() functions here
             for ii in [parseRoomDefinition(),
                 parseObjDefinition(),
@@ -943,7 +953,11 @@ def transpile(inputSource):
                 parseSimpleAssignment()]:
                 if ii!=None:
                     rawParsedData.append(ii)
+            #If this goes off it means nothing valid was found
+            if startForThisLoop==i and source[i]!="}":
+                raiseException("Invalid syntax")
             i+=1
+            startForThisLoop=i
         return rawParsedData
 
     def transpileToPython(structure):

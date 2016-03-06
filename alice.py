@@ -531,11 +531,33 @@ def transpile(inputSource):
             nonlocal source
             value=""
             expect_whitespace()
-            while source[i] in "0123456789.":
-                value+=source[i]
-                i+=1
-            if value!="":
-                return realNumber(value)
+            if expect("0x"):
+                value+="0x"
+                while source[i] in "0123456789":
+                    value+=source[i]
+                    i+=1
+                if value!="0x":
+                    return realNumber(int(value,16))
+            elif expect("0b"):
+                value+="0b"
+                while source[i] in "0123456789":
+                    value+=source[i]
+                    i+=1
+                if value!="0b":
+                    return realNumber(int(value,2))
+            elif expect("0o"):
+                value+="0o"
+                while source[i] in "0123456789":
+                    value+=source[i]
+                    i+=1
+                if value!="0o":
+                    return realNumber(int(value,8))
+            else:
+                while source[i] in "0123456789.":
+                    value+=source[i]
+                    i+=1
+                if value!="":
+                    return realNumber(value)
 
         def parseExpression(bracketed=False):
             nonlocal i

@@ -13,7 +13,7 @@ obj textbox
             draw_set_color(c_black)
             draw_rectangle(room_current.room_height,1,(room_current.room_height/3)*2,room_current.room_width,true)
             draw_set_color(c_white)
-            draw_text((room_current.room_height/3)*2+1,2,self.string[0:round(self.strIndex)])
+            draw_text(self.string[0:round(self.strIndex)],(room_current.room_height/3)*2+1,2)
             if self.strIndex<len(self.string)
             {
                 self.strIndex+=len(self.string)/150
@@ -54,7 +54,7 @@ obj player
             self.y+=1
         }
 
-        if collision_circle(self.y,self.x,2,room_current.mobInst)
+        if collision_circle(room_current.mobInst,self.y,self.x,2)
         {
             self.conversationIndex=0
             room_current.textboxInst.string=self.conversation[self.conversationIndex]
@@ -116,16 +116,16 @@ obj ctrl
 {
   event draw
   {
-    draw_text(3,4,"Topdown Game Demo")
+    draw_text("Topdown Game Demo",3,4)
   }
 }
 room rm1 {
     self.room_speed=60
     self.room_width=88
     self.room_height=24
-    instance_create(10,10,player)
-    instance_create(3,4,ctrl)
-    self.mobInst=instance_create(3,3,mobTest)
-    self.textboxInst=instance_create(2,2,textbox)
+    instance_create(player,10,10)
+    instance_create(ctrl,3,4)
+    self.mobInst=instance_create(mobTest,3,3)
+    self.textboxInst=instance_create(textbox,2,2)
 }
 room_goto(rm1)

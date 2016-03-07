@@ -91,7 +91,7 @@ def draw_point(y,x):
             round(x-engineVars.view_current.view_xview)>=0):
             screen.addstr(round(y-engineVars.view_current.view_yview),round(x-engineVars.view_current.view_xview)," ",curses.color_pair(current_color+10))
 
-def draw_text(y,x, string):
+def draw_text(string,y,x):
     global screen
     global current_color
     backwardsOffset=0
@@ -187,7 +187,7 @@ def draw_line(y,x,yy,xx):
                 workingY-=1
             err-=1
 #Paths are stored as lists of points
-def draw_path(y,x,path):
+def draw_path(path,y,x):
     for i in range(len(path)-1):
         draw_line(path[i][0],path[i][1],path[i+1][0],path[i+1][1])
 
@@ -244,7 +244,7 @@ def sprite_get_width(sprite):
     return len(sprite[0])
 
 #Instance handling functions
-def instance_create(y,x,obj):
+def instance_create(obj,y,x):
     inst=obj()
     inst.y=y
     inst.x=x
@@ -269,7 +269,7 @@ def instance_destroy(obj):
 ##################################################################
 #collision_
 #Checks if a point collides with an instance
-def collision_point(y,x,instance):
+def collision_point(instance,y,x):
     inst_collidablePoints=[]
     yy=0
     xx=0
@@ -284,7 +284,7 @@ def collision_point(y,x,instance):
     else:
         return False
 
-def collision_line(y,x,yy,xx,instance):
+def collision_line(instance,y,x,yy,xx):
     def safeDivide(numerator,divisor):
         if divisor:
             return numerator/divisor
@@ -300,7 +300,7 @@ def collision_line(y,x,yy,xx,instance):
     deltaErr=abs(safeDivide(deltaY,deltaX))
     workingY=y
     for i in rnge:
-        if collision_point(workingY,i,instance):
+        if collision_point(instance,workingY,i):
             return True
         err+=deltaErr
         while err>=0.5:
@@ -312,15 +312,15 @@ def collision_line(y,x,yy,xx,instance):
             err-=1
     return False
 
-def collision_circle(y,x,r,instance):
+def collision_circle(instance,y,x,r):
     workingX=r
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:
-        if (collision_line(x+workingX,y-workingY,x+workingX,y+workingY,instance) or
-            collision_line(y+workingY,x-workingX,y+workingY,x+workingX,instance) or
-            collision_line(y-workingY,x-workingX,y-workingY,x+workingX,instance) or
-            collision_line(y-workingX,x-workingY,y-workingX,x+workingY,instance)):
+        if (collision_line(instance,x+workingX,y-workingY,x+workingX,y+workingY) or
+            collision_line(instance,y+workingY,x-workingX,y+workingY,x+workingX) or
+            collision_line(instance,y-workingY,x-workingX,y-workingY,x+workingX) or
+            collision_line(instance,y-workingX,x-workingY,y-workingX,x+workingY)):
             return True
         workingY+=1
         if decOverTwo<=0:

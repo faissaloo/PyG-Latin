@@ -1,5 +1,6 @@
 room_current=None
 view_current=None
+screen_current=None
 
 class globalVarHolder():
     pass

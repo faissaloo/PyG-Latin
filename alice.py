@@ -222,7 +222,9 @@ def transpile(inputSource):
                     (self.VARIABLENAME[:len("view_current.")]=="view_current." or
                     self.VARIABLENAME=="view_current") or
                     (self.VARIABLENAME[:len("keyboard_lastkey.")]=="keyboard_lastkey." or
-                    self.VARIABLENAME=="keyboard_lastkey")
+                    self.VARIABLENAME=="keyboard_lastkey") or
+                    (self.VARIABLENAME[:len("screen_current.")]=="screen_current." or
+                    self.VARIABLENAME=="screen_current")
                     ):
                     return "engineVars."+self.VARIABLENAME
                 elif self.VARIABLENAME[:len("global.")]=="global.":

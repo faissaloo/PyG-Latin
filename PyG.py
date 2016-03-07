@@ -43,13 +43,13 @@ c_white=7
 termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
 
 #Start basic screen drawing stuff
-screen=curses.initscr()
+engineVars.screen_current=curses.initscr()
 curses.start_color()
 curses.noecho()
-screen.clear()
+engineVars.screen_current.clear()
 curses.curs_set(0)
-screen.nodelay(1)
-screen.keypad(1)
+engineVars.screen_current.nodelay(1)
+engineVars.screen_current.keypad(1)
 curses.mousemask(1)
 curses.use_default_colors()
 current_color=0
@@ -80,20 +80,18 @@ def draw_set_color(color):
     current_color=color
 
 def draw_point(y,x):
-    global screen
     global current_color
     if engineVars.view_current==None or engineVars.view_current.enabled==False:
         if round(y)<=engineVars.room_current.room_height and round(x)<=engineVars.room_current.room_width and round(y)>=0 and round(x)>=0:
-            screen.addstr(round(y),round(x)," ",curses.color_pair(current_color+10))
+            engineVars.screen_current.addstr(round(y),round(x)," ",curses.color_pair(current_color+10))
     else:
         if (round(y-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and
             round(x-engineVars.view_current.view_xview)<=engineVars.view_current.view_wview and
             round(y-engineVars.view_current.view_yview)>=0 and
             round(x-engineVars.view_current.view_xview)>=0):
-            screen.addstr(round(y-engineVars.view_current.view_yview),round(x-engineVars.view_current.view_xview)," ",curses.color_pair(current_color+10))
+            engineVars.screen_current.addstr(round(y-engineVars.view_current.view_yview),round(x-engineVars.view_current.view_xview)," ",curses.color_pair(current_color+10))
 
 def draw_text(string,y,x):
-    global screen
     global current_color
     backwardsOffset=0
     currentLineLength=0
@@ -111,13 +109,13 @@ def draw_text(string,y,x):
                 if (round(y+yOffset)<=engineVars.room_current.room_height and
                     round(x+i-backwardsOffset)<=engineVars.room_current.room_width and
                     round(y)>=0 and round(x+i)>=0):
-                    screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
+                    engineVars.screen_current.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
             else:
                 if (round(y+yOffset-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and
                     round(x+i-backwardsOffset-engineVars.view_current.view_xview)<=engineVars.view_current.view_wview and
                     round(y-engineVars.view_current.view_yview)>=0 and
                     round(x+i-backwardsOffset-engineVars.view_current.view_xview)>=0):
-                    screen.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
+                    engineVars.screen_current.addstr(round(y+yOffset),round(x+i-backwardsOffset),str(string[i]),curses.color_pair(current_color))
         i+=1
 
 def draw_rectangle(y,x,yy,xx,outline):
@@ -402,7 +400,7 @@ random=random.uniform
 
 def game_main():
     while True:
-        lastCh=screen.getch()
+        lastCh=engineVars.screen_current.getch()
         if False: #lastCh==curses.KEY_MOUSE:
             mouseEvent=curses.getmouse()
             engineVars.mouse_x=mouseEvent[1]
@@ -411,7 +409,7 @@ def game_main():
         else:
             engineVars.keyboard_lastkey=lastCh
         sleep(1/engineVars.room_current.room_speed)
-        screen.clear()
+        engineVars.screen_current.clear()
         engineVars.room_current.instanceList=\
             sorted(engineVars.room_current.instanceList,key=lambda x: x.depth)
         #Draw
@@ -421,4 +419,4 @@ def game_main():
         for i in engineVars.room_current.instanceList:
             if hasattr(i, 'step'):
                 i.step()
-        screen.refresh()
+        engineVars.screen_current.refresh()

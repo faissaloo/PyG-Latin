@@ -21,9 +21,9 @@ obj animation
     }
 }
 room rm1 {
-    room_speed=15
-    room_width=24
-    room_height=88
-    instance_create(0,0,animation)
+    self.room_speed=15
+    self.room_width=24
+    self.room_height=88
+    instance_create(animation,0,0)
 }
-current_room=rm1()
+rm1()

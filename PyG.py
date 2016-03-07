@@ -390,6 +390,10 @@ def place_empty(self,y,x):
 def room_goto(room):
     room()
 
+#Maths functions
+def point_direction(y,x,yy,xx):
+    return atan2(y-yy,x-xx)/pi*180
+
 #Random number functions
 #Since most of this stuff is already implemented by the builting random.
 #module I'll just make aliases for them

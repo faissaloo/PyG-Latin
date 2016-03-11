@@ -160,6 +160,54 @@ def draw_circle(y,x,r,outline):
             workingX-=1
             decOverTwo+=2 * (workingY - workingX) + 1
 
+#Based on: https://dai.fmph.uniba.sk/upload/0/01/Ellipse.pdf
+def draw_ellipse(y,x,yr,xr,outline):
+    twoASquare=2*(xr**2)
+    twoBSquare=2*(yr**2)
+    workingX=xr
+    workingY=0
+    xChange=(1-2*xr)*(yr**2)
+    yChange=xr**2
+    ellipseError=0
+    stoppingX=twoBSquare*xr
+    stoppingY=0
+    while stoppingX>=stoppingY:
+        draw_point(y+workingY,x+workingX)
+        draw_point(y+workingY,x-workingX)
+        draw_point(y-workingY,x-workingX)
+        draw_point(y-workingY,x+workingX)
+        workingY+=1
+        stoppingY+=twoASquare
+        ellipseError+=yChange
+        yChange+=twoASquare
+        if ((2*ellipseError+xChange)>0):
+            workingX-=1
+            stoppingX-=twoBSquare
+            ellipseError+=xChange
+            xChange+=twoBSquare
+    workingX=0
+    workingY=yr
+    xChange=(yr**2)
+    yChange=(xr**2)*(1-2*yr)
+    ellipseError=0
+    stoppingX=0
+    stoppingY=twoASquare*yr
+    while stoppingX<=stoppingY:
+        draw_point(y+workingY,x+workingX)
+        draw_point(y+workingY,x-workingX)
+        draw_point(y-workingY,x-workingX)
+        draw_point(y-workingY,x+workingX)
+        workingX+=1
+        stoppingX+=twoBSquare
+        ellipseError+=xChange
+        xChange+=twoBSquare
+        if ((2*ellipseError+yChange)>0):
+            workingY-=1
+            stoppingY-=twoASquare
+            ellipseError+=yChange
+            yChange+=twoASquare
+
+
 def draw_line(y,x,yy,xx):
     def safeDivide(numerator,divisor):
         if divisor:

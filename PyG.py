@@ -471,7 +471,7 @@ def game_main():
         sleep(1/engineVars.room_current.room_speed)
         engineVars.screen_current.clear()
         engineVars.room_current.instanceList=\
-            sorted(engineVars.room_current.instanceList,key=lambda x: x.depth)
+            sorted(engineVars.room_current.instanceList,key=lambda x: x.z)
         #Draw
         for i in engineVars.room_current.instanceList:
             if hasattr(i, 'draw'):

@@ -81,7 +81,7 @@ def transpile(inputSource):
             codeToReturn+=getCorrectTabulation()+"sprite_index=[]\n"
             codeToReturn+=getCorrectTabulation()+"mask_index=[]\n"
             codeToReturn+=getCorrectTabulation()+"solid=0\n"
-            codeToReturn+=getCorrectTabulation()+"depth=0\n"
+            codeToReturn+=getCorrectTabulation()+"z=0\n"
             currentTabulation-=1
             if self.BODY!=None:
                 codeToReturn+=self.BODY.py3()

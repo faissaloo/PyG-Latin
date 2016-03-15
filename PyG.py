@@ -172,10 +172,14 @@ def draw_ellipse(y,x,yr,xr,outline):
     stoppingX=twoBSquare*xr
     stoppingY=0
     while stoppingX>=stoppingY:
-        draw_point(y+workingY,x+workingX)
-        draw_point(y+workingY,x-workingX)
-        draw_point(y-workingY,x-workingX)
-        draw_point(y-workingY,x+workingX)
+        if outline:
+            draw_point(y+workingY,x+workingX)
+            draw_point(y+workingY,x-workingX)
+            draw_point(y-workingY,x-workingX)
+            draw_point(y-workingY,x+workingX)
+        else:
+            draw_line(y+workingY,x+workingX,y+workingY,x-workingX)
+            draw_line(y-workingY,x+workingX,y-workingY,x-workingX)
         workingY+=1
         stoppingY+=twoASquare
         ellipseError+=yChange
@@ -193,10 +197,14 @@ def draw_ellipse(y,x,yr,xr,outline):
     stoppingX=0
     stoppingY=twoASquare*yr
     while stoppingX<=stoppingY:
-        draw_point(y+workingY,x+workingX)
-        draw_point(y+workingY,x-workingX)
-        draw_point(y-workingY,x-workingX)
-        draw_point(y-workingY,x+workingX)
+        if outline:
+            draw_point(y+workingY,x+workingX)
+            draw_point(y+workingY,x-workingX)
+            draw_point(y-workingY,x-workingX)
+            draw_point(y-workingY,x+workingX)
+        else:
+            draw_line(y+workingY,x+workingX,y+workingY,x-workingX)
+            draw_line(y-workingY,x+workingX,y-workingY,x-workingX)
         workingX+=1
         stoppingX+=twoBSquare
         ellipseError+=xChange

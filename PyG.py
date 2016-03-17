@@ -462,9 +462,10 @@ random=random.uniform
 try:
     #Use the faster stuff if numpy is avalible
     import numpy
-    vector_dot_product=numpy.dot
+    vector_dot=numpy.dot
     vector_sub=numpy.subtract
-except:
+    vector_add=numpy.add
+except ImportError:
     def vector_dot(a,b):
         return sum([i*ii for (i, ii) in zip(a, b)])
 

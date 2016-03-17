@@ -506,7 +506,7 @@ def c3d_draw_projection(direction,y,x,h,w,fov,maxRenderDistance):
     #rayDirVector=vector_normalize(cos(deg2rad(direction)),sin(deg2rad(direction)),1)
     for screenX in range(w):
         for screenY in range(h):
-            rayDirVector=vector_normalize((screenX,screenY,1))
+            rayDirVector=vector_normalize((screenX,screenY,10))
             #Generate ray direction
             #castRay(direction)
             #origin=[i,ii] #x,y
@@ -518,7 +518,7 @@ def c3d_draw_projection(direction,y,x,h,w,fov,maxRenderDistance):
                     A=vector_dot(rayDirVector, rayDirVector)
                     dist=vector_sub((x,y,0),i[:3])
                     B= 2 * vector_dot(rayDirVector, dist)
-                    C = vector_dot(dist, dist)-10
+                    C = vector_dot(dist, dist)-1
                     #print(A,B,C)
                     if B **2 - 4 * A * C>0:
                         draw_set_color(i[3])

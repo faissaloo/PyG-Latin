@@ -1,0 +1,27 @@
+obj player
+{
+  event create
+  {
+    c3d_init()
+    self.dr=0
+  }
+  event step
+  {
+    self.dr+=10
+    if self.x>-1000
+    {
+      self.x-=1
+    }
+  }
+  event draw
+  {
+    c3d_draw_projection(self.dr,self.y,self.x,40,40,70,100)
+  }
+}
+room rm1 {
+    self.room_speed=60
+    self.room_width=88
+    self.room_height=24
+    instance_create(player,20,10)
+}
+room_goto(rm1)

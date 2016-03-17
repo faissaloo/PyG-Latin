@@ -458,6 +458,77 @@ choose=random.choice
 random_set_seed=random.seed
 random=random.uniform
 
+#Vector maths functions
+try:
+    #Use the faster stuff if numpy is avalible
+    import numpy
+    vector_dot_product=numpy.dot
+    vector_sub=numpy.subtract
+except:
+    def vector_dot(a,b):
+        return sum([i*ii for (i, ii) in zip(a, b)])
+
+    def vector_sub(a,b):
+        return tuple([i-ii for (i, ii) in zip(a, b)])
+
+    def vector_add(a,b):
+        return tuple([i+ii for (i, ii) in zip(a, b)])
+
+    def vector_scale(a,scale):
+        return tuple([i*scale for i in a])
+
+    def vector_length(a):
+        return sqrt(sum([i**2 for i in a]))
+
+    def vector_normalize(a):
+        length=vector_length(a)
+        if length!=0:
+            return tuple([i/length for i in a])
+
+#3D
+def deg2rad(x):
+    return pi * x / 180
+
+zscreen=[[]]
+def c3d_init():
+    global zscreen
+    #This is where we're storing all the points that will be drawn
+    #They're speres atm, I'll make them voxels later
+    zscreen=[]
+    #For testing purposes
+    #zscreen=[(10,10,20,1),(23,42,12,6)]
+    #E.g: zscreen[0]=[[x,y,color],[x,y,color],]
+
+def c3d_draw_projection(direction,y,x,h,w,fov,maxRenderDistance):
+    global zscreen
+    scale=tan(deg2rad(fov/2))
+    imageAspectRatio=w/h
+    #rayDirVector=vector_normalize(cos(deg2rad(direction)),sin(deg2rad(direction)),1)
+    for screenX in range(w):
+        for screenY in range(h):
+            rayDirVector=vector_normalize((screenX,screenY,1))
+            #Generate ray direction
+            #castRay(direction)
+            #origin=[i,ii] #x,y
+            for i in zscreen:
+                #For collision detection code:
+                #https://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html
+                #Under 'Intersecting a Sphere
+                if i[2]<maxRenderDistance:
+                    A=vector_dot(rayDirVector, rayDirVector)
+                    dist=vector_sub((x,y,0),i[:3])
+                    B= 2 * vector_dot(rayDirVector, dist)
+                    C = vector_dot(dist, dist)-10
+                    #print(A,B,C)
+                    if B **2 - 4 * A * C>0:
+                        draw_set_color(i[3])
+                        draw_point(screenX,screenY)
+
+                else:
+                    #If we've reached the render distance limit break to prevent
+                    #lag
+                    break
+
 def game_main():
     while True:
         lastCh=engineVars.screen_current.getch()

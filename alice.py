@@ -25,6 +25,7 @@
 import argparse
 import functools
 import re
+import os
 #Argument handling
 parser = argparse.ArgumentParser(description='Transpile a PyG-Latin program to Python3')
 parser.add_argument('inputFile', help='The file with the source code to be transpiled')
@@ -34,7 +35,7 @@ inputFile = args.inputFile
 outputFile = args.outputFile
 
 latinSource = ""
-def transpile(inputSource):
+def transpile(inputSource,workingDirectory,header=True,footer=True):
     constants={"c_black":"0",
         "c_red":"1",
         "c_green":"2",
@@ -439,6 +440,11 @@ def transpile(inputSource):
                 return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+"]"
             else:
                 return self.EXPRESSION1.py3()+"["+self.EXPRESSION2.py3()+":"+self.EXPRESSION3.py3()+"]"
+    class includeDirective():
+        def __init__(self,CONTENTS):
+            self.CONTENTS=CONTENTS
+        def py3(self):
+            return self.CONTENTS
 
     def parse(source):
         def raiseException(string):
@@ -785,6 +791,13 @@ def transpile(inputSource):
             nonlocal source
             return handleAssignment("=",simpleAssignmentOperation)
 
+        def parseIncludeDirective():
+            if expect("include",True):
+                fname=parseString().STRING.replace("./", workingDirectory+"/")
+                with open(fname) as f:
+                    contents=transpile(f.read(),workingDirectory,False,False)
+                    return includeDirective(contents)
+
         def parseScriptStatement():
             nonlocal i
             nonlocal source
@@ -863,7 +876,8 @@ def transpile(inputSource):
                     expect_whitespace()
                     expectComment()
                     expect_whitespace()
-                    for ii in [parseElseIfStatement(),
+                    for ii in [parseIncludeDirective(),
+                        parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
                         parseForStatement(),
@@ -961,7 +975,8 @@ def transpile(inputSource):
             expectComment()
             expect_whitespace()
             #Put all the parse*() functions here
-            for ii in [parseRoomDefinition(),
+            for ii in [parseIncludeDirective(),
+                parseRoomDefinition(),
                 parseObjDefinition(),
                 parseScriptStatement(),
                 parseElseIfStatement(),
@@ -986,19 +1001,22 @@ def transpile(inputSource):
         return rawParsedData
 
     def transpileToPython(structure):
-        pythonCode="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\nimport engineVars\n"
+        pythonCode=""
+        if header:
+            pythonCode+="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\nimport engineVars\n"
         tempForObject=None
         for i in structure:
             tempForObject=i.py3()
             if tempForObject!=None:
                 pythonCode+=tempForObject+"\n"
-        pythonCode+="\ngame_main()"
+        if footer:
+            pythonCode+="\ngame_main()"
         return pythonCode
     return transpileToPython(parse(inputSource))
 
 with open(inputFile,'r') as f:
     latinSource = f.read()
-a=transpile(latinSource)
+a=transpile(latinSource,os.path.dirname(os.path.realpath(inputFile)))
 print(a)
 with open(outputFile,'w') as f:
     f.write(a)

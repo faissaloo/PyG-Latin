@@ -66,8 +66,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             currentTabulation+=1
             codeToReturn=""
             for i in self.BODY:
-                returnedStr=i.py3()
-                codeToReturn+=getCorrectTabulation()+returnedStr+"\n"
+                codeToReturn+=getCorrectTabulation()+i.py3()+"\n"
             currentTabulation-=1
             return codeToReturn
     #Special case statements
@@ -444,7 +443,11 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         def __init__(self,CONTENTS):
             self.CONTENTS=CONTENTS
         def py3(self):
-            return self.CONTENTS
+            global currentTabulation
+            returnStr="\n"
+            for i in self.CONTENTS.split("\n"):
+                returnStr+=getCorrectTabulation()+i+"\n"
+            return returnStr
 
     def parse(source):
         def raiseException(string):

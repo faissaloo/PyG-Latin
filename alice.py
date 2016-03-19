@@ -798,7 +798,12 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             if expect("include",True):
                 fname=parseString().STRING.replace("./", workingDirectory+"/")
                 with open(fname) as f:
-                    contents=transpile(f.read(),workingDirectory,False,False)
+                    if fname[-4:]==".pgl":
+                        contents=transpile(f.read(),workingDirectory,False,False)
+                    elif fname[-3:]==".py":
+                        contents=f.read()
+                    else:
+                        raiseException("File "+fname+"is not .pgl or .py")
                     return includeDirective(contents)
 
         def parseScriptStatement():

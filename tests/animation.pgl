@@ -5,11 +5,13 @@ obj animation
         self.x=0
         self.y=0
         self.image_index=0
+        self.image_angle=0
         self.sprite=sprite_add("tests/testSprite/",0,0)
     }
     event draw
     {
-        draw_sprite(self.sprite,self.image_index,self.y,self.x)
+        self.image_angle+=1
+        draw_sprite(self.sprite,self.image_index,self.y,self.x,1,1,self.image_angle)
         if self.image_index<self.sprite.length-1
         {
             self.image_index+=1
@@ -24,6 +26,6 @@ room rm1 {
     self.room_speed=15
     self.room_width=24
     self.room_height=88
-    instance_create(animation,0,0)
+    instance_create(animation,10,10)
 }
 rm1()

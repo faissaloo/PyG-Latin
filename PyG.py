@@ -294,9 +294,12 @@ class sprite():
                 self.height=len(self.subimages[:1])
                 self.length=len(self.subimages)
 
-def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1):
+def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1,angle=0):
     yy=0
     xx=0
+    #angle=deg2rad(ang)
+    sinOfAngle=sin(deg2rad(angle))
+    cosOfAngle=cos(deg2rad(angle))
     for i in spr.subimages[image_index]:
         yy+=1
         xx=0
@@ -306,7 +309,8 @@ def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1):
                 draw_set_color(ii)
                 for iii in range(round(yscale)):
                     for iiii in range(round(xscale)):
-                        draw_point(y+(yy*yscale)-spr.yorigin+iii,x+(xx*xscale)-spr.xorigin+iiii)
+                        draw_point(y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*yscale)-spr.yorigin)+iii,
+                            x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*xscale)-spr.xorigin)+iiii)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(dirname,yorigin,xorigin):

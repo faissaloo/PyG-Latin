@@ -294,7 +294,7 @@ class sprite():
                 self.height=len(self.subimages[:1])
                 self.length=len(self.subimages)
 
-def draw_sprite(spr,image_index,y,x):
+def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1):
     yy=0
     xx=0
     for i in spr.subimages[image_index]:
@@ -304,7 +304,9 @@ def draw_sprite(spr,image_index,y,x):
             xx+=1
             if ii!=None:
                 draw_set_color(ii)
-                draw_point(y+yy-spr.yorigin,x+xx-spr.xorigin)
+                for iii in range(round(yscale)):
+                    for iiii in range(round(xscale)):
+                        draw_point(y+(yy*yscale)-spr.yorigin+iii,x+(xx*xscale)-spr.xorigin+iiii)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(dirname,yorigin,xorigin):
@@ -321,7 +323,7 @@ def instance_create(obj,y,x):
     engineVars.room_current.instanceList.append(inst)
     return inst
 
-def instance_destroy(inst=self):
+def instance_destroy(inst):
     engineVars.room_current.instanceList.remove(inst)
     obj.destroyed() #Executes the destroyed event
 

@@ -325,6 +325,11 @@ def instance_destroy(obj):
     engineVars.room_current.instanceList.remove(obj)
     obj.destroyed() #Executes the destroyed event
 
+def instance_exists(obj):
+    for i in engineVars.room_current.instanceList:
+        if isinstance(i,obj):
+            return True
+    return False
 #Collisions
 ##################################################################
 #Function            Checks using   Checks against     Returns

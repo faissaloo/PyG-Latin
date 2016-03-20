@@ -27,6 +27,7 @@
 from time import sleep
 import curses
 import random
+import os
 from math import *
 import engineVars
 
@@ -258,10 +259,45 @@ def make_color_rgb(R,G,B):
     return termcolorsAsRGB.index(closest)
 
 #Sprite functions
-def draw_sprite(sprite,y,x):
+class sprite():
+    def __init__(self,subimages,yorigin,xorigin):
+        #Using [:1] so that it just returns 0 if subimages is []
+        self.width=len(subimages[:1][:1])
+        self.height=len(subimages[:1])
+        self.length=len(subimages)
+        self.subimages=subimages
+        self.yorigin=yorigin
+        self.xorigin=xorigin
+
+    def image_add(self,fname):
+        #Script to read 32-bit bitmaps (with alpha)
+        with open(fname,"rb") as file:
+            text=file.read()
+            if chr(text[0])=="B" and chr(text[1])=="M":
+                pos=text[10] #Tells us the offset
+                image_array=[]
+                pixels=0
+                row=[]
+                while pos<len(text):
+                    if pixels%text[18]==0:
+                        image_array.insert(0,row)
+                        row=[]
+                    if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
+                        row.append(make_color_rgb(text[pos+1],text[pos+2],text[pos+3]))
+                    else:
+                        row.append(None)
+                    pos+=4
+                    pixels+=1
+                self.subimages.append(image_array)
+                #Update properties and all that jazz
+                self.width=len(self.subimages[:1][:1])
+                self.height=len(self.subimages[:1])
+                self.length=len(self.subimages)
+
+def draw_sprite(sprite,image_index,y,x):
     yy=0
     xx=0
-    for i in sprite:
+    for i in sprite.subimages[image_index]:
         yy+=1
         xx=0
         for ii in i:
@@ -271,32 +307,11 @@ def draw_sprite(sprite,y,x):
                 draw_point(y+yy,x+xx)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
-def image_add(fname):
-    #Script to read 32-bit bitmaps (with alpha)
-    with open(fname,"rb") as file:
-        text=file.read()
-        if chr(text[0])=="B" and chr(text[1])=="M":
-        	pos=text[10] #Tells us the offset
-        	image_array=[]
-        	pixels=0
-        	row=[]
-        	while pos<len(text):
-        		if pixels%text[18]==0:
-        			image_array.insert(0,row)
-        			row=[]
-        		if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
-        			row.append(make_color_rgb(text[pos+1],text[pos+2],text[pos+3]))
-        		else:
-        			row.append(None)
-        		pos+=4
-        		pixels+=1
-        	return image_array
-
-def sprite_get_height(sprite):
-    return len(sprite)
-
-def sprite_get_width(sprite):
-    return len(sprite[0])
+def sprite_add(dirname,yorigin,xorigin):
+    spr=sprite([],yorigin,xorigin)
+    for i in os.listdir(dirname):
+        spr.image_add(dirname+i)
+    return spr
 
 #Instance handling functions
 def instance_create(obj,y,x):

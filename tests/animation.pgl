@@ -5,12 +5,12 @@ obj animation
         self.x=0
         self.y=0
         self.image_index=0
-        self.sprite=[image_add("tests/testSprite/1.bmp"),image_add("tests/testSprite/2.bmp"),image_add("tests/testSprite/3.bmp")]
+        self.sprite=sprite_add("tests/testSprite/",0,0)
     }
     event draw
     {
-        draw_sprite(self.sprite[self.image_index],self.y,self.x)
-        if self.image_index<len(self.sprite)-1
+        draw_sprite(self.sprite,self.image_index,self.y,self.x)
+        if self.image_index<self.sprite.length-1
         {
             self.image_index+=1
         }

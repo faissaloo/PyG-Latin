@@ -465,6 +465,9 @@ def room_goto(room):
 def point_direction(y,x,yy,xx):
     return atan2(y-yy,x-xx)/pi*180
 
+def point_distance(y,x,yy,xx):
+    return ((y-yy)**2)+((x-xx)**2)**0.5
+
 #Random number functions
 #Since most of this stuff is already implemented by the builting random.
 #module I'll just make aliases for them

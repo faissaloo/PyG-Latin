@@ -294,17 +294,17 @@ class sprite():
                 self.height=len(self.subimages[:1])
                 self.length=len(self.subimages)
 
-def draw_sprite(sprite,image_index,y,x):
+def draw_sprite(spr,image_index,y,x):
     yy=0
     xx=0
-    for i in sprite.subimages[image_index]:
+    for i in spr.subimages[image_index]:
         yy+=1
         xx=0
         for ii in i:
             xx+=1
             if ii!=None:
                 draw_set_color(ii)
-                draw_point(y+yy-sprite.yorigin,x+xx-sprite.xorigin)
+                draw_point(y+yy-spr.yorigin,x+xx-spr.xorigin)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(dirname,yorigin,xorigin):

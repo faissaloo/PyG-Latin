@@ -298,6 +298,8 @@ def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1,angle=0):
     yy=0
     xx=0
     #angle=deg2rad(ang)
+    image_xscale=round(xscale)
+    image_yscale=round(yscale)
     sinOfAngle=sin(deg2rad(angle))
     cosOfAngle=cos(deg2rad(angle))
     for i in spr.subimages[image_index]:
@@ -307,10 +309,10 @@ def draw_sprite(spr,image_index,y,x,yscale=1,xscale=1,angle=0):
             xx+=1
             if ii!=None:
                 draw_set_color(ii)
-                for iii in range(round(yscale)):
-                    for iiii in range(round(xscale)):
-                        draw_point(y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*yscale)-spr.yorigin)+iii,
-                            x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*xscale)-spr.xorigin)+iiii)
+                for iii in range(image_yscale):
+                    for iiii in range(image_xscale):
+                        draw_point(y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*image_yscale)-spr.yorigin)+iii,
+                            x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*image_xscale)-spr.xorigin)+iiii)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(dirname,yorigin,xorigin):

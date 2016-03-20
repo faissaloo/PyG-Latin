@@ -11,7 +11,7 @@ obj animation
     event draw
     {
         self.image_angle+=1
-        draw_sprite(self.sprite,self.image_index,self.y,self.x,1,1,self.image_angle)
+        draw_sprite(self.sprite,self.image_index,self.y,self.x,2,2,self.image_angle)
         if self.image_index<self.sprite.length-1
         {
             self.image_index+=1

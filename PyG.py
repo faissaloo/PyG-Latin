@@ -321,8 +321,8 @@ def instance_create(obj,y,x):
     engineVars.room_current.instanceList.append(inst)
     return inst
 
-def instance_destroy(obj):
-    engineVars.room_current.instanceList.remove(obj)
+def instance_destroy(inst=self):
+    engineVars.room_current.instanceList.remove(inst)
     obj.destroyed() #Executes the destroyed event
 
 def instance_exists(obj):

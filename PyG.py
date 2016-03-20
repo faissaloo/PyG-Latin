@@ -304,7 +304,7 @@ def draw_sprite(sprite,image_index,y,x):
             xx+=1
             if ii!=None:
                 draw_set_color(ii)
-                draw_point(y+yy,x+xx)
+                draw_point(y+yy-sprite.yorigin,x+xx-sprite.xorigin)
     draw_set_color(c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(dirname,yorigin,xorigin):

@@ -238,7 +238,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             self.FUNCTIONNAME=FUNCTIONNAME
             self.ARGUMENTS=ARGUMENTS #Arguments should be a list
         def py3(self):
-            return self.FUNCTIONNAME+"("+self.ARGUMENTS.py3()+")"
+            return self.FUNCTIONNAME+"(self,"+self.ARGUMENTS.py3()+")"
 
     class arguments():
         def __init__(self,ARGUMENTS):
@@ -1011,7 +1011,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
     def transpileToPython(structure):
         pythonCode=""
         if header:
-            pythonCode+="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\nimport engineVars\n"
+            pythonCode+="#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\nfrom PyG import *\nimport engineVars\nself=game_root()\n"
         tempForObject=None
         for i in structure:
             tempForObject=i.py3()

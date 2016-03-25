@@ -888,7 +888,6 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             if expect("{"):
                 startForThisLoop=i
                 while i<len(source)-1 and source[i]!="}":
-                    i+=1
                     startForThisLoop=i
                     expect_whitespace()
                     expectComment()

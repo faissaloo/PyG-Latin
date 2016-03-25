@@ -12,7 +12,7 @@ obj animation
     {
         self.image_angle+=1
         draw_sprite(self.sprite,self.image_index,self.y,self.x,2,2,self.image_angle)
-        if self.image_index<self.sprite.length-1
+        if self.image_index<len(self.sprite)-1
         {
             self.image_index+=1
         }

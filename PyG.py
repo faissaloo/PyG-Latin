@@ -264,7 +264,6 @@ class sprite():
         #Using [:1] so that it just returns 0 if subimages is []
         self.width=len(self,subimages[:1][:1])
         self.height=len(self,subimages[:1])
-        self.length=len(self,subimages)
         self.subimages=subimages
         self.yorigin=yorigin
         self.xorigin=xorigin
@@ -292,7 +291,8 @@ class sprite():
                 #Update properties and all that jazz
                 self.width=len(self,self.subimages[:1][:1])
                 self.height=len(self,self.subimages[:1])
-                self.length=len(self,self.subimages)
+    def __len__(self):
+        return len(self,self.subimages)
 
 def draw_sprite(self,spr,image_index,y,x,yscale=1,xscale=1,angle=0):
     yy=0

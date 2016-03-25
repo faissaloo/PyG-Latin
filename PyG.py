@@ -616,7 +616,7 @@ except ImportError:
         return math.sqrt(sum([i**2 for i in a]))
 
     def vector_normalize(self,a):
-        length=vector_length(a)
+        length=vector_length(self,a)
         if length!=0:
             return tuple([i/length for i in a])
 

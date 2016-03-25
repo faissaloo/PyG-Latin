@@ -251,7 +251,7 @@ def draw_path(self,path,y,x):
 def make_color_rgb(self,R,G,B):
     closest=[0,0,0]
     def euclideanDistance(color1, color2):
-        return math.sqrt(sum([(e1-e2)**2 for e1, e2 in zip(color1, color2)]))
+        return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(color1, color2)]))
     #Find the nearest value to [R,G,B] in termcolorsAsRGB
     for i in termcolorsAsRGB:
         if euclideanDistance([R,G,B],closest)>euclideanDistance([R,G,B],i):
@@ -537,7 +537,7 @@ def round(self,a,decimalPlaces=0):
 def ceiling(self,a):
     return a.__ceil__()
 
-#Sorting functions
+#List functions
 #Doing this hacky fix because implementing my own is too long and slow
 builtinMax=max
 def max(self,*args):
@@ -549,6 +549,18 @@ def min(self, *args):
     global builtinMin
     return builtinMin(args)
 
+#Works different to builtin sum(), allows unlimited args, and has no start
+#argument because that was stupid as well as doing stuff like say
+#sum(self,[[3,2,3],2],3)
+def sum(self,*args):
+    total=0
+    for i in args:
+        if hasattr(i,"__iter__"):
+            for ii in i:
+                total+=sum(self,ii)
+        else:
+            total+=i
+    return total
 #Trig functions
 def sin(self,a):
     return math.sin(a)
@@ -601,7 +613,7 @@ try:
 
 except ImportError:
     def vector_dot(self,a,b):
-        return sum([i*ii for (i, ii) in zip(a, b)])
+        return sum(self,[i*ii for (i, ii) in zip(a, b)])
 
     def vector_sub(self,a,b):
         return tuple([i-ii for (i, ii) in zip(a, b)])
@@ -613,7 +625,7 @@ except ImportError:
         return tuple([i*scale for i in a])
 
     def vector_length(self,a):
-        return math.sqrt(sum([i**2 for i in a]))
+        return math.sqrt(sum(self,[i**2 for i in a]))
 
     def vector_normalize(self,a):
         length=vector_length(self,a)

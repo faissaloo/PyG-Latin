@@ -384,6 +384,11 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         def py3(self):
             return self.OPERANDS[0].py3()+"="+self.OPERANDS[1].py3()
 
+    class returnStatement():
+        def __init__(self,EXPRESSION):
+            self.EXPRESSION=EXPRESSION
+        def py3(self):
+            return "return "+self.EXPRESSION.py3()
 
     class expression():
         def __init__(self,VALUE,NEXT,BRACKETED=False):
@@ -794,6 +799,10 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             nonlocal source
             return handleAssignment("=",simpleAssignmentOperation)
 
+        def parseReturnStatement():
+            if expect("return",True):
+                expr=parseExpression()
+                return returnStatement(expr)
         def parseIncludeDirective():
             if expect("include",True):
                 fname=parseString().STRING.replace("./", workingDirectory+"/")
@@ -885,6 +894,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                     expectComment()
                     expect_whitespace()
                     for ii in [parseIncludeDirective(),
+                        parseReturnStatement(),
                         parseElseIfStatement(),
                         parseWhileStatement(),
                         parseIfStatement(),
@@ -984,6 +994,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             expect_whitespace()
             #Put all the parse*() functions here
             for ii in [parseIncludeDirective(),
+                parseReturnStatement(),
                 parseRoomDefinition(),
                 parseObjDefinition(),
                 parseScriptStatement(),

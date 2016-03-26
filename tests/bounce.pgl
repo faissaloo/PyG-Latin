@@ -6,8 +6,8 @@ obj ball
         self.y=0
         self.image_index=0
         self.image_angle=0
-        self.sprite=sprite_add("tests/testSprite/",0,0)
-        self.mask=sprite_add("tests/testSprite/",0,0)
+        self.sprite=sprite_add("tests/ballsprite/",0,0)
+        self.mask=sprite_add("tests/ballsprite/",0,0)
         self.vspeed=-1
         self.gravity=0.1
     }

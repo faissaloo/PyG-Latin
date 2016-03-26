@@ -8,7 +8,7 @@ obj ball
         self.image_angle=0
         self.sprite=sprite_add("tests/testSprite/",0,0)
         self.mask=sprite_add("tests/testSprite/",0,0)
-        self.vspeed=0-1
+        self.vspeed=-1
         self.gravity=0.1
     }
     event step

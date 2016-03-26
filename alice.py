@@ -581,11 +581,11 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             nonlocal source
             realValue=""
             expect_whitespace()
-            for ii in [parseSubtraction(),
-                parseAddition(),
-                parseNotOperation(),
-                takevalue(),
-                parseList(),
+            for ii in [parseSubtraction(),  #Keep in mind that these 3 call
+                parseAddition(),            #another parseExpression() later on
+                parseNotOperation(),        #SO DON'T CONTINUE PARSING THE
+                takevalue(),                #EXPRESSION AFTER OR THERE WILL BE
+                parseList(),                #LINE SPILLAGE
                 parseName(),
                 parseString(),
                 parseBracketedExpression()
@@ -605,8 +605,16 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                         expect_whitespace()
                         if EXPRESSION2!=None:
                             ii=itemInList(ii,EXPRESSION2,EXPRESSION3)
-                    #
-                    return expression(ii,getNextOperation(),bracketed)
+
+                    #This is because parseSubtractionOperation() etc have already
+                    #handled the parsing of any other expressions.
+                    if (isinstance(ii,subtractionOperation) or
+                        isinstance(ii,additionOperation) or
+                        isinstance(ii,notOperation)
+                        ):
+                        return expression(ii,None,bracketed)
+                    else:
+                        return expression(ii,getNextOperation(),bracketed)
             raiseException("Invalid syntax")
 
         def parseBracketedExpression():

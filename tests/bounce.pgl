@@ -15,7 +15,7 @@ obj ball
     {
         self.y+=self.vspeed
         self.vspeed+=self.gravity
-        if place_free(self.y+1,self.x)=False
+        if place_empty(self.y+6,self.x)=False
         {
             self.vspeed-=1
         }
@@ -23,7 +23,6 @@ obj ball
     }
     event draw
     {
-        self.image_angle+=1
         draw_sprite(self.sprite,self.image_index,self.y,self.x,1,1,self.image_angle)
         if self.image_index<len(self.sprite)-1
         {
@@ -35,10 +34,25 @@ obj ball
         }
     }
 }
+obj platform
+{
+    event create
+    {
+        self.sprite=sprite_add("tests/blocksprite/",0,0)
+        self.mask=sprite_add("tests/blocksprite/",0,0)
+        self.image_index=0
+        self.solid=true
+    }
+    event draw
+    {
+        draw_sprite(self.sprite,0,self.y,self.x)
+    }
+}
 room rm1 {
     self.room_speed=15
-    self.room_width=24
+    self.room_width=60
     self.room_height=30
     instance_create(ball,10,10)
+    instance_create(platform,20,10)
 }
 room_goto(rm1)

@@ -425,12 +425,12 @@ def place_free(self,y,x):
         if i.solid: #Place_free is only supposed to do collisions with solid objects
             yy=0
             xx=0
-            for ii in i.mask.subimages[self.image_index]:
+            for ii in i.mask.subimages[i.image_index]:
                 yy+=1
                 for iii in ii:
                     xx+=1
                     if iii!=None:
-                        obj_collidablePoints.append((i.y+yy,i.x+xx))
+                        obj_collidablePoints.append((round(self,i.y+yy),round(self,i.x+xx)))
     yy=0
     xx=0
     for ii in self.mask.subimages[self.image_index]:
@@ -438,7 +438,7 @@ def place_free(self,y,x):
         for iii in ii:
             xx+=1
             if iii!=None:
-                self_collidablePoints.append((y+yy,x+xx))
+                self_collidablePoints.append((round(self,y+yy),round(self,x+xx)))
     for i in self_collidablePoints:
         if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
             return False
@@ -453,12 +453,12 @@ def place_empty(self,y,x):
     for i in engineVars.room_current.instanceList:
         yy=0
         xx=0
-        for ii in self.mask.subimages[self.image_index]:
+        for ii in i.mask.subimages[i.image_index]:
             yy+=1
             for iii in ii:
                 xx+=1
                 if iii!=None:
-                    obj_collidablePoints.append((i.y+yy,i.x+xx))
+                    obj_collidablePoints.append((round(self,i.y+yy),round(self,i.x+xx)))
     yy=0
     xx=0
     for i in self.mask.subimages[self.image_index]:
@@ -466,7 +466,7 @@ def place_empty(self,y,x):
         for ii in i:
             xx+=1
             if ii!=None:
-                self_collidablePoints.append((y+yy,x+xx))
+                self_collidablePoints.append((round(self,y+yy),round(self,x+xx)))
     for i in self_collidablePoints:
         if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
             return False

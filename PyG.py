@@ -357,7 +357,7 @@ def collision_point(self,instance,y,x):
     inst_collidablePoints=[]
     yy=0
     xx=0
-    for i in instance.mask_index:
+    for i in instance.mask:
         yy+=1
         for ii in i:
             xx+=1
@@ -416,7 +416,7 @@ def collision_circle(self,instance,y,x,r):
 #place_
 #Checks if it would be safe to move to a position
 def place_free(self,y,x):
-    if self.mask_index==[]: #Save ourselves some calculations and just return True if there is no mask
+    if len(self,self.mask)==0: #Save ourselves some calculations and just return True if there is no mask
         return True
 
     obj_collidablePoints=[]
@@ -425,7 +425,7 @@ def place_free(self,y,x):
         if i.solid: #Place_free is only supposed to do collisions with solid objects
             yy=0
             xx=0
-            for ii in i.mask_index:
+            for ii in i.mask.subimages[self.image_index]:
                 yy+=1
                 for iii in ii:
                     xx+=1
@@ -433,12 +433,12 @@ def place_free(self,y,x):
                         obj_collidablePoints.append((i.y+yy,i.x+xx))
     yy=0
     xx=0
-    for ii in self.mask_index:
+    for ii in self.mask.subimages[self.image_index]:
         yy+=1
-        for iii in i:
+        for iii in ii:
             xx+=1
             if iii!=None:
-                points.append((y+yy,x+xx))
+                self_collidablePoints.append((y+yy,x+xx))
     for i in self_collidablePoints:
         if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
             return False
@@ -446,14 +446,14 @@ def place_free(self,y,x):
 
 #Like place_free but for all objects, not just solid ones
 def place_empty(self,y,x):
-    if self.mask_index==[]: #Save ourselves some calculations and just return True if there is no mask
+    if len(self,self.mask)==0: #Save ourselves some calculations and just return True if there is no mask
         return True
     obj_collidablePoints=[]
     self_collidablePoints=[]
     for i in engineVars.room_current.instanceList:
         yy=0
         xx=0
-        for ii in i.mask_index:
+        for ii in self.mask.subimages[self.image_index]:
             yy+=1
             for iii in ii:
                 xx+=1
@@ -461,7 +461,7 @@ def place_empty(self,y,x):
                     obj_collidablePoints.append((i.y+yy,i.x+xx))
     yy=0
     xx=0
-    for i in self.mask_index:
+    for i in self.mask.subimages[self.image_index]:
         yy+=1
         for ii in i:
             xx+=1

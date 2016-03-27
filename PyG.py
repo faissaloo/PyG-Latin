@@ -401,7 +401,7 @@ def collision_point(self,instance,y,x):
         yy+=1
         for ii in i:
             xx+=1
-            if ii==True and (instance.y+yy,instance.x+xx)==(y,x):
+            if ii==True and (round(self,instance.y+yy),round(self,instance.x+xx))==(round(self,y),round(self,x)):
                 return True
     return False
 

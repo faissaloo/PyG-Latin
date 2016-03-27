@@ -401,12 +401,9 @@ def collision_point(self,instance,y,x):
         yy+=1
         for ii in i:
             xx+=1
-            if ii!=None:
-                inst_collidablePoints.append((instance.y+yy,instance.x+xx))
-    if (y,x) in inst_collidablePoints:
-        return True
-    else:
-        return False
+            if ii==True and (instance.y+yy,instance.x+xx)==(y,x):
+                return True
+    return False
 
 def collision_line(self,instance,y,x,yy,xx):
     def safeDivide(numerator,divisor):

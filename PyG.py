@@ -351,6 +351,41 @@ def instance_exists(self,obj):
 #instance_place      mask           specified object   instance
 #instance_position   point          specified object   instance
 ##################################################################
+class mask():
+    def __init__(self,subimages,yorigin,xorigin):
+        #Using [:1] so that it just returns 0 if subimages is []
+        self.width=len(self,subimages[:1][:1])
+        self.height=len(self,subimages[:1])
+        self.subimages=subimages
+        self.yorigin=yorigin
+        self.xorigin=xorigin
+
+    def image_add(self,fname):
+        #Script to read 32-bit bitmaps (with alpha)
+        with open(fname,"rb") as file:
+            text=file.read()
+            if chr(self,text[0])=="B" and chr(self,text[1])=="M":
+                pos=text[10] #Tells us the offset
+                image_array=[]
+                pixels=0
+                row=[]
+                while pos<len(self,text):
+                    if pixels%text[18]==0:
+                        image_array.insert(0,row)
+                        row=[]
+                    if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
+                        row.append(True)
+                    else:
+                        row.append(False)
+                    pos+=4
+                    pixels+=1
+                self.subimages.append(image_array)
+                #Update properties and all that jazz
+                self.width=len(self,self.subimages[:1][:1])
+                self.height=len(self,self.subimages[:1])
+    def __len__(self):
+        return len(self,self.subimages)
+
 #collision_
 #Checks if a point collides with an instance
 def collision_point(self,instance,y,x):

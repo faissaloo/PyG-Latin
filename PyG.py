@@ -386,6 +386,11 @@ class mask():
     def __len__(self):
         return len(self,self.subimages)
 
+def mask_add(self,dirname,yorigin,xorigin):
+    msk=mask([],yorigin,xorigin)
+    for i in os.listdir(dirname):
+        msk.image_add(dirname+i)
+    return msk
 #collision_
 #Checks if a point collides with an instance
 def collision_point(self,instance,y,x):

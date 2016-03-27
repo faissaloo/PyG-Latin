@@ -150,10 +150,10 @@ def draw_circle(self,y,x,r,outline):
             draw_point(self,workingX+x,-workingY+y)
             draw_point(self,workingY+x,-workingX+y)
         else:
-            draw_line(self,x+workingX,y-workingY,x+workingX,y+workingY)
             draw_line(self,y+workingY,x-workingX,y+workingY,x+workingX)
             draw_line(self,y-workingY,x-workingX,y-workingY,x+workingX)
             draw_line(self,y-workingX,x-workingY,y-workingX,x+workingY)
+            draw_line(self,y+workingX,x-workingY,y+workingX,x+workingY)
         workingY+=1
         if decOverTwo<=0:
             decOverTwo+=2 * workingY + 1

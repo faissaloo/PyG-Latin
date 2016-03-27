@@ -46,6 +46,11 @@ obj platform
     event draw
     {
         draw_sprite(self.sprite,0,self.y,self.x)
+        draw_circle(self.y,self.x-2,5,false)
+        if collision_circle(global.bll,self.y,self.x,10)
+        {
+            draw_text("Collided with circle",1,1)
+        }
     }
 }
 room rm1 {

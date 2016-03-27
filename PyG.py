@@ -438,10 +438,10 @@ def collision_circle(self,instance,y,x,r):
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:
-        if (collision_line(self,instance,x+workingX,y-workingY,x+workingX,y+workingY) or
-            collision_line(self,instance,y+workingY,x-workingX,y+workingY,x+workingX) or
+        if (collision_line(self,instance,y+workingY,x-workingX,y+workingY,x+workingX) or
             collision_line(self,instance,y-workingY,x-workingX,y-workingY,x+workingX) or
-            collision_line(self,instance,y-workingX,x-workingY,y-workingX,x+workingY)):
+            collision_line(self,instance,y-workingX,x-workingY,y-workingX,x+workingY) or
+            collision_line(self,instance,y+workingX,x-workingY,y+workingX,x+workingY)):
             return True
         workingY+=1
         if decOverTwo<=0:

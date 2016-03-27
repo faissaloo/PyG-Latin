@@ -52,7 +52,7 @@ room rm1 {
     self.room_speed=15
     self.room_width=60
     self.room_height=30
-    instance_create(ball,10,10)
+    global.bll=instance_create(ball,10,10)
     instance_create(platform,20,10)
 }
 room_goto(rm1)

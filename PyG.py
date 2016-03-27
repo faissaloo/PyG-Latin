@@ -230,7 +230,7 @@ def draw_line(self,y,x,yy,xx):
     deltaX=xx-x
     deltaY=yy-y
     err=0
-    deltaErr=abs(safeDivide(deltaY,deltaX))
+    deltaErr=abs(self,safeDivide(deltaY,deltaX))
     workingY=y
     for i in rnge:
         draw_point(self,workingY,i)
@@ -397,7 +397,7 @@ def collision_point(self,instance,y,x):
     inst_collidablePoints=[]
     yy=0
     xx=0
-    for i in instance.mask:
+    for i in instance.mask.subimages[instance.image_index]:
         yy+=1
         for ii in i:
             xx+=1
@@ -418,7 +418,7 @@ def collision_line(self,instance,y,x,yy,xx):
     deltaX=xx-x
     deltaY=yy-y
     err=0
-    deltaErr=abs(safeDivide(deltaY,deltaX))
+    deltaErr=abs(self,safeDivide(deltaY,deltaX))
     workingY=y
     for i in rnge:
         if collision_point(self,instance,workingY,i):

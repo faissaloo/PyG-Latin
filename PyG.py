@@ -351,6 +351,10 @@ def instance_exists(self,obj):
 #instance_place      mask           specified object   instance
 #instance_position   point          specified object   instance
 ##################################################################
+
+#Masks are stored as vectors for lines (which have a constant y),
+#making collision checks alot faster and meaning masks take up less RAM.
+#Each vector is in the format (y,(xstart,xend))
 class mask():
     def __init__(self,subimages,yorigin,xorigin):
         #Using [:1] so that it just returns 0 if subimages is []
@@ -369,20 +373,31 @@ class mask():
                 image_array=[]
                 pixels=0
                 row=[]
+                xx=0
+                yy=0
+                xstart=0
+                started=False
                 while pos<len(self,text):
                     if pixels%text[18]==0:
-                        image_array.insert(0,row)
-                        row=[]
+                        if started==True:
+                            image_array.append((yy,(xstart,xx)))
+                            started=False
+                        self.width=xx
+                        xx=0
+                        yy+=1
                     if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
-                        row.append(True)
-                    else:
-                        row.append(False)
+                        if started==False:
+                            started=True
+                            xstart=xx
+                    elif started==True:
+                        image_array.append((yy,(xstart,xx)))
+                        started=False
+                    xx+=1
                     pos+=4
                     pixels+=1
                 self.subimages.append(image_array)
                 #Update properties and all that jazz
-                self.width=len(self,self.subimages[:1][:1])
-                self.height=len(self,self.subimages[:1])
+                self.height=yy
     def __len__(self):
         return len(self,self.subimages)
 
@@ -394,15 +409,13 @@ def mask_add(self,dirname,yorigin,xorigin):
 #collision_
 #Checks if a point collides with an instance
 def collision_point(self,instance,y,x):
-    inst_collidablePoints=[]
-    yy=0
-    xx=0
     for i in instance.mask.subimages[instance.image_index]:
-        yy+=1
-        for ii in i:
-            xx+=1
-            if ii==True and (round(self,instance.y+yy),round(self,instance.x+xx))==(round(self,y),round(self,x)):
-                return True
+        if (
+            round(self,instance.y+i[0])==round(self,y) and
+            round(self,x)<round(self,instance.x+max(self,i[1])) and
+            round(self,x)>round(self,instance.x+min(self,i[1]))
+        ):
+            return True
     return False
 
 def collision_line(self,instance,y,x,yy,xx):
@@ -453,61 +466,49 @@ def collision_circle(self,instance,y,x,r):
 #place_
 #Checks if it would be safe to move to a position
 def place_free(self,y,x):
-    if len(self,self.mask)==0: #Save ourselves some calculations and just return True if there is no mask
-        return True
+    #Save ourselves some calculations and just return True if there is no mask
+    if not (len(self,self.mask) or len(self,self.mask.subimages[self.image_index])):
+        return False
+    #Exclude outselves from the list of objects so we don't collide with ourselves.
+    objlist=[i for i in engineVars.room_current.instanceList if i!=self]
+    for i in objlist:
+        if i.solid:
+            for ii in self.mask.subimages[self.image_index]:
+                for iii in i.mask.subimages[i.image_index]:
+                    #Based on:
+                    #https://stackoverflow.com/questions/1558901/one-dimensional-line-segments-ranges-intersection-test-solution-name
+                    if (round(self,y+ii[0])==round(self,i.y+iii[0]) and
+                        not (
+                            (i.x+iii[1][1] < x+ii[1][0]) or
+                            (x+ii[1][1] < i.x+iii[1][0])
+                            )
+                        ):
+                        return False
 
-    obj_collidablePoints=[]
-    self_collidablePoints=[]
-    for i in engineVars.room_current.instanceList:
-        if i.solid: #Place_free is only supposed to do collisions with solid objects
-            yy=0
-            xx=0
-            for ii in i.mask.subimages[i.image_index]:
-                yy+=1
-                for iii in ii:
-                    xx+=1
-                    if iii!=None:
-                        obj_collidablePoints.append((round(self,i.y+yy),round(self,i.x+xx)))
-    yy=0
-    xx=0
-    for ii in self.mask.subimages[self.image_index]:
-        yy+=1
-        for iii in ii:
-            xx+=1
-            if iii!=None:
-                self_collidablePoints.append((round(self,y+yy),round(self,x+xx)))
-    for i in self_collidablePoints:
-        if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
-            return False
     return True
 
 #Like place_free but for all objects, not just solid ones
 def place_empty(self,y,x):
-    if len(self,self.mask)==0: #Save ourselves some calculations and just return True if there is no mask
-        return True
-    obj_collidablePoints=[]
-    self_collidablePoints=[]
-    for i in engineVars.room_current.instanceList:
-        yy=0
-        xx=0
-        for ii in i.mask.subimages[i.image_index]:
-            yy+=1
-            for iii in ii:
-                xx+=1
-                if iii!=None:
-                    obj_collidablePoints.append((round(self,i.y+yy),round(self,i.x+xx)))
-    yy=0
-    xx=0
-    for i in self.mask.subimages[self.image_index]:
-        yy+=1
-        for ii in i:
-            xx+=1
-            if ii!=None:
-                self_collidablePoints.append((round(self,y+yy),round(self,x+xx)))
-    for i in self_collidablePoints:
-        if i in obj_collidablePoints: #If one of the collidable points in self is found in obj_collidablePoints
-            return False
+    #Save ourselves some calculations and just return True if there is no mask
+    if not (len(self,self.mask) or len(self,self.mask.subimages[self.image_index])):
+        return False
+    #Exclude outselves from the list of objects so we don't collide with ourselves.
+    objlist=[i for i in engineVars.room_current.instanceList if i!=self]
+    for i in objlist:
+        for ii in self.mask.subimages[self.image_index]:
+            for iii in i.mask.subimages[i.image_index]:
+                #Based on:
+                #https://stackoverflow.com/questions/1558901/one-dimensional-line-segments-ranges-intersection-test-solution-name
+                if (round(self,y+ii[0])==round(self,i.y+iii[0]) and
+                    not (
+                        (i.x+iii[1][1] < x+ii[1][0]) or
+                        (x+ii[1][1] < i.x+iii[1][0])
+                        )
+                    ):
+                    return False
+
     return True
+
 #Room handling functions
 def room_goto(self,room):
     room()
@@ -518,7 +519,10 @@ def room_goto(self,room):
 builtinInt=int
 def int(self,a,base=10):
     global builtinInt
-    return builtinInt(a,base)
+    if base!=10:
+        return builtinInt(a,base)
+    else:
+        return builtinInt(a)
 
 #Float handling functions (no maths allowed here, put that in general maths)
 #Hacky method because str does not support .__float__() so this is probs
@@ -576,15 +580,25 @@ def ceiling(self,a):
 
 #List functions
 #Doing this hacky fix because implementing my own is too long and slow
+#When a tuple gets passed to this we have issues because *args is a tuple
+#So we'll end up getting a tuple back if we pass a tuple to it
 builtinMax=max
 def max(self,*args):
     global builtinMax
-    return builtinMax(args)
+    if len(self,args)==1:
+        return builtinMax(args[0])
+    else:
+        return builtinMax(args)
 
 builtinMin=min
+#When a tuple gets passed to this we have issues because *args is a tuple
+#So we'll end up getting a tuple back if we pass a tuple to it
 def min(self, *args):
     global builtinMin
-    return builtinMin(args)
+    if len(self,args)==1:
+        return builtinMin(args[0])
+    else:
+        return builtinMin(args)
 
 #Works different to builtin sum(), allows unlimited args, and has no start
 #argument because that was stupid as well as doing stuff like say

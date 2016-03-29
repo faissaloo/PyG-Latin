@@ -15,7 +15,7 @@ obj ball
     {
         self.y+=self.vspeed
         self.vspeed+=self.gravity
-        if place_empty(self.y+6,self.x)=False
+        if place_empty(self.y+1,self.x)=False
         {
             self.vspeed-=1
         }
@@ -47,7 +47,7 @@ obj platform
     {
         draw_sprite(self.sprite,0,self.y,self.x)
         draw_circle(self.y,self.x-2,5,false)
-        if collision_circle(global.bll,self.y,self.x,10)
+        if collision_circle(global.bll,self.y,self.x-2,5)
         {
             draw_text("Collided with circle",1,1)
         }

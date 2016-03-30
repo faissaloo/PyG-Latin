@@ -69,7 +69,7 @@ def keyboard_check(self,key):
 #Drawing functions
 #Views
 class view():
-    def __init__(self,enabled,view_yview,view_xview,view_wview,view_hview):
+    def __init__(self,_,enabled,view_yview,view_xview,view_wview,view_hview):
         self.enabled=enabled
         self.view_xview=view_xview
         self.view_yview=view_yview

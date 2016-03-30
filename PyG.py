@@ -136,7 +136,7 @@ def draw_rectangle(self,y,x,yy,xx,outline):
     draw_line(self,y,x,yy,x)
 
 def draw_circle(self,y,x,r,outline):
-    workingX=r
+    workingX=abs(self,r)
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:
@@ -447,7 +447,7 @@ def collision_line(self,instance,y,x,yy,xx):
     return False
 
 def collision_circle(self,instance,y,x,r):
-    workingX=r
+    workingX=abs(self,r)
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:

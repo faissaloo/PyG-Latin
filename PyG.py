@@ -451,11 +451,30 @@ def collision_circle(self,instance,y,x,r):
     workingY=0
     decOverTwo=1-workingX
     while workingY<=workingX:
-        if (collision_line(self,instance,y+workingY,x-workingX,y+workingY,x+workingX) or
-            collision_line(self,instance,y-workingY,x-workingX,y-workingY,x+workingX) or
-            collision_line(self,instance,y-workingX,x-workingY,y-workingX,x+workingY) or
-            collision_line(self,instance,y+workingX,x-workingY,y+workingX,x+workingY)):
-            return True
+        for i in instance.mask.subimages[instance.image_index]:
+            if (
+                (
+                    (
+                        round(self,y+workingY)==round(self,instance.y+i[0]) or
+                        round(self,y-workingY)==round(self,instance.y+i[0])
+                    ) and not
+                    (
+                        (instance.x+i[1][1] < x-workingX) or
+                        (x+workingX < instance.x+i[1][0])
+                    )
+                ) or
+                (
+                    (
+                        round(self,y-workingX)==round(self,instance.y+i[0]) or
+                        round(self,y+workingX)==round(self,instance.y+i[0])
+                    ) and not
+                    (
+                        (instance.x+i[1][1] < x-workingY) or
+                        (x+workingY < instance.x+i[1][0])
+                    )
+                )
+                ):
+                return True
         workingY+=1
         if decOverTwo<=0:
             decOverTwo+=2 * workingY + 1

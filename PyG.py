@@ -119,7 +119,7 @@ def draw_text(self,string,y,x):
                     engineVars.screen_current.addstr(round(self,y+yOffset),round(self,x+i-backwardsOffset),str(self,string[i]),curses.color_pair(current_color))
         i+=1
 
-def draw_rectangle(self,y,x,yy,xx,outline):
+def draw_rectangle(self,y,x,yy,xx,outline=False):
     if y<yy:
         rnge=range(round(self,y),round(self,yy))
     else:
@@ -135,7 +135,7 @@ def draw_rectangle(self,y,x,yy,xx,outline):
     draw_line(self,y,xx,yy,xx)
     draw_line(self,y,x,yy,x)
 
-def draw_circle(self,y,x,r,outline):
+def draw_circle(self,y,x,r,outline=False):
     workingX=abs(self,r)
     workingY=0
     decOverTwo=1-workingX
@@ -162,7 +162,7 @@ def draw_circle(self,y,x,r,outline):
             decOverTwo+=2 * (workingY - workingX) + 1
 
 #Based on: https://dai.fmph.uniba.sk/upload/0/01/Ellipse.pdf
-def draw_ellipse(self,y,x,yr,xr,outline):
+def draw_ellipse(self,y,x,yr,xr,outline=False):
     twoASquare=2*(xr**2)
     twoBSquare=2*(yr**2)
     workingX=xr

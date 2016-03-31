@@ -547,38 +547,25 @@ def room_goto(self,room):
     room()
 
 #Integer handling functions (no maths allowed here, put that in general maths)
-#Hacky method because str does not support .__float__() so this is probs
-#faster than implementing my own
-builtinInt=int
 def int(self,a,base=10):
-    global builtinInt
     if base!=10:
-        return builtinInt(a,base)
+        return __builtins__["int"](a,base)
     else:
-        return builtinInt(a)
+        return __builtins__["int"](a)
 
 #Float handling functions (no maths allowed here, put that in general maths)
-#Hacky method because str does not support .__float__() so this is probs
-#faster than implementing my own
-builtinFloat=float
 def float(self,a):
-    global builtinFloat
-    return builtinFloat(a)
+    return __builtins__["float"](a)
 
 #String functions
 def str(self,a):
     return a.__str__()
 
-#Hacky method
-builtinChr=chr
 def chr(self,a):
-    global builtinChr
-    return builtinChr(a)
+    return __builtins__["chr"](a)
 
-builtinOrd=ord
 def ord(self,a):
-    global builtinOrd
-    return builtinOrd(a)
+    return __builtins__["ord"](a)
 
 #Boolean functions
 def bool(self,a):
@@ -612,26 +599,20 @@ def ceiling(self,a):
     return a.__ceil__()
 
 #List functions
-#Doing this hacky fix because implementing my own is too long and slow
-#When a tuple gets passed to this we have issues because *args is a tuple
-#So we'll end up getting a tuple back if we pass a tuple to it
-builtinMax=max
 def max(self,*args):
-    global builtinMax
     if len(self,args)==1:
-        return builtinMax(args[0])
+        return __builtins__["max"](args[0])
     else:
-        return builtinMax(args)
+        return __builtins__["max"](args)
 
 builtinMin=min
 #When a tuple gets passed to this we have issues because *args is a tuple
 #So we'll end up getting a tuple back if we pass a tuple to it
 def min(self, *args):
-    global builtinMin
     if len(self,args)==1:
-        return builtinMin(args[0])
+        return __builtins__["min"](args[0])
     else:
-        return builtinMin(args)
+        return __builtins__["min"](args)
 
 #Works different to builtin sum(), allows unlimited args, and has no start
 #argument because that was stupid as well as doing stuff like say

@@ -446,6 +446,19 @@ def collision_line(self,instance,y,x,yy,xx):
             err-=1
     return False
 
+def collision_rectangle(self,instance,y,x,yy,xx):
+    if y<yy:
+        rnge=range(round(self,y),round(self,yy))
+    else:
+        rnge=range(round(self,y), round(self,yy),-1)
+    for i in rnge:
+        for ii in instance.mask.subimages[instance.image_index]:
+            if (round(self,instance.y+ii[0])==round(self,i) and
+                x<instance.x+max(self,ii[1]) and
+                xx>instance.x+min(self,ii[1])):
+                return True
+    return False
+
 def collision_circle(self,instance,y,x,r):
     workingX=abs(self,r)
     workingY=0

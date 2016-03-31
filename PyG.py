@@ -287,6 +287,7 @@ class sprite():
                         row.append(None)
                     pos+=4
                     pixels+=1
+                image_array.insert(0,row)
                 self.subimages.append(image_array)
                 #Update properties and all that jazz
                 self.width=len(self,self.subimages[:1][:1])

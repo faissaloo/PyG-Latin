@@ -15,7 +15,7 @@ obj ball
     {
         self.y+=self.vspeed
         self.vspeed+=self.gravity
-        if place_empty(self.y+1,self.x)=False
+        if place_empty(self.y,self.x)=False
         {
             self.vspeed-=1
         }

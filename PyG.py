@@ -539,6 +539,12 @@ def place_empty(self,y,x):
                         )
                     ):
                     return False
+                    pass
+                #Debug
+                #draw_set_color(self,4)
+                #draw_line(self,y+ii[0],x+ii[1][0],y+ii[0],x+ii[1][1])
+                #draw_line(self,i.y+iii[0],i.x+iii[1][0],i.y+iii[0],i.x+iii[1][1])
+
 
     return True
 
@@ -587,7 +593,7 @@ def point_distance(self,y,x,yy,xx):
 
 #Rounding functions
 def floor(self,a):
-    return a.__floor__()
+    return math.floor(a)
 
 def round(self,a,decimalPlaces=0):
     if decimalPlaces:
@@ -596,7 +602,7 @@ def round(self,a,decimalPlaces=0):
         return a.__round__()
 
 def ceiling(self,a):
-    return a.__ceil__()
+    return math.ceil(a)
 
 #List functions
 def max(self,*args):

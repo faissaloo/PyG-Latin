@@ -373,7 +373,6 @@ class mask():
                 pos=text[10] #Tells us the offset
                 image_array=[]
                 pixels=0
-                row=[]
                 xx=0
                 yy=0
                 xstart=0

@@ -611,7 +611,6 @@ def max(self,*args):
     else:
         return __builtins__["max"](args)
 
-builtinMin=min
 #When a tuple gets passed to this we have issues because *args is a tuple
 #So we'll end up getting a tuple back if we pass a tuple to it
 def min(self, *args):

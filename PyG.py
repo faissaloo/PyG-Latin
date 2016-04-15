@@ -24,7 +24,6 @@
 #Imports
 #In places I have imported with 'from' because I want the user to also be able to
 #Use the functions from that library
-from time import sleep
 import curses
 import random
 import os
@@ -774,7 +773,7 @@ def game_main():
             engineVars.mouse_last_button=mouseEvent[4]
         else:
             engineVars.keyboard_lastkey=lastCh
-        sleep(1/engineVars.room_current.room_speed)
+        curses.napms(1000//engineVars.room_current.room_speed)
         engineVars.screen_current.clear()
         engineVars.room_current.instanceList=\
             sorted(engineVars.room_current.instanceList,key=lambda x: x.z)

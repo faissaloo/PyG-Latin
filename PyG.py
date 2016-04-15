@@ -55,17 +55,19 @@ c_white=7
 #So we can determine color pallete for this terminal, making colors more accurate
 #We have to convert the value from color_content() to use 255 as max value
 #instead of 1000
+#print(curses.COLORS)
+#exit()
 termcolorsAsRGB=[]
 tempColorStore=(0,0,0)
-for i in range(8):
+for i in range(curses.COLORS):
     tempColorStore=curses.color_content(i)
     termcolorsAsRGB.append((255*(tempColorStore[0]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[2]/1000)))
 #termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
 
-for i in range(0, 8):
+for i in range(curses.COLORS):
     curses.init_pair(i, i, -1)
-for i in range(0, 8):
-    curses.init_pair(i + 10, i, i)
+for i in range(curses.COLORS):
+    curses.init_pair(curses.COLORS+i, i, i)
 
 #Keyboard handling
 def keyboard_check(self,key):
@@ -92,7 +94,7 @@ def draw_point(self,y,x):
     global current_color
     if engineVars.view_current==None or engineVars.view_current.enabled==False:
         if round(self,y)<=engineVars.room_current.room_height and round(self,x)<=engineVars.room_current.room_width and round(self,y)>=0 and round(self,x)>=0:
-            engineVars.screen_current.addstr(round(self,y),round(self,x)," ",curses.color_pair(current_color+10))
+            engineVars.screen_current.addstr(round(self,y),round(self,x)," ",curses.color_pair(current_color+curses.COLORS))
     else:
         if (round(self,y-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and
             round(self,x-engineVars.view_current.view_xview)<=engineVars.view_current.view_wview and

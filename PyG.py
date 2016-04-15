@@ -31,18 +31,6 @@ import os
 import math
 import engineVars
 
-#Color constants
-c_black=0
-c_red=1
-c_green=2
-c_yellow=3
-c_blue=4
-c_magenta=5
-c_cyan=6
-c_white=7
-#This is based on what it looks like on the default XFCE4 terminal, it's good enough
-termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
-
 #Start basic screen drawing stuff
 engineVars.screen_current=curses.initscr()
 curses.start_color()
@@ -54,6 +42,26 @@ engineVars.screen_current.keypad(1)
 curses.mousemask(1)
 curses.use_default_colors()
 current_color=0
+
+#Color constants
+c_black=0
+c_red=1
+c_green=2
+c_yellow=3
+c_blue=4
+c_magenta=5
+c_cyan=6
+c_white=7
+#So we can determine color pallete for this terminal, making colors more accurate
+#We have to convert the value from color_content() to use 255 as max value
+#instead of 1000
+termcolorsAsRGB=[]
+tempColorStore=(0,0,0)
+for i in range(8):
+    tempColorStore=curses.color_content(i)
+    termcolorsAsRGB.append((255*(tempColorStore[0]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[2]/1000)))
+#termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
+
 for i in range(0, 8):
     curses.init_pair(i, i, -1)
 for i in range(0, 8):
@@ -249,12 +257,12 @@ def draw_path(self,path,y,x):
 
 #Color functions
 def make_color_rgb(self,R,G,B):
-    closest=[0,0,0]
+    closest=termcolorsAsRGB[0]
     def euclideanDistance(color1, color2):
         return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(color1, color2)]))
     #Find the nearest value to [R,G,B] in termcolorsAsRGB
     for i in termcolorsAsRGB:
-        if euclideanDistance([R,G,B],closest)>euclideanDistance([R,G,B],i):
+        if euclideanDistance((R,G,B),closest)>euclideanDistance((R,G,B),i):
             closest=i
     return termcolorsAsRGB.index(closest)
 

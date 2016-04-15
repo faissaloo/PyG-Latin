@@ -60,8 +60,7 @@ termcolorsAsRGB=[]
 tempColorStore=(0,0,0)
 for i in range(curses.COLORS):
     tempColorStore=curses.color_content(i)
-    termcolorsAsRGB.append((255*(tempColorStore[0]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[2]/1000)))
-#termcolorsAsRGB=[[0,0,0],[170,0,0],[0,170,0],[0,0,170],[170,85,0],[170,0,170],[0,170,170],[170,170,170]]
+    termcolorsAsRGB.append((255*(tempColorStore[2]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[0]/1000)))
 
 for i in range(curses.COLORS):
     curses.init_pair(i, i, -1)
@@ -257,10 +256,59 @@ def draw_path(self,path,y,x):
         draw_line(self,path[i][0],path[i][1],path[i+1][0],path[i+1][1])
 
 #Color functions
+#From:
+#https://stackoverflow.com/questions/13405956/convert-an-image-rgb-lab-with-python
+def rgb2lab (self, inputColor ) :
+    num = 0
+    RGB = [0, 0, 0]
+    for value in inputColor :
+        value = float(self, value) / 255
+        if value > 0.04045 :
+            value = ( ( value + 0.055 ) / 1.055 ) ** 2.4
+        else:
+            value = value / 12.92
+        RGB[num] = value * 100
+        num = num + 1
+
+    XYZ = [0, 0, 0]
+
+    X = RGB [0] * 0.4124 + RGB [1] * 0.3576 + RGB [2] * 0.1805
+    Y = RGB [0] * 0.2126 + RGB [1] * 0.7152 + RGB [2] * 0.0722
+    Z = RGB [0] * 0.0193 + RGB [1] * 0.1192 + RGB [2] * 0.9505
+    XYZ[ 0 ] = round(self, X, 4 )
+    XYZ[ 1 ] = round(self, Y, 4 )
+    XYZ[ 2 ] = round(self, Z, 4 )
+
+    XYZ[ 0 ] = float(self, XYZ[ 0 ] ) / 95.047         # ref_X =  95.047   Observer= 2°, Illuminant= D65
+    XYZ[ 1 ] = float(self, XYZ[ 1 ] ) / 100.0          # ref_Y = 100.000
+    XYZ[ 2 ] = float(self, XYZ[ 2 ] ) / 108.883        # ref_Z = 108.883
+
+    num = 0
+    for value in XYZ :
+        if value > 0.008856 :
+            value = value ** ( 0.3333333333333333 )
+        else:
+            value = ( 7.787 * value ) + ( 16 / 116 )
+
+        XYZ[num] = value
+        num = num + 1
+
+    Lab = [0, 0, 0]
+    L = ( 116 * XYZ[ 1 ] ) - 16
+    a = 500 * ( XYZ[ 0 ] - XYZ[ 1 ] )
+    b = 200 * ( XYZ[ 1 ] - XYZ[ 2 ] )
+
+    Lab [ 0 ] = round(self, L, 4 )
+    Lab [ 1 ] = round(self, a, 4 )
+    Lab [ 2 ] = round(self, b, 4 )
+
+    return tuple(Lab)
+
 def make_color_rgb(self,R,G,B):
+    global termcolorsAsRGB
     closest=termcolorsAsRGB[0]
     def euclideanDistance(color1, color2):
-        return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(color1, color2)]))
+        return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(rgb2lab(self,color1), rgb2lab(self,color2))]))
     #Find the nearest value to [R,G,B] in termcolorsAsRGB
     for i in termcolorsAsRGB:
         if euclideanDistance((R,G,B),closest)>euclideanDistance((R,G,B),i):

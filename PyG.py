@@ -54,15 +54,14 @@ c_white=7
 #So we can determine color pallete for this terminal, making colors more accurate
 #We have to convert the value from color_content() to use 255 as max value
 #instead of 1000
-#print(curses.COLORS)
-#exit()
 termcolorsAsRGB=[]
 tempColorStore=(0,0,0)
 for i in range(curses.COLORS):
+    #Get color rgb values
     tempColorStore=curses.color_content(i)
+    #store as bgr
     termcolorsAsRGB.append((255*(tempColorStore[2]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[0]/1000)))
-
-for i in range(curses.COLORS):
+    #add color pair for that color
     curses.init_pair(i, i, -1)
 
 #Keyboard handling

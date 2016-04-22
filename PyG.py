@@ -266,7 +266,7 @@ def rgb2lab (self, inputColor ) :
         else:
             value = value / 12.92
         RGB[num] = value * 100
-        num = num + 1
+        num += 1
 
     XYZ = [0, 0, 0]
 
@@ -289,7 +289,7 @@ def rgb2lab (self, inputColor ) :
             value = ( 7.787 * value ) + ( 16 / 116 )
 
         XYZ[num] = value
-        num = num + 1
+        num += 1
 
     Lab = [0, 0, 0]
     L = ( 116 * XYZ[ 1 ] ) - 16

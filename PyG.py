@@ -66,10 +66,7 @@ for i in range(curses.COLORS):
 
 #Keyboard handling
 def keyboard_check(self,key):
-    if (engineVars.keyboard_lastkey==key):
-        return True
-    else:
-        return False
+    return engineVars.keyboard_lastkey==key
 
 #Drawing functions
 #Views

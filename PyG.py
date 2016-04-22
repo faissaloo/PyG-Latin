@@ -262,7 +262,7 @@ def rgb2lab (self, inputColor ) :
     for value in inputColor :
         value = float(self, value) / 255
         if value > 0.04045 :
-            value = ( ( value + 0.055 ) / 1.055 ) ** 2.4
+            value = ( ( value + 0.055 ) / 1.055 )
         else:
             value = value / 12.92
         RGB[num] = value * 100

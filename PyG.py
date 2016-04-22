@@ -60,7 +60,7 @@ for i in range(curses.COLORS):
     #Get color rgb values
     tempColorStore=curses.color_content(i)
     #store as bgr
-    termcolorsAsRGB.append((255*(tempColorStore[2]/1000),255*(tempColorStore[1]/1000),255*(tempColorStore[0]/1000)))
+    termcolorsAsRGB.append((0.255*tempColorStore[2],0.255*tempColorStore[1],0.255*tempColorStore[0]))
     #add color pair for that color
     curses.init_pair(i, i, -1)
 

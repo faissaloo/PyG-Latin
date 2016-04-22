@@ -259,7 +259,7 @@ def rgb2lab (self, inputColor ) :
     num = 0
     RGB = [0, 0, 0]
     for value in inputColor :
-        value = float(self, value) / 255
+        value = value / 255
         if value > 0.04045 :
             value = ( ( value + 0.055 ) / 1.055 )
         else:
@@ -276,9 +276,9 @@ def rgb2lab (self, inputColor ) :
     XYZ[ 1 ] = round(self, Y, 4 )
     XYZ[ 2 ] = round(self, Z, 4 )
 
-    XYZ[ 0 ] = float(self, XYZ[ 0 ] ) / 95.047         # ref_X =  95.047   Observer= 2°, Illuminant= D65
-    XYZ[ 1 ] = float(self, XYZ[ 1 ] ) / 100.0          # ref_Y = 100.000
-    XYZ[ 2 ] = float(self, XYZ[ 2 ] ) / 108.883        # ref_Z = 108.883
+    XYZ[ 0 ] = XYZ[ 0 ] / 95.047         # ref_X =  95.047   Observer= 2°, Illuminant= D65
+    XYZ[ 1 ] = XYZ[ 1 ] / 100.0          # ref_Y = 100.000
+    XYZ[ 2 ] = XYZ[ 2 ] / 108.883        # ref_Z = 108.883
 
     num = 0
     for value in XYZ :

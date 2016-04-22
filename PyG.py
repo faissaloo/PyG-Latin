@@ -85,7 +85,10 @@ def draw_set_color(self,color):
 def draw_point(self,y,x):
     global current_color
     if engineVars.view_current==None or engineVars.view_current.enabled==False:
-        if round(self,y)<=engineVars.room_current.room_height and round(self,x)<=engineVars.room_current.room_width and round(self,y)>=0 and round(self,x)>=0:
+        if (round(self,y)<=engineVars.room_current.room_height and
+            round(self,x)<=engineVars.room_current.room_width and
+            round(self,y)>=0 and
+            round(self,x)>=0):
             engineVars.screen_current.addstr(round(self,y),round(self,x)," ",curses.color_pair(current_color)|curses.A_REVERSE)
     else:
         if (round(self,y-engineVars.view_current.view_yview)<=engineVars.view_current.view_hview and

@@ -48,6 +48,9 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         "tau":"6.283185307179586",
         "true":"True",
         "false":"False"}
+    definedObjects=[]
+    definedFuncs=[]
+    definedRooms=[]
     rawParsedData=[]
     currentTabulation=0
     def getCorrectTabulation():
@@ -455,6 +458,10 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             return returnStr
 
     def parse(source):
+        nonlocal definedObjects
+        nonlocal definedRooms
+        nonlocal definedFuncs
+
         def raiseException(string):
             nonlocal i
             nonlocal source
@@ -826,10 +833,14 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         def parseFuncDefinition():
             nonlocal i
             nonlocal source
+            nonlocal definedFuncs
+
             if expect("func",True):
                     funcFunction=parseName(False,True)
                     funcBody=parseCodeBlock()
-                    return funcDefinition(funcFunction,funcBody)
+                    funcDefObj=funcDefinition(funcFunction,funcBody)
+                    definedFuncs.append(funcDefObj)
+                    return funcDefObj
 
         def parseIfStatement():
             nonlocal i
@@ -960,13 +971,16 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         def parseObjDefinition():
             nonlocal i
             nonlocal source
+            nonlocal definedObjects
             if expect("obj",True):
                     objName=takename()
                     if objName==None:
                         raiseException("Syntax error; name missing from object definition")
                     expect_whitespace()
                     objBody=parseCodeBlock()
-                    return objDefinition(objName,objBody)
+                    objDefObj=objDefinition(objName,objBody)
+                    definedObjects.append(objDefObj)
+                    return objDefObj
 
         def parseEventDefinition():
             nonlocal i
@@ -982,6 +996,8 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
         def parseRoomDefinition():
             nonlocal i
             nonlocal source
+            nonlocal definedRooms
+
             expect_whitespace()
             if expect("room",True):
                     roomName=takename()
@@ -989,7 +1005,9 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                         raiseException("Syntax error; name missing from room definition")
                     expect_whitespace()
                     roomBody=parseCodeBlock()
-                    return roomDefinition(roomName,roomBody)
+                    roomDefObj=roomDefinition(roomName,roomBody)
+                    definedRooms.append(roomDefObj)
+                    return roomDefObj
 
         i=0
         line=""

@@ -197,7 +197,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
             currentTabulation-=1
             return codeToReturn
 
-    class scriptStatement():
+    class funcDefinition():
         def __init__(self,FUNCTION,BODY):
             self.FUNCTION=FUNCTION
             self.BODY=BODY
@@ -823,13 +823,13 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                         raiseException("File "+fname+"is not .pgl or .py")
                     return includeDirective(contents)
 
-        def parseScriptStatement():
+        def parseFuncDefinition():
             nonlocal i
             nonlocal source
-            if expect("script",True):
-                    scriptFunction=parseName(False,True)
-                    scriptBody=parseCodeBlock()
-                    return scriptStatement(scriptFunction,scriptBody)
+            if expect("func",True):
+                    funcFunction=parseName(False,True)
+                    funcBody=parseCodeBlock()
+                    return funcDefinition(funcFunction,funcBody)
 
         def parseIfStatement():
             nonlocal i
@@ -906,7 +906,7 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                         parseWhileStatement(),
                         parseIfStatement(),
                         parseForStatement(),
-                        parseScriptStatement(),
+                        parseFuncDefinition(),
                         parseEventDefinition(),
                         parseName(False),
                         parseDivisionAssignment(),
@@ -1004,12 +1004,12 @@ def transpile(inputSource,workingDirectory,header=True,footer=True):
                 parseReturnStatement(),
                 parseRoomDefinition(),
                 parseObjDefinition(),
-                parseScriptStatement(),
+                parseFuncDefinition(),
                 parseElseIfStatement(),
                 parseWhileStatement(),
                 parseIfStatement(),
                 parseForStatement(),
-                parseScriptStatement(),
+                parseFuncDefinition(),
                 parseEventDefinition(),
                 parseName(False),
                 parseDivisionAssignment(),

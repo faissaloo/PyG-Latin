@@ -303,14 +303,10 @@ def rgb2lab (self, inputColor ) :
 
 def make_color_rgb(self,R,G,B):
     global termcolorsAsRGB
-    closest=termcolorsAsRGB[0]
     def euclideanDistance(color1, color2):
         return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(rgb2lab(self,color1), rgb2lab(self,color2))]))
     #Find the nearest value to [R,G,B] in termcolorsAsRGB
-    for i in termcolorsAsRGB:
-        if euclideanDistance((R,G,B),closest)>euclideanDistance((R,G,B),i):
-            closest=i
-    return termcolorsAsRGB.index(closest)
+    return termcolorsAsRGB.index(sorted(termcolorsAsRGB, key=lambda x:euclideanDistance(x,(R,G,B)))[0])
 
 #Sprite functions
 class sprite():

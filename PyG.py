@@ -376,10 +376,9 @@ def draw_sprite(self,spr,image_index,y,x,yscale=1,xscale=1,angle=0):
                         #currY is great, thanks india!
                         currY=y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*image_yscale)-spr.yorigin)+iii
                         currX=x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*image_xscale)-spr.xorigin)+iiii
-                        #if we have any alpha deal with it
+                        #if we have any alpha deal with the blending
                         if ii[1]<1:
-                            #>>12 gets the color number attribute.
-                            #currently not working properly
+                            #>>8&0xFF gets the color number attribute.
                             draw_set_color(self,_colorBlend(self,engineVars.screen_current.inch(round(self,currY),round(self,currX))>>8&0xFF,ii[0],ii[1]))
                         draw_point(self,currY,currX)
     draw_set_color(self,c_white)

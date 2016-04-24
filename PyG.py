@@ -223,11 +223,6 @@ def draw_ellipse(self,y,x,yr,xr,outline=False):
 
 
 def draw_line(self,y,x,yy,xx):
-    def safeDivide(numerator,divisor):
-        if divisor:
-            return numerator/divisor
-        else:
-            return 0
     if x<xx:
         rnge=range(x,xx)
     else:
@@ -235,7 +230,7 @@ def draw_line(self,y,x,yy,xx):
     deltaX=xx-x
     deltaY=yy-y
     err=0
-    deltaErr=abs(self,safeDivide(deltaY,deltaX))
+    deltaErr=abs(self,_safeDivide(deltaY,deltaX))
     workingY=y
     for i in rnge:
         draw_point(self,workingY,i)
@@ -301,6 +296,19 @@ def rgb2lab (self, inputColor ) :
 
     return tuple(Lab)
 
+#alpha must be 0-1
+#based on:
+#https://github.com/chjj/blessed/blob/eab243fc7ad27f1d2932db6134f7382825ee3488/lib/colors.js
+def _colorBlend(self,base,added,alpha):
+    global termcolorsAsRGB
+    #if we can, avoid make_color_rgb(), since it's slow.
+    if alpha>=1:
+        return added
+    elif alpha<=0:
+        return base
+    else:
+        R,G,B=[e1+((e2-e1)*alpha) for e1, e2 in zip(termcolorsAsRGB[base],termcolorsAsRGB[added])]
+        return make_color_rgb(self,R,G,B)
 
 def _euclideanDistance(self,color1, color2):
     return math.sqrt(sum(self,[(e1-e2)**2 for e1, e2 in zip(rgb2lab(self,color1), rgb2lab(self,color2))]))
@@ -333,10 +341,8 @@ class sprite():
                     if pixels%text[18]==0:
                         image_array.insert(0,row)
                         row=[]
-                    if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
-                        row.append(make_color_rgb(self,text[pos+1],text[pos+2],text[pos+3]))
-                    else:
-                        row.append(None)
+                    #rgba
+                    row.append((make_color_rgb(self,text[pos+1],text[pos+2],text[pos+3]),text[pos]/255))
                     pos+=4
                     pixels+=1
                 image_array.insert(0,row)
@@ -360,13 +366,22 @@ def draw_sprite(self,spr,image_index,y,x,yscale=1,xscale=1,angle=0):
         xx=0
         for ii in i:
             xx+=1
-            if ii!=None:
-                draw_set_color(self,ii)
+            #only bother with any drawing if the alpha isn't 0
+            if ii[1]>0:
+                #only bother calculating blend if there can be any
+                if ii[1]>=1:
+                    draw_set_color(self,ii[0])
                 for iii in range(image_yscale):
                     for iiii in range(image_xscale):
-                        draw_point(self,
-                            y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*image_yscale)-spr.yorigin)+iii,
-                            x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*image_xscale)-spr.xorigin)+iiii)
+                        #currY is great, thanks india!
+                        currY=y+(((sinOfAngle * (xx - spr.xorigin) + cosOfAngle * (yy - spr.yorigin) + spr.yorigin)*image_yscale)-spr.yorigin)+iii
+                        currX=x+(((cosOfAngle * (xx - spr.xorigin) - sinOfAngle * (yy - spr.yorigin) + spr.xorigin)*image_xscale)-spr.xorigin)+iiii
+                        #if we have any alpha deal with it
+                        if ii[1]<1:
+                            #>>12 gets the color number attribute.
+                            #currently not working properly
+                            draw_set_color(self,_colorBlend(self,engineVars.screen_current.inch(round(self,currY),round(self,currX))>>8&0xFF,ii[0],ii[1]))
+                        draw_point(self,currY,currX)
     draw_set_color(self,c_white)
 #To test use: draw_sprite(image_add("tests/test.bmp"),10,10)
 def sprite_add(self,dirname,yorigin,xorigin):
@@ -437,7 +452,7 @@ class mask():
                         self.width=xx
                         xx=0
                         yy+=1
-                    if text[pos]>254: #Checks the alpha, if it has any transparency, ignore
+                    if text[pos]>0: #Checks the alpha, if it's 0, ignore
                         if started==False:
                             started=True
                             xstart=xx
@@ -471,11 +486,6 @@ def collision_point(self,instance,y,x):
     return False
 
 def collision_line(self,instance,y,x,yy,xx):
-    def safeDivide(numerator,divisor):
-        if divisor:
-            return numerator/divisor
-        else:
-            return 0
     if x<xx:
         rnge=range(x,xx)
     else:
@@ -483,7 +493,7 @@ def collision_line(self,instance,y,x,yy,xx):
     deltaX=xx-x
     deltaY=yy-y
     err=0
-    deltaErr=abs(self,safeDivide(deltaY,deltaX))
+    deltaErr=abs(self,_safeDivide(deltaY,deltaX))
     workingY=y
     for i in rnge:
         if collision_point(self,instance,workingY,i):
@@ -633,6 +643,12 @@ def iter(self,a):
     return a.__iter__()
 
 #General maths functions
+def _safeDivide(numerator,divisor):
+    if divisor:
+        return numerator/divisor
+    else:
+        return 0
+
 def abs(self,a):
     return a.__abs__()
 

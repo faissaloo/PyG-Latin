@@ -333,17 +333,78 @@ class sprite():
         with open(fname,"rb") as file:
             text=file.read()
             if chr(self,text[0])=="B" and chr(self,text[1])=="M":
-                pos=text[10] #Tells us the offset
+                pallete=[]
+                palletePos=0
+                infoHeadSize=__builtins__['int'].from_bytes(text[14:18], byteorder='little', signed=False)
+                while palletePos<text[46]:
+                    pallete.append([text[infoHeadSize+15+palletePos],text[infoHeadSize+16+palletePos],text[infoHeadSize+17+palletePos],text[infoHeadSize+14+palletePos]])
+                    palletePos+=1
+
+                depth=text[28]+(text[29]<<8) #Bit depth of each pixel
+                if text[30]==0:
+                    if depth==32 or depth==0:
+                        def process_color(binColor):
+                            row.append((make_color_rgb(self,binColor[1],binColor[2],binColor[3]),binColor[0]/255))
+                    elif depth==24:
+                        def process_color(binColor):
+                            row.append((make_color_rgb(self,binColor[0],binColor[1],binColor[2]),255))
+                    elif depth==16:
+                        if pallete:
+                            def process_color(binColor):
+                                row.append((make_color_rgb(self,pallete[binColor[0]&0xF][1],pallete[(binColor[0]&0xF0)>>4][2],pallete[binColor[1]&0xF][3]),(pallete[(binColor[1]&0xF0)>>4][4])))
+                        else:
+                            def process_color(binColor):
+                                row.append((make_color_rgb(self,((binColor[0]&0xF)*16),((binColor[1]&0xF0)>>4)*16,((binColor[1]&0xF))*16),(binColor[0]&0xF0)>>4)*16)
+                elif text[30]==3: #bi_bitfields
+                    #iThe masks will deal with the bit depth for us here
+                    redMask=__builtins__['int'].from_bytes(text[62:66], byteorder='little', signed=False)
+                    redShift=0
+                    while redMask&1==0 and redMask:
+                        redMask>>=1
+                        redShift+=1
+                    greenMask=__builtins__['int'].from_bytes(text[58:62], byteorder='little', signed=False)
+                    greenShift=0
+                    while greenMask&1==0 and greenMask:
+                        greenMask>>=1
+                        greenShift+=1
+                    blueMask=__builtins__['int'].from_bytes(text[54:58], byteorder='little', signed=False)
+                    blueShift=0
+                    while blueMask&1==0 and blueMask:
+                        blueMask>>=1
+                        blueShift+=1
+                    alphaMask=__builtins__['int'].from_bytes(text[66:70], byteorder='little', signed=False)
+                    alphaShift=0
+                    #No alpha information? That means we need to default to 255
+                    if alphaMask==0:
+                        def process_color(binColor):
+                            color_dword=__builtins__['int'].from_bytes(binColor, byteorder='little', signed=False)
+                            row.append((make_color_rgb(self,(color_dword>>redShift)&redMask,
+                                (color_dword>>greenShift)&greenMask,
+                                (color_dword>>blueShift)&blueMask),
+                                255))
+                    else:
+                        while alphaMask&1==0:
+                            alphaMask>>=1
+                            alphaShift+=1
+                        def process_color(binColor):
+                            color_dword=__builtins__['int'].from_bytes(binColor, byteorder='little', signed=False)
+                            row.append((make_color_rgb(self,(color_dword>>redShift)&redMask,
+                                (color_dword>>greenShift)&greenMask,
+                                (color_dword>>blueShift)&blueMask),
+                                (color_dword>>alphaShift)&alphaMask))
                 image_array=[]
                 pixels=0
                 row=[]
+                width=__builtins__['int'].from_bytes(text[18:22], byteorder='little', signed=False)
+                height=__builtins__['int'].from_bytes(text[22:26], byteorder='little', signed=False)
+                data_start=__builtins__['int'].from_bytes(text[10:14], byteorder='little', signed=False)#Tells us the offset
+                pos=data_start
                 while pos<len(self,text):
                     if pixels%text[18]==0:
                         image_array.insert(0,row)
                         row=[]
-                    #rgba
-                    row.append((make_color_rgb(self,text[pos+1],text[pos+2],text[pos+3]),text[pos]/255))
-                    pos+=4
+                    process_color(text[pos:pos+(depth//8)])
+                    pos+=depth//8
                     pixels+=1
                 image_array.insert(0,row)
                 self.subimages.append(image_array)
@@ -436,6 +497,7 @@ class mask():
         with open(fname,"rb") as file:
             text=file.read()
             if chr(self,text[0])=="B" and chr(self,text[1])=="M":
+                depth=(__builtins__['int'].from_bytes(text[28:30], byteorder='little', signed=False))//8 #Bit depth of each pixel
                 pos=text[10] #Tells us the offset
                 image_array=[]
                 pixels=0
@@ -443,6 +505,11 @@ class mask():
                 yy=0
                 xstart=0
                 started=False
+                if text[30]==0:
+                    alphaMask=0xFF0000
+                elif text[30]==3:
+                    alphaMask=__builtins__['int'].from_bytes(text[66:70], byteorder='little', signed=False)
+
                 while pos<len(self,text):
                     if pixels%text[18]==0:
                         if started==True:
@@ -451,7 +518,9 @@ class mask():
                         self.width=xx
                         xx=0
                         yy+=1
-                    if text[pos]>0: #Checks the alpha, if it's 0, ignore
+                    
+                    #Checks the alpha, if it's 0, ignore, if there is no alpha channel do it regardless (TODO: Add bounding boxes and use those in that case if it's worth it)
+                    if (__builtins__['int'].from_bytes(text[pos:pos+4], byteorder='little', signed=False)&alphaMask) or alphaMask==0:
                         if started==False:
                             started=True
                             xstart=xx
@@ -459,7 +528,7 @@ class mask():
                         image_array.append((yy,(xstart,xx)))
                         started=False
                     xx+=1
-                    pos+=4
+                    pos+=depth
                     pixels+=1
                 self.subimages.append(image_array)
                 #Update properties and all that jazz
